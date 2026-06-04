@@ -146,3 +146,13 @@ Defined in `app/globals.css` as `@utility` rules. Apply as a single class — th
 - **Typography classes as single utilities.** Don't reconstruct type styles with individual Tailwind classes — use `text-desktop-h1`, not `text-[96px] font-light leading-[0.9]`.
 - **Sections use 60px horizontal padding** (`px-[60px]`) on desktop, `px-4` on mobile.
 - **Section vertical gap:** `gap-[120px]` between major sections (desktop spacer unit).
+
+## Component Library
+
+Shared UI components live at **`components/ui/<name>.tsx`** — flat structure, no subdirectories.
+
+**Before building any UI element, check this file and CONTEXT.md first.** If a component already exists, use it — do not create a duplicate. If a new variant is needed, add it to the existing component via props.
+
+Each component entry below documents: file path, all accepted props with types, variants, and a usage example.
+
+> Components will be listed here as they are built. Start of component library — none yet.
