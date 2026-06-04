@@ -1,26 +1,293 @@
 @import "tailwindcss";
 
+/* ─── Light Theme (default) ────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary: #07060D;
+  --inverted-primary: #F2F1F5;
+  --inverted-primary-hover: #D0CED6;
+  --background: #FFFFFF;
+  --foreground: #07060D;
+  --grey-100: #2D2B36;
+  --grey-200: #888A91;
+  --grey-300: #A2A3A5;
+  --grey-400: #BAB9BB;
+  --grey-500: #D7D6D9;
+  --grey-500-hover: #C4C2C9;
+  --grey-600: #E7E6E8;
+  --grey-600-hover: #DCDBDE;
+  --stroke: #E1E1E5;
+  --purple-subtle: #DDCFF2;
+
+  /* Accent colors — no theme flip */
+  --purple: #670DE5;
+  --purple-hover: #721FE5;
+  --bubble-gum: #E271D7;
+  --sky-blue: #00BBFF;
+  --neon-green: #00FF08;
+  --orange: #FF7421;
+  --yellow: #FEE211;
+  --blue: #0037C6;
+  --semi-transparent-blue: #707BB7;
+  --semi-transparent-purple: #C590E5;
 }
 
+/* ─── Dark Theme ────────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --primary: #FFFFFF;
+  --inverted-primary: #07060D;
+  --inverted-primary-hover: #121118;
+  --background: #07060D;
+  --foreground: #FFFFFF;
+  --grey-100: #F2F3F7;
+  --grey-200: #A0A1A6;
+  --grey-300: #595A5F;
+  --grey-400: #353535;
+  --grey-500: #1F1E20;
+  --grey-500-hover: #272628;
+  --grey-600: #141415;
+  --grey-600-hover: #1D1D1F;
+  --stroke: #1B1B1D;
+  --purple-subtle: #290958;
+}
+
+/* ─── Tailwind Token Map ────────────────────────────────────────────────────── */
+/* Maps CSS vars to Tailwind utility names (bg-primary, text-foreground, etc.)  */
 @theme inline {
+  /* Fonts — injected by next/font/local via className on <html> */
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  /* Semantic */
+  --color-primary: var(--primary);
+  --color-inverted-primary: var(--inverted-primary);
+  --color-inverted-primary-hover: var(--inverted-primary-hover);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* Greys */
+  --color-grey-100: var(--grey-100);
+  --color-grey-200: var(--grey-200);
+  --color-grey-300: var(--grey-300);
+  --color-grey-400: var(--grey-400);
+  --color-grey-500: var(--grey-500);
+  --color-grey-500-hover: var(--grey-500-hover);
+  --color-grey-600: var(--grey-600);
+  --color-grey-600-hover: var(--grey-600-hover);
+  --color-stroke: var(--stroke);
+  --color-purple-subtle: var(--purple-subtle);
+
+  /* Accents */
+  --color-purple: var(--purple);
+  --color-purple-hover: var(--purple-hover);
+  --color-bubble-gum: var(--bubble-gum);
+  --color-sky-blue: var(--sky-blue);
+  --color-neon-green: var(--neon-green);
+  --color-orange: var(--orange);
+  --color-yellow: var(--yellow);
+  --color-blue: var(--blue);
+  --color-semi-transparent-blue: var(--semi-transparent-blue);
+  --color-semi-transparent-purple: var(--semi-transparent-purple);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Typography Utilities ──────────────────────────────────────────────────── */
+/* Desktop headings — PolySans Slim Wide, weight 300 */
+@utility text-desktop-h1 {
+  font-family: var(--font-heading);
+  font-size: 96px;
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -1.92px;
+}
+@utility text-desktop-h2 {
+  font-family: var(--font-heading);
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -1.28px;
+}
+@utility text-desktop-h2-indent {
+  font-family: var(--font-heading);
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -1.28px;
+  text-indent: 120px;
+}
+@utility text-desktop-h3 {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.36px;
+}
+@utility text-desktop-h3-indent {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.36px;
+  text-indent: 130px;
+}
+@utility text-desktop-h4 {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.28px;
+}
+@utility text-desktop-h4-indent {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.28px;
+  text-indent: 70px;
+}
+@utility text-desktop-h5 {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.24px;
 }
 
+/* Desktop body — PolySans Neutral, weight 400 */
+@utility text-desktop-body-large {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+@utility text-desktop-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+@utility text-desktop-body-small {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* Desktop mono — PolySans NeutralMono, weight 400, always uppercase */
+@utility text-desktop-mono-large {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.16px;
+  text-transform: uppercase;
+  font-feature-settings: 'dlig' on;
+}
+@utility text-desktop-mono-medium {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.14px;
+  text-transform: uppercase;
+  font-feature-settings: 'dlig' on;
+}
+@utility text-desktop-mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.13px;
+  text-transform: uppercase;
+  font-feature-settings: 'dlig' on;
+}
+@utility text-desktop-mono-small {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.12px;
+  text-transform: uppercase;
+  font-feature-settings: 'dlig' on;
+}
+
+/* Mobile headings — same family/weight, scaled sizes */
+@utility text-mobile-h1 {
+  font-family: var(--font-heading);
+  font-size: 56px;
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -1.12px;
+}
+@utility text-mobile-h2 {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.72px;
+}
+@utility text-mobile-h2-indent {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.72px;
+  text-indent: 100px;
+}
+@utility text-mobile-h3 {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.28px;
+}
+@utility text-mobile-h4 {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.24px;
+}
+@utility text-mobile-h5 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.18px;
+}
+@utility text-mobile-body-large {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+@utility text-mobile-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+@utility text-mobile-mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.13px;
+  text-transform: uppercase;
+  font-feature-settings: 'dlig' on;
+}
+@utility text-mobile-mono-small {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.12px;
+  text-transform: uppercase;
+  font-feature-settings: 'dlig' on;
+}
+
+/* ─── Base ──────────────────────────────────────────────────────────────────── */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
 }
