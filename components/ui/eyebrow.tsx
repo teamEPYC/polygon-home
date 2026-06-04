@@ -38,16 +38,16 @@ export function Eyebrow({
       <span className={`text-desktop-mono-small ${textClass} whitespace-nowrap pt-[2px]`}>
         {text}
       </span>
-      {/* Top-left corner tick */}
-      <span className="absolute top-0 left-0 size-[6px] pointer-events-none">
+      {/* Top-left corner tick (filled triangle) */}
+      <span className={`absolute top-0 left-0 size-[6px] pointer-events-none ${textClass}`}>
         <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
-          <path d="M6 1H1V6" stroke="currentColor" strokeWidth="1" className={textClass} />
+          <path d="M0 0H6L0 6V0Z" fill="currentColor" />
         </svg>
       </span>
-      {/* Bottom-right corner tick */}
-      <span className="absolute bottom-0 right-0 size-[6px] pointer-events-none">
+      {/* Bottom-right corner tick (filled triangle) */}
+      <span className={`absolute bottom-0 right-0 size-[6px] pointer-events-none ${textClass}`}>
         <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
-          <path d="M0 5H5V0" stroke="currentColor" strokeWidth="1" className={textClass} />
+          <path d="M6 6H0L6 0V6Z" fill="currentColor" />
         </svg>
       </span>
     </div>

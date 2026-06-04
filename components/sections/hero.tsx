@@ -3,11 +3,17 @@
 import Image from 'next/image'
 import { Eyebrow } from '@/components/ui/eyebrow'
 
-const CUT = 14
-const clipPath = `polygon(0 0, calc(100% - ${CUT}px) 0, 100% ${CUT}px, 100% 100%, 0 100%)`
-
 const HERO_VIDEO = '/assets/hero-loop.mp4'
 
+// Alpha-mask that carves the 3D scene into its Figma silhouette.
+const SCENE_MASK = {
+  WebkitMaskImage: 'url(/assets/hero/hero-scene-mask.svg)',
+  maskImage: 'url(/assets/hero/hero-scene-mask.svg)',
+  WebkitMaskRepeat: 'no-repeat',
+  maskRepeat: 'no-repeat',
+} as const
+
+// NE arrow that lives inside the button corner cap.
 function ArrowIcon({ color = 'currentColor' }: { color?: string }) {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
@@ -22,95 +28,106 @@ function ArrowIcon({ color = 'currentColor' }: { color?: string }) {
   )
 }
 
+// Cut-corner CTA built from the real Figma corner SVG + a left text block.
+function CtaButton({
+  label,
+  corner,
+  bgClass,
+  textClass,
+  arrowColor,
+  prClass,
+}: {
+  label: string
+  corner: string
+  bgClass: string
+  textClass: string
+  arrowColor: string
+  prClass: string
+}) {
+  return (
+    <a href="#" className="inline-flex items-center">
+      <div className={`flex h-[52px] items-center pl-[16px] ${prClass} rounded-l-[4px] ${bgClass}`}>
+        <span className={`text-desktop-mono-small ${textClass}`}>{label}</span>
+      </div>
+      <div className="relative h-[52px] w-[28px] overflow-hidden shrink-0">
+        <img src={corner} alt="" className="absolute left-[-1px] top-0 h-[52px] w-[29px]" />
+        <span className="absolute left-0 top-[20px] size-[12px]">
+          <ArrowIcon color={arrowColor} />
+        </span>
+      </div>
+    </a>
+  )
+}
+
+// chipW/left are the Figma marquee coordinates; w/h are the logo's intrinsic size.
 const LOGOS = [
-  { src: '/assets/logo-stripe.svg', alt: 'Stripe', w: 66, h: 26 },
-  { src: '/assets/logo-revolut.svg', alt: 'Revolut', w: 81, h: 18 },
-  { src: '/assets/logo-google.svg', alt: 'Google', w: 85, h: 27 },
-  { src: '/assets/logo-nexo.svg', alt: 'Nexo', w: 95, h: 19 },
+  { src: '/assets/logo-stripe.svg', alt: 'Stripe', w: 66, h: 26, chipW: 72, left: 26 },
+  { src: '/assets/logo-revolut.svg', alt: 'Revolut', w: 81, h: 18, chipW: 88, left: 122 },
+  { src: '/assets/logo-google.svg', alt: 'Google', w: 85, h: 27, chipW: 88, left: 234 },
+  { src: '/assets/logo-nexo.svg', alt: 'Nexo', w: 95, h: 19, chipW: 98, left: 346 },
 ]
-
-function XIcon() {
-  return (
-    <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
-      <path
-        d="M11.44.25h2.19L8.9 5.93l5.57 7.82H10.1L6.77 9.1 2.97 13.75H.78L5.61 7.7.24.25h4.54L7.9 4.85 11.44.25Zm-.77 12.06h1.21L4.1 1.5H2.8l7.87 10.81Z"
-        fill="rgba(255,255,255,0.6)"
-      />
-    </svg>
-  )
-}
-
-function DiscordIcon() {
-  return (
-    <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
-      <path
-        d="M15.23 1.42A14.9 14.9 0 0 0 11.5.27a.06.06 0 0 0-.06.03c-.16.28-.34.65-.46.94a13.74 13.74 0 0 0-4.13 0 9.5 9.5 0 0 0-.47-.94.06.06 0 0 0-.06-.03c-1.3.22-2.55.62-3.72 1.15a.05.05 0 0 0-.03.02C.27 4.97-.16 8.4.05 11.8a.06.06 0 0 0 .03.04c1.56 1.15 3.07 1.84 4.56 2.3a.06.06 0 0 0 .06-.02c.35-.48.66-.99.93-1.52a.06.06 0 0 0-.03-.08 9.8 9.8 0 0 1-1.4-.67.06.06 0 0 1-.01-.1l.28-.21a.05.05 0 0 1 .05-.01c2.93 1.34 6.1 1.34 9 0a.05.05 0 0 1 .06.01l.28.21a.06.06 0 0 1 0 .1c-.45.27-.91.49-1.4.67a.06.06 0 0 0-.03.08c.27.53.59 1.04.93 1.52a.06.06 0 0 0 .06.02c1.5-.46 3-1.15 4.57-2.3a.06.06 0 0 0 .02-.04c.26-3.94-.42-7.34-1.8-10.36a.04.04 0 0 0-.02-.02ZM6.02 9.74c-.9 0-1.64-.83-1.64-1.84 0-1.02.72-1.84 1.64-1.84.92 0 1.66.83 1.64 1.84 0 1.01-.73 1.84-1.64 1.84Zm6.06 0c-.9 0-1.64-.83-1.64-1.84 0-1.02.72-1.84 1.64-1.84.93 0 1.66.83 1.64 1.84 0 1.01-.71 1.84-1.64 1.84Z"
-        fill="rgba(255,255,255,0.6)"
-      />
-    </svg>
-  )
-}
 
 export function Hero() {
   return (
     <section className="relative w-full h-[840px] overflow-hidden bg-background">
-      {/*
-       * Layout: video fills right ~62% of section (starting at col 5 / x=600).
-       * Dark section background shows on the left ~38%.
-       * Text content is absolutely positioned over the full width.
-       */}
+      {/* Grid — solid stroke cells behind everything (matches Figma 120px grid) */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage:
+            'linear-gradient(var(--color-stroke) 1px, transparent 1px), linear-gradient(90deg, var(--color-stroke) 1px, transparent 1px)',
+          backgroundSize: '120px 120px',
+        }}
+      />
 
-      {/* Video — clipped to the right portion of the section */}
-      <div className="absolute inset-y-0 right-0 w-[calc(100%-480px)]">
+      {/* 3D scene — masked into its silhouette */}
+      <div
+        className="absolute left-[24px] top-[-94px] w-[1392px] h-[1044px] pointer-events-none"
+        style={{ ...SCENE_MASK, WebkitMaskSize: '1392px 740px', maskSize: '1392px 740px', WebkitMaskPosition: '0px 170px', maskPosition: '0px 170px' }}
+      >
         <video
           autoPlay
           muted
           loop
           playsInline
-          className="w-full h-full object-cover object-center"
-          poster="/assets/hero-bg.png"
+          className="w-full h-full object-cover"
+          poster="/assets/hero/hero-scene.png"
         >
           <source src={HERO_VIDEO} type="video/mp4" />
         </video>
-        {/* Soft left-edge blend so video merges into the dark panel */}
-        <div
-          className="absolute inset-y-0 left-0 w-[240px] pointer-events-none"
-          style={{
-            background: 'linear-gradient(90deg, #07060D 0%, rgba(7,6,13,0.6) 50%, rgba(7,6,13,0) 100%)',
-          }}
-        />
       </div>
 
-      {/* Grid overlay — matches Figma dark-mode stroke */}
+      {/* Overlay — darkens the left of the scene so the heading reads */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute left-[24px] top-[76px] w-[700px] h-[756px] opacity-40 pointer-events-none"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
-          backgroundSize: '120px 120px',
+            'linear-gradient(60.2deg, rgb(7,6,13) 17.5%, rgba(7,6,13,0) 79.3%)',
+          ...SCENE_MASK,
+          WebkitMaskSize: '1392px 740px',
+          maskSize: '1392px 740px',
         }}
       />
 
-      {/* ── Left panel content (all text) ── */}
+      {/* Eyebrow */}
+      <Eyebrow
+        text="$250B in Stablecoin Volume"
+        borderColor="white"
+        textColor="primary"
+        className="absolute left-[60px] top-[120px]"
+      />
 
-      {/* Eyebrow — row 1 */}
-      <div className="absolute left-[60px] top-[120px]">
-        <Eyebrow text="$250B in Stablecoin Volume" borderColor="white" textColor="primary" />
-      </div>
-
-      {/* Heading — rows 2–4 */}
-      <div className="absolute left-[60px] top-[176px] flex flex-col gap-[2px]">
-        <h1 className="font-heading font-[300] text-[80px] leading-[72px] tracking-[-0.8px] text-grey-100">
-          It&rsquo;s not
-          <br />
-          our first
-        </h1>
-        {/* Third line: decorative diamond · chain thumbnail · "trillion." */}
-        <div className="flex items-end gap-[12px] mt-[4px]">
-          <div className="pb-[14px]">
-            <Image src="/assets/poly-diamond.svg" alt="" width={16} height={16} unoptimized />
+      {/* Heading */}
+      <div className="absolute left-[60px] top-[176px] w-[466px] flex flex-col gap-[2px]">
+        <div className="font-heading font-[300] text-[80px] leading-[72px] tracking-[-0.8px] text-grey-100">
+          <p className="leading-[72px] mb-0">It&rsquo;s not</p>
+          <p className="leading-[72px]">our first</p>
+        </div>
+        <div className="flex items-end gap-[12px] w-full">
+          <div className="flex flex-col items-start justify-end pb-[14px]">
+            <Image src="/assets/hero/poly-rotated-16.svg" alt="" width={16} height={16} unoptimized />
           </div>
-          <div className="h-[86px] w-[152px] overflow-hidden rounded-[2px]">
+          <div className="h-[86px] w-[152px] overflow-hidden">
             <Image
               src="/assets/hero-chains.png"
               alt=""
@@ -120,91 +137,100 @@ export function Hero() {
               unoptimized
             />
           </div>
-          <h1 className="font-heading font-[300] text-[80px] leading-[72px] tracking-[-0.8px] text-grey-100 whitespace-nowrap">
+          <div className="font-heading font-[300] text-[80px] leading-[72px] tracking-[-0.8px] text-grey-100 whitespace-nowrap">
             trillion.
-          </h1>
+          </div>
         </div>
       </div>
 
-      {/* Body text */}
-      <p className="absolute left-[60px] top-[472px] w-[421px] text-desktop-body-large">
+      {/* Body */}
+      <p className="absolute left-[60px] top-[472px] w-[421px] font-body text-[18px] leading-[26px]">
         <span className="text-white">The go-to blockchain for global payments, </span>
-        <span className="text-grey-200">
-          where trillions in assets move instantly, at scale.
-        </span>
+        <span className="text-grey-200">where trillions in assets move instantly, at scale.</span>
       </p>
 
-      {/* CTA buttons — primary is purple, secondary is inverted */}
-      <div className="absolute left-[60px] top-[570px] flex items-center gap-[12px]">
-        <a
-          href="#"
-          className="inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-primary text-purple transition-colors hover:bg-inverted-primary-hover whitespace-nowrap"
-          style={{ clipPath }}
-        >
-          <span className="text-desktop-mono-small">BUILD</span>
-          <ArrowIcon color="var(--color-purple)" />
-        </a>
-        <a
-          href="#"
-          className="inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-grey-500 hover:bg-grey-500-hover text-primary transition-colors whitespace-nowrap"
-          style={{ clipPath }}
-        >
-          <span className="text-desktop-mono-small">USE POLYGON</span>
-          <ArrowIcon color="var(--color-primary)" />
-        </a>
+      {/* CTAs */}
+      <div className="absolute left-[60px] top-[570px] flex items-center gap-[2px]">
+        <CtaButton
+          label="BUILD"
+          corner="/assets/hero/btn-corner-white.svg"
+          bgClass="bg-primary"
+          textClass="text-purple"
+          arrowColor="var(--color-purple)"
+          prClass="pr-[107px]"
+        />
+        <CtaButton
+          label="USE POLYGON"
+          corner="/assets/hero/btn-corner-grey.svg"
+          bgClass="bg-grey-500"
+          textClass="text-primary"
+          arrowColor="var(--color-primary)"
+          prClass="pr-[59px]"
+        />
       </div>
 
-      {/* ── Right panel content ── */}
+      {/* Trusted by — logos on dark chips with edge fades */}
+      <div className="absolute left-[66.67%] top-[120px] w-[480px] h-[120px] overflow-hidden">
+        {LOGOS.map((logo) => (
+          <div
+            key={logo.alt}
+            className="absolute top-[30px] h-[60px] bg-inverted-primary flex items-center justify-center"
+            style={{ left: logo.left, width: logo.chipW }}
+          >
+            <Image src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} unoptimized />
+          </div>
+        ))}
+        {/* right fade */}
+        <div
+          className="absolute right-0 top-1/2 -translate-y-1/2 h-[118px] w-[96px] pointer-events-none"
+          style={{ background: 'linear-gradient(to left, var(--color-background), rgba(7,6,13,0))' }}
+        />
+        {/* left fade */}
+        <div
+          className="absolute left-px top-1/2 -translate-y-1/2 h-[118px] w-[205px] pointer-events-none"
+          style={{ background: 'linear-gradient(to right, rgba(7,6,13,0), var(--color-background) 56.731%)' }}
+        />
+        {/* label + tick marks */}
+        <span className="absolute left-[22px] top-[54px] text-desktop-mono text-grey-100">
+          TRUSTED BY
+        </span>
+        <Image
+          src="/assets/hero/poly-rotated-8.svg"
+          alt=""
+          width={8}
+          height={8}
+          unoptimized
+          className="absolute left-[10px] top-[8px] rotate-180"
+        />
+        <Image
+          src="/assets/hero/poly-rotated-8.svg"
+          alt=""
+          width={8}
+          height={8}
+          unoptimized
+          className="absolute right-[366px] bottom-[8px]"
+        />
+      </div>
 
-      {/* Trusted By — top-right, col 8 onward (x=960) */}
-      <div
-        className="absolute top-[120px] overflow-hidden h-[120px]"
-        style={{ left: 960, right: 0 }}
+      {/* Socials */}
+      <a
+        href="#"
+        aria-label="Follow on X"
+        className="absolute left-[calc(100%-72px)] top-[528px] size-[24px] flex items-center justify-center hover:opacity-80 transition-opacity"
       >
-        {/* Fade out at right edge */}
-        <div className="absolute inset-y-0 right-0 w-[80px] bg-gradient-to-l from-[#07060D] to-transparent z-10 pointer-events-none" />
-
-        <div className="absolute top-[8px] left-[22px] z-20 flex items-center gap-[6px]">
-          <Image src="/assets/poly-corner.svg" alt="" width={8} height={8} unoptimized />
-          <span className="text-desktop-mono text-grey-100">TRUSTED BY</span>
-        </div>
-
-        <div className="absolute top-[44px] left-[22px] flex items-center gap-[20px]">
-          {LOGOS.map((logo) => (
-            <Image
-              key={logo.alt}
-              src={logo.src}
-              alt={logo.alt}
-              width={logo.w}
-              height={logo.h}
-              className="object-contain opacity-80"
-              unoptimized
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Social icons — right edge of section */}
-      <div className="absolute right-[48px] top-[500px] flex flex-col gap-[32px]">
-        <a href="#" aria-label="Follow on X" className="hover:opacity-80 transition-opacity">
-          <XIcon />
-        </a>
-        <a href="#" aria-label="Join Discord" className="hover:opacity-80 transition-opacity">
-          <DiscordIcon />
-        </a>
-      </div>
+        <Image src="/assets/hero/social-x.svg" alt="" width={15} height={13} unoptimized />
+      </a>
+      <a
+        href="#"
+        aria-label="Join Discord"
+        className="absolute left-[calc(100%-72px)] top-[648px] size-[24px] flex items-center justify-center hover:opacity-80 transition-opacity"
+      >
+        <Image src="/assets/hero/social-discord.svg" alt="" width={18} height={13} unoptimized />
+      </a>
 
       {/* Scroll indicator */}
-      <div className="absolute right-[68px] bottom-[48px]">
-        <svg width="12" height="16" viewBox="0 0 12 16" fill="none">
-          <path
-            d="M6 9L1 14M6 9L11 14M6 7L1 2M6 7L11 2"
-            stroke="rgba(255,255,255,0.5)"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+      <div className="absolute left-[calc(100%-60px)] top-[calc(50%+360px)] -translate-x-1/2 -translate-y-1/2 size-[56px] flex items-center justify-center">
+        <Image src="/assets/hero/scroll-double-arrow.svg" alt="" width={12} height={16} unoptimized />
       </div>
     </section>
   )
