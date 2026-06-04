@@ -285,6 +285,16 @@
   font-feature-settings: 'dlig' on;
 }
 
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* ─── Base ──────────────────────────────────────────────────────────────────── */
 body {
   background-color: var(--background);

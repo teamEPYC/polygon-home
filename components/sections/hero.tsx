@@ -59,12 +59,12 @@ function CtaButton({
   )
 }
 
-// chipW/left are the Figma marquee coordinates; w/h are the logo's intrinsic size.
+// chipW is the Figma chip width; w/h are the logo's intrinsic size.
 const LOGOS = [
-  { src: '/assets/logo-stripe.svg', alt: 'Stripe', w: 66, h: 26, chipW: 72, left: 26 },
-  { src: '/assets/logo-revolut.svg', alt: 'Revolut', w: 81, h: 18, chipW: 88, left: 122 },
-  { src: '/assets/logo-google.svg', alt: 'Google', w: 85, h: 27, chipW: 88, left: 234 },
-  { src: '/assets/logo-nexo.svg', alt: 'Nexo', w: 95, h: 19, chipW: 98, left: 346 },
+  { src: '/assets/logo-stripe.svg', alt: 'Stripe', w: 66, h: 26, chipW: 72 },
+  { src: '/assets/logo-revolut.svg', alt: 'Revolut', w: 81, h: 18, chipW: 88 },
+  { src: '/assets/logo-google.svg', alt: 'Google', w: 85, h: 27, chipW: 88 },
+  { src: '/assets/logo-nexo.svg', alt: 'Nexo', w: 95, h: 19, chipW: 98 },
 ]
 
 export function Hero() {
@@ -169,26 +169,33 @@ export function Hero() {
         />
       </div>
 
-      {/* Trusted by — logos on dark chips with edge fades */}
+      {/* Trusted by — scrolling logo marquee on dark chips with edge fades */}
       <div className="absolute left-[66.67%] top-[120px] w-[480px] h-[120px] overflow-hidden">
-        {LOGOS.map((logo) => (
-          <div
-            key={logo.alt}
-            className="absolute top-[30px] h-[60px] bg-inverted-primary flex items-center justify-center"
-            style={{ left: logo.left, width: logo.chipW }}
-          >
-            <Image src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} unoptimized />
-          </div>
-        ))}
+        {/* Two identical sets; -50% translate loops seamlessly */}
+        <div className="absolute top-[30px] left-0 flex h-[60px] animate-[marquee_22s_linear_infinite]">
+          {[0, 1].map((set) => (
+            <div key={set} className="flex items-center gap-[24px] pr-[24px] h-[60px]" aria-hidden={set === 1}>
+              {LOGOS.map((logo) => (
+                <div
+                  key={logo.alt}
+                  className="h-[60px] shrink-0 bg-inverted-primary flex items-center justify-center"
+                  style={{ width: logo.chipW }}
+                >
+                  <Image src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} unoptimized />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
         {/* right fade */}
         <div
           className="absolute right-0 top-1/2 -translate-y-1/2 h-[118px] w-[96px] pointer-events-none"
           style={{ background: 'linear-gradient(to left, var(--color-background), rgba(7,6,13,0))' }}
         />
-        {/* left fade */}
+        {/* left fade — opaque on the left (covers label + first logo), clears to the right */}
         <div
           className="absolute left-px top-1/2 -translate-y-1/2 h-[118px] w-[205px] pointer-events-none"
-          style={{ background: 'linear-gradient(to right, rgba(7,6,13,0), var(--color-background) 56.731%)' }}
+          style={{ background: 'linear-gradient(to left, rgba(7,6,13,0), var(--color-background) 56.731%)' }}
         />
         {/* label + tick marks */}
         <span className="absolute left-[22px] top-[54px] text-desktop-mono text-grey-100">
