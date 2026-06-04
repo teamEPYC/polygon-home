@@ -63,30 +63,29 @@ export function Nav() {
           ))}
         </div>
 
-        {/* STAKE POL — ghost button with cut right corner */}
+        {/* STAKE POL — inline SVGs so CSS vars resolve correctly */}
         <a href="#" className="absolute left-[1080px] top-0 flex items-center h-[52px]">
-          <div className="relative h-[52px] w-[100px]">
-            <img src="/assets/hero/nav-stake-left.svg" alt="" className="absolute inset-0 size-full" />
+          <div className="relative h-[52px] w-[100px] bg-inverted-primary">
             <span className="absolute left-[23px] top-[18px] text-desktop-mono-small text-grey-100">
               STAKE POL
             </span>
           </div>
-          <img src="/assets/hero/nav-stake-corner.svg" alt="" className="h-[52px] w-[20px]" />
+          <svg width="20" height="52" viewBox="0 0 20 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+            <path d="M20 0V32.6784C20 34.8433 19.1226 36.9157 17.5682 38.4225L4.72555 50.872C3.9793 51.5955 2.98077 52 1.94143 52H0V0H20Z" fill="var(--inverted-primary)" />
+          </svg>
         </a>
 
-        {/* BUILD ON POLYGON — purple button, dark text, cut corner + arrow */}
+        {/* BUILD ON POLYGON — purple button, white text, inline SVG corner + arrow */}
         <a href="#" className="absolute left-[1200px] top-0 flex items-center h-[52px]">
           <div className="flex items-center h-[52px] pl-[16px] pr-[43px] rounded-bl-[4px] bg-purple">
-            <span className="text-desktop-mono-small text-background">BUILD ON POLYGON</span>
+            <span className="text-desktop-mono-small text-primary">BUILD ON POLYGON</span>
           </div>
           <div className="relative h-[52px] w-[28px] overflow-hidden shrink-0">
-            <img
-              src="/assets/hero/nav-build-corner.svg"
-              alt=""
-              className="absolute left-[-1px] top-0 h-[52px] w-[29px]"
-            />
+            <svg width="29" height="52" viewBox="0 0 29 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute left-[-1px] top-0">
+              <path d="M29 0V32.6784C29 34.8433 28.1226 36.9157 26.5682 38.4225L13.7256 50.872C12.9793 51.5955 11.9808 52 10.9414 52H0V0H29Z" fill="var(--purple)" />
+            </svg>
             <span className="absolute left-0 top-[20px] size-[12px]">
-              <ArrowIcon color="var(--color-background)" />
+              <ArrowIcon color="var(--color-primary)" />
             </span>
           </div>
         </a>
