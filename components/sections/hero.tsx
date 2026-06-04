@@ -6,8 +6,7 @@ import { Eyebrow } from '@/components/ui/eyebrow'
 const CUT = 14
 const clipPath = `polygon(0 0, calc(100% - ${CUT}px) 0, 100% ${CUT}px, 100% 100%, 0 100%)`
 
-const HERO_VIDEO =
-  'https://polytech-assets.polygon.technology/videos/polygon-revamp/Asset_Hero_02_Loop_Dark%20(2).mp4'
+const HERO_VIDEO = '/assets/hero-loop.mp4'
 
 function ArrowIcon({ color = 'currentColor' }: { color?: string }) {
   return (
@@ -41,22 +40,11 @@ function XIcon() {
   )
 }
 
-function TelegramIcon() {
+function DiscordIcon() {
   return (
-    <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
       <path
-        d="M16.94.42 1.28 6.5c-1.07.43-1.06 1.02-.2 1.28l3.93 1.23 9.1-5.74c.43-.26.82-.12.5.17L6.5 10.17l-.22 4.07c.32 0 .46-.15.63-.31l1.52-1.47 3.16 2.33c.58.32 1 .16 1.14-.54L16.98 1.7C17.17.83 16.62.44 16.94.42Z"
-        fill="rgba(255,255,255,0.6)"
-      />
-    </svg>
-  )
-}
-
-function LinkedInIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M3.58 16H.26V5.32h3.32V16ZM1.92 3.86C.86 3.86 0 2.98 0 1.92a1.92 1.92 0 1 1 3.84 0c0 1.06-.86 1.94-1.92 1.94ZM16 16h-3.32v-5.19c0-1.24-.02-2.83-1.73-2.83-1.73 0-1.99 1.35-1.99 2.74V16H5.64V5.32h3.19v1.46h.05c.44-.84 1.52-1.73 3.13-1.73C15.36 5.05 16 7.15 16 10v6Z"
+        d="M15.23 1.42A14.9 14.9 0 0 0 11.5.27a.06.06 0 0 0-.06.03c-.16.28-.34.65-.46.94a13.74 13.74 0 0 0-4.13 0 9.5 9.5 0 0 0-.47-.94.06.06 0 0 0-.06-.03c-1.3.22-2.55.62-3.72 1.15a.05.05 0 0 0-.03.02C.27 4.97-.16 8.4.05 11.8a.06.06 0 0 0 .03.04c1.56 1.15 3.07 1.84 4.56 2.3a.06.06 0 0 0 .06-.02c.35-.48.66-.99.93-1.52a.06.06 0 0 0-.03-.08 9.8 9.8 0 0 1-1.4-.67.06.06 0 0 1-.01-.1l.28-.21a.05.05 0 0 1 .05-.01c2.93 1.34 6.1 1.34 9 0a.05.05 0 0 1 .06.01l.28.21a.06.06 0 0 1 0 .1c-.45.27-.91.49-1.4.67a.06.06 0 0 0-.03.08c.27.53.59 1.04.93 1.52a.06.06 0 0 0 .06.02c1.5-.46 3-1.15 4.57-2.3a.06.06 0 0 0 .02-.04c.26-3.94-.42-7.34-1.8-10.36a.04.04 0 0 0-.02-.02ZM6.02 9.74c-.9 0-1.64-.83-1.64-1.84 0-1.02.72-1.84 1.64-1.84.92 0 1.66.83 1.64 1.84 0 1.01-.73 1.84-1.64 1.84Zm6.06 0c-.9 0-1.64-.83-1.64-1.84 0-1.02.72-1.84 1.64-1.84.93 0 1.66.83 1.64 1.84 0 1.01-.71 1.84-1.64 1.84Z"
         fill="rgba(255,255,255,0.6)"
       />
     </svg>
@@ -65,7 +53,7 @@ function LinkedInIcon() {
 
 export function Hero() {
   return (
-    <section className="relative w-full h-[840px] overflow-hidden bg-[#07060D]">
+    <section className="relative w-full h-[840px] overflow-hidden bg-background">
       {/*
        * Layout: video fills right ~62% of section (starting at col 5 / x=600).
        * Dark section background shows on the left ~38%.
@@ -150,19 +138,19 @@ export function Hero() {
       <div className="absolute left-[60px] top-[570px] flex items-center gap-[12px]">
         <a
           href="#"
-          className="inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-purple hover:bg-purple-hover text-primary transition-colors whitespace-nowrap"
+          className="inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-primary text-purple transition-colors hover:bg-inverted-primary-hover whitespace-nowrap"
           style={{ clipPath }}
         >
           <span className="text-desktop-mono-small">BUILD</span>
-          <ArrowIcon color="var(--color-primary)" />
+          <ArrowIcon color="var(--color-purple)" />
         </a>
         <a
           href="#"
-          className="inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-inverted-primary text-grey-100 transition-opacity hover:opacity-80 whitespace-nowrap"
+          className="inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-grey-500 hover:bg-grey-500-hover text-primary transition-colors whitespace-nowrap"
           style={{ clipPath }}
         >
           <span className="text-desktop-mono-small">USE POLYGON</span>
-          <ArrowIcon color="var(--color-grey-100)" />
+          <ArrowIcon color="var(--color-primary)" />
         </a>
       </div>
 
@@ -201,11 +189,8 @@ export function Hero() {
         <a href="#" aria-label="Follow on X" className="hover:opacity-80 transition-opacity">
           <XIcon />
         </a>
-        <a href="#" aria-label="Telegram" className="hover:opacity-80 transition-opacity">
-          <TelegramIcon />
-        </a>
-        <a href="#" aria-label="LinkedIn" className="hover:opacity-80 transition-opacity">
-          <LinkedInIcon />
+        <a href="#" aria-label="Join Discord" className="hover:opacity-80 transition-opacity">
+          <DiscordIcon />
         </a>
       </div>
 

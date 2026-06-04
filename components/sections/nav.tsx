@@ -24,7 +24,7 @@ function ArrowIcon() {
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
       <path
         d="M3 9L9 3M9 3H4M9 3V8"
-        stroke="white"
+        stroke="currentColor"
         strokeWidth="1.2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -35,7 +35,7 @@ function ArrowIcon() {
 
 export function Nav() {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-[52px] bg-[var(--inverted-primary,#07060d)]">
+    <nav className="fixed top-0 left-0 right-0 z-50 h-[52px] bg-inverted-primary">
       <div className="relative max-w-[1440px] mx-auto h-full">
       {/* Logo */}
       <div className="absolute left-[48px] top-[13px]">
@@ -68,7 +68,7 @@ export function Nav() {
         {/* STAKE POL ghost */}
         <a
           href="#"
-          className="inline-flex items-center h-[52px] px-[23px] text-desktop-mono-small text-grey-100 bg-[var(--inverted-primary)] hover:opacity-80 transition-opacity whitespace-nowrap"
+          className="inline-flex items-center h-[52px] px-[23px] text-desktop-mono-small text-grey-100 bg-inverted-primary hover:opacity-80 transition-opacity whitespace-nowrap"
           style={{ clipPath }}
         >
           STAKE POL
@@ -76,7 +76,7 @@ export function Nav() {
         {/* BUILD ON POLYGON primary */}
         <a
           href="#"
-          className="inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-purple hover:bg-purple-hover text-primary transition-colors whitespace-nowrap"
+          className="inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-purple hover:bg-purple-hover text-background transition-colors whitespace-nowrap"
           style={{ clipPath }}
         >
           <span className="text-desktop-mono-small">BUILD ON POLYGON</span>
