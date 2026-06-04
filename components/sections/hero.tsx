@@ -67,7 +67,7 @@ export function Hero() {
           muted
           loop
           playsInline
-          className="w-full h-full object-cover object-left"
+          className="w-full h-full object-cover object-center"
           poster="/assets/hero-bg.png"
         >
           <source src={HERO_VIDEO} type="video/mp4" />
