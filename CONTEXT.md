@@ -156,4 +156,33 @@ Shared UI components live at **`components/ui/<name>.tsx`** — flat structure, 
 
 Each component entry below documents: file path, all accepted props with types, variants, and a usage example.
 
-> Components will be listed here as they are built. Start of component library — none yet.
+> Components will be listed here as they are built. Specs extracted from Figma — implementation pending.
+
+### Planned components (not yet built)
+
+| File | Description | Props |
+|---|---|---|
+| `nav.tsx` | Global sticky navbar — logo, 5 nav links, 2 CTA buttons | — |
+| `button.tsx` | Cut-corner button, 2 variants | `label: string`, `href?: string`, `variant?: 'primary' \| 'ghost'` |
+| `eyebrow.tsx` | Bordered stat/label badge with corner tick marks | `text: string` |
+| `badge.tsx` | Status label — LIVE / COMING SOON | `text: string`, `variant?: 'primary' \| 'blue'` |
+| `logo-strip.tsx` | "Trusted By" logos with gradient fade | `logos: { src: string, alt: string, width: number }[]` |
+| `spacer.tsx` | 12-col 120px grid spacer between sections | — |
+| `stat-card.tsx` | Dark parallelogram card with stat value + label | `value: string`, `label: string` |
+| `btn-outline.tsx` | Small 44×36 arrow-only outline button | `href?: string` |
+| `powered-by.tsx` | "POWERED BY [partner logo]" tag | `partnerName: string`, `logo: string` |
+| `product-section.tsx` | Full-width product row with status, title, icon, description, partner | `status: 'live' \| 'coming-soon'`, `title: string`, `subtitle: string`, `description: string`, `icon: string`, `ctaLabel: string`, `partnerName: string`, `partnerLogo: string` |
+| `product-card.tsx` | Smaller secondary product card | `status: 'coming-soon'`, `title: string`, `subtitle: string`, `icon: string` |
+
+**Button variants:**
+- `primary` — white bg, purple text, cut-corner right side with arrow (BUILD ON POLYGON, START BUILDING)
+- `ghost` — neutral bg, grey-100 text, cut-corner right side, no arrow (STAKE POL)
+
+**Figma source:** file key `Xot6Ao6SMgaUTRzC2TWHoP`, node IDs documented in `docs/superpowers/specs/2026-06-04-style-guide-design.md`
+
+**Sections being built (first milestone):**
+1. Navbar (`1727:43116`)
+2. Hero (`1727:41835`)
+3. Spacer (`1727:42062`)
+4. Polygon at a Glance (`1727:42063`)
+5. Open Money Stack / Products (`1727:42190`)
