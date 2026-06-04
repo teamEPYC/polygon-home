@@ -146,6 +146,7 @@ Defined in `app/globals.css` as `@utility` rules. Apply as a single class — th
 - **Typography classes as single utilities.** Don't reconstruct type styles with individual Tailwind classes — use `text-desktop-h1`, not `text-[96px] font-light leading-[0.9]`.
 - **Sections use 60px horizontal padding** (`px-[60px]`) on desktop, `px-4` on mobile.
 - **Section vertical gap:** `gap-[120px]` between major sections (desktop spacer unit).
+- **Assets must live in the app.** All images, SVGs, icons, and 3D renders go in `public/assets/`. Never reference Figma CDN URLs (`figma.com/api/mcp/asset/...`) in code — download the asset and use a local path instead.
 
 ## Component Library
 
