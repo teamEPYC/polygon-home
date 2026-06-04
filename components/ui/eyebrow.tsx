@@ -1,7 +1,7 @@
 type EyebrowProps = {
   text: string
   className?: string
-  borderColor?: 'stroke' | 'primary' | 'semi-transparent-blue' | 'white'
+  borderColor?: 'stroke' | 'primary' | 'grey-100' | 'semi-transparent-blue' | 'white'
   textColor?: 'primary' | 'grey-100' | 'white-70'
   hasDot?: boolean
 }
@@ -16,6 +16,7 @@ export function Eyebrow({
   const borderClass = {
     stroke: 'border-stroke',
     primary: 'border-primary',
+    'grey-100': 'border-grey-100',
     'semi-transparent-blue': 'border-[var(--semi-transparent-blue)]',
     white: 'border-[rgba(255,255,255,0.5)]',
   }[borderColor]

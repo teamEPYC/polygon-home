@@ -26,13 +26,13 @@ function StatCard({ value, label, bg, transform, size = 'lg' }: StatCardProps) {
         <Image src={bg} alt="" fill className="object-fill" unoptimized />
         <div className={`absolute inset-0 flex flex-col justify-between ${pad}`}>
           <p
-            className="font-heading font-[300] text-grey-100 leading-[1.25]"
+            className="font-heading font-[300] text-primary leading-[1.25]"
             style={{ fontSize: valSize, letterSpacing: track }}
           >
             {value}
           </p>
           <p
-            className="text-desktop-mono-small text-grey-100 uppercase whitespace-pre-line"
+            className={`${size === 'lg' ? 'text-desktop-mono-large' : 'text-desktop-mono'} text-primary uppercase whitespace-pre-line`}
             style={{ fontFeatureSettings: '"dlig" 1' }}
           >
             {label}
@@ -109,7 +109,7 @@ export function AtGlance() {
         Polygon at a Glance.
       </p>
       <div className="absolute left-[60px] top-[96px]">
-        <Eyebrow text="INTRO" borderColor="stroke" textColor="grey-100" />
+        <Eyebrow text="INTRO" borderColor="grey-100" textColor="grey-100" />
       </div>
 
       {/* 3D center diamond */}
