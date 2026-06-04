@@ -156,33 +156,34 @@ Shared UI components live at **`components/ui/<name>.tsx`** — flat structure, 
 
 Each component entry below documents: file path, all accepted props with types, variants, and a usage example.
 
-> Components will be listed here as they are built. Specs extracted from Figma — implementation pending.
-
-### Planned components (not yet built)
+### Built components
 
 | File | Description | Props |
 |---|---|---|
-| `nav.tsx` | Global sticky navbar — logo, 5 nav links, 2 CTA buttons | — |
-| `button.tsx` | Cut-corner button, 2 variants | `label: string`, `href?: string`, `variant?: 'primary' \| 'ghost'` |
-| `eyebrow.tsx` | Bordered stat/label badge with corner tick marks | `text: string` |
-| `badge.tsx` | Status label — LIVE / COMING SOON | `text: string`, `variant?: 'primary' \| 'blue'` |
-| `logo-strip.tsx` | "Trusted By" logos with gradient fade | `logos: { src: string, alt: string, width: number }[]` |
-| `spacer.tsx` | 12-col 120px grid spacer between sections | — |
-| `stat-card.tsx` | Dark parallelogram card with stat value + label | `value: string`, `label: string` |
-| `btn-outline.tsx` | Small 44×36 arrow-only outline button | `href?: string` |
-| `powered-by.tsx` | "POWERED BY [partner logo]" tag | `partnerName: string`, `logo: string` |
-| `product-section.tsx` | Full-width product row with status, title, icon, description, partner | `status: 'live' \| 'coming-soon'`, `title: string`, `subtitle: string`, `description: string`, `icon: string`, `ctaLabel: string`, `partnerName: string`, `partnerLogo: string` |
-| `product-card.tsx` | Smaller secondary product card | `status: 'coming-soon'`, `title: string`, `subtitle: string`, `icon: string` |
+| `components/ui/button.tsx` | Cut-corner button, 3 variants | `label: string`, `href?: string`, `variant?: 'primary' \| 'ghost' \| 'purple'` |
+| `components/ui/eyebrow.tsx` | Bordered badge with corner tick SVGs | `text: string`, `borderColor?: 'stroke' \| 'primary' \| 'semi-transparent-blue' \| 'white'`, `textColor?: 'primary' \| 'grey-100' \| 'white-70'`, `hasDot?: boolean` |
+| `components/ui/badge.tsx` | Status label — LIVE / COMING SOON | `text: string`, `variant?: 'primary' \| 'blue'` |
+| `components/ui/spacer.tsx` | 120px section spacer | — (also exports `SpacerMobile` at 75px) |
+| `components/ui/btn-outline.tsx` | Small 44×36 arrow-only outline button | `href?: string`, `variant?: 'default' \| 'white'`, `className?: string` |
+
+### Built sections (first milestone)
+
+| File | Figma node | Description |
+|---|---|---|
+| `components/sections/nav.tsx` | `1727:43116` | Fixed sticky nav — logo, 5 links, STAKE POL + BUILD ON POLYGON |
+| `components/sections/hero.tsx` | `1727:41835` | Hero — heading, eyebrow, CTAs, trusted-by logos, social icons |
+| `components/sections/at-glance.tsx` | `1727:42063` | Polygon at a Glance — stat cards, 3D diamond, gem, hexagon |
+| `components/sections/open-money-stack.tsx` | `1727:42190` | 4 product rows + 2 secondary cards + centered 3D animation |
 
 **Button variants:**
-- `primary` — white bg, purple text, cut-corner right side with arrow (BUILD ON POLYGON, START BUILDING)
-- `ghost` — neutral bg, grey-100 text, cut-corner right side, no arrow (STAKE POL)
+- `primary` — `bg-primary` (white in dark), `text-purple`, cut-corner, arrow
+- `ghost` — `bg-inverted-primary`, `text-grey-100`, cut-corner
+- `purple` — `bg-purple`, `text-primary`, cut-corner, arrow (used in nav)
+
+**Cut-corner technique:** CSS `clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)` — no image assets needed.
+
+**Assets:** All images in `public/assets/`. Many Figma exports are SVGs served with `.svg` extension. Set `dangerouslyAllowSVG: true` in `next.config.ts`.
+
+**Theme:** Homepage forces `data-theme="dark"` on the root wrapper so all sections render with dark tokens.
 
 **Figma source:** file key `Xot6Ao6SMgaUTRzC2TWHoP`, node IDs documented in `docs/superpowers/specs/2026-06-04-style-guide-design.md`
-
-**Sections being built (first milestone):**
-1. Navbar (`1727:43116`)
-2. Hero (`1727:41835`)
-3. Spacer (`1727:42062`)
-4. Polygon at a Glance (`1727:42063`)
-5. Open Money Stack / Products (`1727:42190`)
