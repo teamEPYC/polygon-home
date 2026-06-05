@@ -46,7 +46,7 @@ export function Nav() {
         </div>
 
         {/* Center nav links — 840px box offset 60px left of center, links left-packed */}
-        <div className="absolute left-[calc(50%-60px)] -translate-x-1/2 top-0 flex items-center gap-[32px] h-[52px] w-[840px] px-[32px] bg-inverted-primary border border-stroke">
+        <div className="absolute left-[calc(50%-60px)] -translate-x-1/2 top-0 flex items-center gap-[32px] h-[52px] w-[840px] px-[32px] bg-inverted-primary border-l border-t border-b border-stroke">
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
@@ -64,7 +64,7 @@ export function Nav() {
         </div>
 
         {/* STAKE POL — inline SVGs so CSS vars resolve correctly */}
-        <a href="#" className="absolute left-[1080px] top-0 flex items-center h-[52px]">
+        <a href="#" className="absolute left-[1080px] top-0 flex items-center h-[52px] border-l border-stroke">
           <div className="relative h-[52px] w-[100px] bg-inverted-primary">
             <span className="absolute left-[23px] top-[18px] text-desktop-mono-small text-grey-100">
               STAKE POL

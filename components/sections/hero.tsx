@@ -170,7 +170,7 @@ export function Hero() {
       </div>
 
       {/* Trusted by — fixed label cell + separate scrolling logos area */}
-      <div className="absolute left-[66.67%] top-[120px] w-[480px] h-[120px] bg-background">
+      <div className="absolute left-[66.67%] top-[120px] w-[480px] h-[120px] bg-background border-t border-stroke">
 
         {/* "TRUSTED BY" label cell — static, first 120px column */}
         <div className="absolute left-0 top-0 w-[120px] h-[120px]">
