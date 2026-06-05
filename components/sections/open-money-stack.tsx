@@ -1,7 +1,7 @@
 import Image from 'next/image'
-import { Eyebrow } from '@/components/ui/eyebrow'
 import { Badge } from '@/components/ui/badge'
 import { BtnOutline } from '@/components/ui/btn-outline'
+import { OMSStaircase } from './oms-staircase'
 
 const CUT = 14
 const clipPath = `polygon(0 0, calc(100% - ${CUT}px) 0, 100% ${CUT}px, 100% 100%, 0 100%)`
@@ -206,139 +206,131 @@ function SecondaryCard({ title, subtitle, description, icon }: SecondaryCardProp
   )
 }
 
+
 export function OpenMoneyStack() {
   return (
-    <section className="relative w-full overflow-hidden bg-[#3449c1]">
-      {/* Background gradient image */}
+    <section className="relative w-full overflow-hidden bg-[#3449c1]" style={{ height: 2521 }}>
+      {/* Background gradient */}
       <div className="absolute inset-0 pointer-events-none">
-        <Image
-          src="/assets/products-bg.svg"
-          alt=""
-          fill
-          className="object-cover object-top"
-          unoptimized
+        <Image src="/assets/products-bg.svg" alt="" fill className="object-cover object-top" unoptimized />
+      </div>
+
+      {/* Faint global grid */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)',
+          backgroundSize: '120px 120px',
+        }}
+      />
+
+      {/* Inverted staircase — animates in on scroll */}
+      <OMSStaircase />
+
+      {/* Heading */}
+      <p
+        className="absolute left-1/2 -translate-x-1/2 font-heading font-[300] text-[56px] leading-[60px] tracking-[-0.56px] text-grey-100 text-center w-[652px]"
+        style={{ top: 416 }}
+      >
+        One open stack for money movement.
+      </p>
+
+      {/* Body text */}
+      <p
+        className="absolute left-1/2 -translate-x-1/2 text-desktop-body-large text-white text-center w-[778px]"
+        style={{ top: 580 }}
+      >
+        The Open Money Stack is a vertically integrated stack of services and technologies designed
+        to move money reliably from offchain systems to onchain settlement, and back again
+      </p>
+
+      {/* START BUILDING button */}
+      <a
+        href="#"
+        className="absolute inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-inverted-primary text-primary hover:opacity-90 transition-opacity"
+        style={{ top: 662, left: '50%', transform: 'translateX(-50%)', clipPath }}
+      >
+        <span className="text-desktop-mono-small">START BUILDING</span>
+        <ArrowIcon />
+      </a>
+
+      {/* Product sections — absolute, centered 1320px wide, starts at y=790 */}
+      <div
+        className="absolute left-1/2 -translate-x-1/2 w-[1320px] flex flex-col gap-[48px]"
+        style={{ top: 790 }}
+      >
+        <ProductSection
+          badge="LIVE"
+          badgeVariant="primary"
+          title="Wallet Infrastructure"
+          subtitle="A secure digital wallet that works everywhere"
+          description="Provide seamless user and business experience with a single wallet for any application across an ecosystem."
+          wireIcon="/assets/ico-wire-chains.png"
+          productImg="/assets/product-img-wallet.svg"
+          containerBg="/assets/product-icon-container-dark.svg"
+          dotColor="#00FF08"
+          poweredBy={['/assets/logo-sequence.png', '/assets/logo-trails.png']}
+          isFirst
+        />
+        <ProductSection
+          badge="LIVE"
+          title="Crosschain Interop"
+          subtitle="Move any crypto asset to any chain in 1-click"
+          description="Enable your users to make transactions on any chain, with any token, using any wallet in just 1-click."
+          wireIcon="/assets/ico-wire-trails.png"
+          productImg="/assets/product-img-interop.svg"
+          containerBg="/assets/product-icon-container-light.svg"
+          dotColor="#00BBFF"
+          poweredBy={['/assets/logo-sequence.png', '/assets/logo-trails.png']}
+        />
+        <ProductSection
+          badge="LIVE"
+          title="On/Off and Cash Ramps"
+          subtitle="Physical cash and digital fiat on- and off-ramps"
+          description="Compliant, friction-free ramps that bridge traditional finance to digital assets on blockchain rails."
+          wireIcon="/assets/ico-wire-wallet.png"
+          productImg="/assets/product-img-ramps.svg"
+          containerBg="/assets/product-icon-container-light.svg"
+          dotColor="#C590E5"
+          poweredBy={['/assets/logo-coinme.png']}
+        />
+        <ProductSection
+          badge="LIVE"
+          title="Blockchain Rails"
+          subtitle={"The fastest settlement layer to\nmove money globally"}
+          description="Build on Polygon rails or any chain your use case demands, without tradeoffs. We'll focus on moving the money, so you can focus on growing it."
+          wireIcon="/assets/ico-wire-bpn.png"
+          productImg="/assets/product-img-ramps.svg"
+          containerBg="/assets/product-icon-container-light.svg"
+          dotColor="#FF7421"
         />
       </div>
 
-      {/* Grid overlay */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)',
-            backgroundSize: '120px 120px',
-          }}
-        />
+      {/* 3D animation — absolute overlay floating over the product section center gap */}
+      <div
+        className="absolute left-1/2 -translate-x-1/2 w-[484px] h-[710px] pointer-events-none z-10"
+        style={{ top: 1145 }}
+      >
+        <Image src="/assets/products-center.png" alt="" fill className="object-contain" unoptimized />
       </div>
 
-      <div className="relative z-10">
-        {/* Top intro block */}
-        <div className="flex flex-col items-center pt-[284px] gap-[32px]">
-          <Eyebrow
-            text="OPEN MONEY STACK"
-            borderColor="stroke"
-            textColor="primary"
-            hasDot
-          />
-
-          <h2 className="text-desktop-h2 text-grey-100 text-center w-[652px]">
-            One open stack for money movement.
-          </h2>
-
-          <p className="text-desktop-body-large text-white text-center w-[778px]">
-            The Open Money Stack is a vertically integrated stack of services and technologies
-            designed to move money reliably from offchain systems to onchain settlement, and back
-            again
-          </p>
-
-          <a
-            href="#"
-            className="inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-inverted-primary text-primary hover:opacity-90 transition-opacity"
-            style={{ clipPath }}
-          >
-            <span className="text-desktop-mono-small">START BUILDING</span>
-            <ArrowIcon />
-          </a>
-        </div>
-
-        {/* Center 3D animation — between intro and product list */}
-        <div className="flex justify-center py-[60px]">
-          <div className="relative w-[484px] h-[484px]">
-            <Image
-              src="/assets/products-center.png"
-              alt=""
-              fill
-              className="object-contain"
-              unoptimized
-            />
-          </div>
-        </div>
-
-        {/* Product list */}
-        <div className="flex flex-col gap-[48px] px-[60px] pb-[120px]">
-          <ProductSection
-            badge="LIVE"
-            badgeVariant="primary"
-            title="Wallet Infrastructure"
-            subtitle="A secure digital wallet that works everywhere"
-            description="Provide seamless user and business experience with a single wallet for any application across an ecosystem."
-            wireIcon="/assets/ico-wire-chains.png"
-            productImg="/assets/product-img-wallet.svg"
-            containerBg="/assets/product-icon-container-dark.svg"
-            dotColor="#00FF08"
-            poweredBy={['/assets/logo-sequence.png', '/assets/logo-trails.png']}
-            isFirst
-          />
-          <ProductSection
-            badge="LIVE"
-            title="Crosschain Interop"
-            subtitle="Move any crypto asset to any chain in 1-click"
-            description="Enable your users to make transactions on any chain, with any token, using any wallet in just 1-click."
-            wireIcon="/assets/ico-wire-trails.png"
-            productImg="/assets/product-img-interop.svg"
-            containerBg="/assets/product-icon-container-light.svg"
-            dotColor="#00BBFF"
-            poweredBy={['/assets/logo-sequence.png', '/assets/logo-trails.png']}
-          />
-          <ProductSection
-            badge="LIVE"
-            title="On/Off and Cash Ramps"
-            subtitle="Physical cash and digital fiat on- and off-ramps"
-            description="Compliant, friction-free ramps that bridge traditional finance to digital assets on blockchain rails."
-            wireIcon="/assets/ico-wire-wallet.png"
-            productImg="/assets/product-img-ramps.svg"
-            containerBg="/assets/product-icon-container-light.svg"
-            dotColor="#C590E5"
-            poweredBy={['/assets/logo-coinme.png']}
-          />
-          <ProductSection
-            badge="LIVE"
-            title="Blockchain Rails"
-            subtitle={"The fastest settlement layer to\nmove money globally"}
-            description="Build on Polygon rails or any chain your use case demands, without tradeoffs. We'll focus on moving the money, so you can focus on growing it."
-            wireIcon="/assets/ico-wire-bpn.png"
-            productImg="/assets/product-img-ramps.svg"
-            containerBg="/assets/product-icon-container-light.svg"
-            dotColor="#FF7421"
-          />
-        </div>
-
-        {/* Secondary cards */}
-        <div className="flex items-center justify-between px-[60px] pb-[120px]">
-          <SecondaryCard
-            title="Business Kit"
-            subtitle="Polygon Business Kit"
-            description="Scale your business with crypto payments"
-            icon="/assets/ico-kit.png"
-          />
-          <SecondaryCard
-            title="Pay"
-            subtitle="Polygon Pay"
-            description="One app for crypto payments"
-            icon="/assets/ico-pay.png"
-          />
-        </div>
+      {/* Secondary cards */}
+      <div
+        className="absolute flex items-center justify-between w-[1320px]"
+        style={{ top: 2068, left: 60 }}
+      >
+        <SecondaryCard
+          title="Business Kit"
+          subtitle="Polygon Business Kit"
+          description="Scale your business with crypto payments"
+          icon="/assets/ico-kit.png"
+        />
+        <SecondaryCard
+          title="Pay"
+          subtitle="Polygon Pay"
+          description="One app for crypto payments"
+          icon="/assets/ico-pay.png"
+        />
       </div>
     </section>
   )

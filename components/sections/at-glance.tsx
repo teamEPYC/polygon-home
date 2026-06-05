@@ -251,16 +251,16 @@ function CylinderCarousel() {
 /* ─── Section ─────────────────────────────────────────────────────────── */
 export function AtGlance() {
   return (
-    <section className="relative w-full h-[932px] overflow-hidden bg-[#141b6b]">
+    <section className="relative w-full h-[960px] overflow-hidden bg-[#141b6b]">
       {/* Atmospheric radial gradient background */}
       <div className="absolute inset-0 pointer-events-none">
         <Image src="/assets/at-glance-bg.svg" alt="" fill className="object-cover object-center" unoptimized />
       </div>
 
       {/* Staircase grid */}
-      <StaircaseRow top={480} left={600} cols={2} />
-      <StaircaseRow top={600} left={480} cols={4} />
-      <StaircaseRow top={720} left={240} cols={8} />
+      <StaircaseRow top={600} left={600} cols={2} />
+      <StaircaseRow top={720} left={480} cols={4} />
+      <StaircaseRow top={840} left={240} cols={8} />
 
       {/* Faint global grid */}
       <div
@@ -286,12 +286,12 @@ export function AtGlance() {
       <CylinderCarousel />
 
       {/* Gem — left */}
-      <div className="absolute w-[125px] h-[168px] pointer-events-none" style={{ left: 300, top: 492, zIndex: 50 }}>
+      <div className="absolute w-[125px] h-[168px] pointer-events-none" style={{ left: 300, top: 612, zIndex: 50 }}>
         <Image src="/assets/gem-3d.svg" alt="" fill className="object-contain" unoptimized />
       </div>
 
       {/* Hexagon — right */}
-      <div className="absolute w-[137px] h-[149px] pointer-events-none" style={{ left: 1011, top: 508, zIndex: 50 }}>
+      <div className="absolute w-[137px] h-[149px] pointer-events-none" style={{ left: 1011, top: 628, zIndex: 50 }}>
         <Image src="/assets/hexagon-3d.svg" alt="" fill className="object-contain" unoptimized />
       </div>
     </section>

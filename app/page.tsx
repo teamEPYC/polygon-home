@@ -14,7 +14,6 @@ export default function Home() {
         <Hero />
         <Spacer />
         <AtGlance />
-        <Spacer />
         <OpenMoneyStack />
       </main>
     </div>
