@@ -2,16 +2,16 @@ import Image from 'next/image'
 
 const NAV_LINKS = [
   { label: 'Products', hasNew: true },
-  { label: 'Developers' },
-  { label: 'Use Polygon' },
+  { label: 'Use Cases' },
   { label: 'Company' },
-  { label: 'Blog' },
+  { label: 'Use Polygon' },
+  { label: 'Developers Docs' },
 ]
 
-// NE arrow that lives inside the BUILD button corner cap.
+// NE arrow — matches the live site oms-button-icon (12×12, width:12px)
 function ArrowIcon({ color = 'currentColor' }: { color?: string }) {
   return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ width: 12, flexShrink: 0 }}>
       <path
         d="M3 9L9 3M9 3H4M9 3V8"
         stroke={color}
@@ -25,33 +25,36 @@ function ArrowIcon({ color = 'currentColor' }: { color?: string }) {
 
 export function Nav() {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-[52px]">
-      <div className="relative max-w-[1440px] mx-auto h-full">
-        {/* Logo-area box — bordered panel with cut bottom-left corner */}
-        <img
-          src="/assets/hero/nav-logo-area.svg"
-          alt=""
-          className="absolute left-[24px] top-0 h-[52px] w-[216px]"
-        />
-        {/* Logo */}
-        <div className="absolute left-[48px] top-[13px]">
+    <nav className="fixed top-0 left-0 right-0 z-[100000]">
+      <div className="max-w-[1440px] mx-auto flex items-stretch justify-between">
+
+        {/* Brand area — flex:1, bg, border-bottom, logo centered vertically */}
+        <div className="flex-1 bg-[#07060d] border-b border-stroke flex items-center pl-[50px]">
           <Image
             src="/assets/polygon-logo.svg"
             alt="Polygon"
-            width={112}
+            width={110}
             height={26}
             priority
             unoptimized
           />
         </div>
 
-        {/* Center nav links — 840px box offset 60px left of center, links left-packed */}
-        <div className="absolute left-[calc(50%-60px)] -translate-x-1/2 top-0 flex items-center gap-[32px] h-[52px] w-[840px] px-[32px] bg-inverted-primary border border-stroke">
+        {/* Nav links — bg, border-bottom, flex row */}
+        <div className="bg-[#07060d] border-b border-stroke flex items-center justify-start">
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
               href="#"
-              className="flex items-center gap-[4px] text-desktop-mono-small text-grey-100 hover:text-primary transition-colors whitespace-nowrap"
+              className="flex items-center gap-[4px] text-primary no-underline hover:opacity-80 transition-opacity whitespace-nowrap"
+              style={{
+                padding: '1rem',
+                fontFamily: 'var(--font-mono), Polysans Mono, Arial, sans-serif',
+                fontSize: 'min(.875rem, 1.111vw)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.01em',
+                lineHeight: '1.2',
+              }}
             >
               {link.label}
               {link.hasNew && (
@@ -63,32 +66,50 @@ export function Nav() {
           ))}
         </div>
 
-        {/* STAKE POL — inline SVGs so CSS vars resolve correctly */}
-        <a href="#" className="absolute left-[1080px] top-0 flex items-center h-[52px]">
-          <div className="relative h-[52px] w-[100px] bg-inverted-primary">
-            <span className="absolute left-[23px] top-[18px] text-desktop-mono-small text-grey-100">
-              STAKE POL
-            </span>
-          </div>
-          <svg width="20" height="52" viewBox="0 0 20 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-            <path d="M20 0V32.6784C20 34.8433 19.1226 36.9157 17.5682 38.4225L4.72555 50.872C3.9793 51.5955 2.98077 52 1.94143 52H0V0H20Z" fill="var(--inverted-primary)" />
-          </svg>
-        </a>
+        {/* CTA buttons — nav-button-wrap: flex, align-items:stretch */}
+        <div className="flex items-stretch">
 
-        {/* BUILD ON POLYGON — purple button, white text, inline SVG corner + arrow */}
-        <a href="#" className="absolute left-[1200px] top-0 flex items-center h-[52px]">
-          <div className="flex items-center h-[52px] pl-[16px] pr-[43px] rounded-bl-[4px] bg-purple">
-            <span className="text-desktop-mono-small text-primary">BUILD ON POLYGON</span>
-          </div>
-          <div className="relative h-[52px] w-[28px] overflow-hidden shrink-0">
-            <svg width="29" height="52" viewBox="0 0 29 52" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute left-[-1px] top-0">
-              <path d="M29 0V32.6784C29 34.8433 28.1226 36.9157 26.5682 38.4225L13.7256 50.872C12.9793 51.5955 11.9808 52 10.9414 52H0V0H29Z" fill="var(--purple)" />
-            </svg>
-            <span className="absolute left-0 top-[20px] size-[12px]">
-              <ArrowIcon color="var(--color-primary)" />
-            </span>
-          </div>
-        </a>
+          {/* Stake Pol — grey bg, clip-path, no arrow */}
+          <a
+            href="https://staking.polygon.technology/"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center text-grey-100 no-underline hover:opacity-80 transition-opacity whitespace-nowrap"
+            style={{
+              background: '#1f1e20',
+              clipPath: 'url(#navClipLeft)',
+              padding: '16px',
+              fontFamily: 'var(--font-mono), Polysans Mono, Arial, sans-serif',
+              fontSize: '.875rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.01em',
+              lineHeight: '1.2',
+            }}
+          >
+            Stake Pol
+          </a>
+
+          {/* Book a Call — purple bg, clip-path, NE arrow */}
+          <a
+            href="#"
+            className="flex items-center text-primary no-underline hover:opacity-80 transition-opacity whitespace-nowrap"
+            style={{
+              background: '#670de5',
+              clipPath: 'url(#navClipLeft)',
+              padding: '16px',
+              gap: '28px',
+              fontFamily: 'var(--font-mono), Polysans Mono, Arial, sans-serif',
+              fontSize: '.875rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.01em',
+              lineHeight: '1.2',
+            }}
+          >
+            <span>Book a Call</span>
+            <ArrowIcon color="white" />
+          </a>
+
+        </div>
       </div>
     </nav>
   )

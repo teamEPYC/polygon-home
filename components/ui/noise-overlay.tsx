@@ -16,6 +16,7 @@ export function NoiseOverlay() {
 
     const drawGrain = () => {
       const { width, height } = canvas
+      if (!width || !height) return
       const imageData = ctx.createImageData(width, height)
       const buf = imageData.data
       for (let i = 0; i < buf.length; i += 4) {

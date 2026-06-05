@@ -59,12 +59,16 @@ function CtaButton({
   )
 }
 
-// chipW is the Figma chip width; w/h are the logo's intrinsic size.
+// Widths from live site CSS: is-capped=88px, is-large=120px, is-xlarge=150px
+// Order and sizes extracted from source.html hero-marquee-wrap is-grid is-capped
 const LOGOS = [
-  { src: '/assets/logo-stripe.svg', alt: 'Stripe', w: 66, h: 26, chipW: 72 },
-  { src: '/assets/logo-revolut.svg', alt: 'Revolut', w: 81, h: 18, chipW: 88 },
-  { src: '/assets/logo-google.svg', alt: 'Google', w: 85, h: 27, chipW: 88 },
-  { src: '/assets/logo-nexo.svg', alt: 'Nexo', w: 95, h: 19, chipW: 98 },
+  { src: '/assets/hero/logos/stripe.svg',     alt: 'Stripe',     w: 88  },
+  { src: '/assets/hero/logos/revolut.svg',    alt: 'Revolut',    w: 120 },
+  { src: '/assets/hero/logos/polymarket.svg', alt: 'Polymarket', w: 150 },
+  { src: '/assets/hero/logos/courtyard.svg',  alt: 'Courtyard',  w: 150 },
+  { src: '/assets/hero/logos/google.svg',     alt: 'Google',     w: 120 },
+  { src: '/assets/hero/logos/reddit.svg',     alt: 'Reddit',     w: 88  },
+  { src: '/assets/hero/logos/nexo.svg',       alt: 'Nexo',       w: 150 },
 ]
 
 export function Hero() {
@@ -111,7 +115,7 @@ export function Hero() {
 
       {/* Eyebrow */}
       <Eyebrow
-        text="$250B in Stablecoin Volume"
+        text="$2.4 Trillion Transfer Volume"
         borderColor="white"
         textColor="primary"
         className="absolute left-[60px] top-[120px]"
@@ -138,7 +142,7 @@ export function Hero() {
             />
           </div>
           <div className="font-heading font-[300] text-[80px] leading-[72px] tracking-[-0.8px] text-grey-100 whitespace-nowrap">
-            trillion.
+            trillion
           </div>
         </div>
       </div>
@@ -152,28 +156,29 @@ export function Hero() {
       {/* CTAs */}
       <div className="absolute left-[60px] top-[570px] flex items-center gap-[2px]">
         <CtaButton
-          label="BUILD"
-          corner="/assets/hero/btn-corner-white.svg"
-          bgClass="bg-primary"
-          textClass="text-purple"
-          arrowColor="var(--color-purple)"
-          prClass="pr-[107px]"
+          label="OPEN MONEY STACK"
+          corner="/assets/hero/btn-corner-purple.svg"
+          bgClass="bg-purple"
+          textClass="text-primary"
+          arrowColor="var(--color-primary)"
+          prClass="pr-[16px]"
         />
         <CtaButton
-          label="USE POLYGON"
+          label="BUILD ON POLYGON"
           corner="/assets/hero/btn-corner-grey.svg"
           bgClass="bg-grey-500"
           textClass="text-primary"
           arrowColor="var(--color-primary)"
-          prClass="pr-[59px]"
+          prClass="pr-[16px]"
         />
       </div>
 
       {/* Trusted by — fixed label cell + separate scrolling logos area */}
-      <div className="absolute left-[66.67%] top-[120px] w-[480px] h-[120px] bg-background">
+      {/* height:min(120px,8.333vw) per live site CSS; border-right added on is-capped variant */}
+      <div className="absolute left-[66.67%] top-[120px] w-[480px] bg-background border-t border-r border-stroke" style={{ height: 'min(120px, 8.333vw)' }}>
 
         {/* "TRUSTED BY" label cell — static, first 120px column */}
-        <div className="absolute left-0 top-0 w-[120px] h-[120px]">
+        <div className="absolute left-0 top-0 w-[120px] h-full">
           <span className="absolute left-[22px] top-[54px] text-desktop-mono text-grey-100 whitespace-nowrap">
             TRUSTED BY
           </span>
@@ -186,17 +191,17 @@ export function Hero() {
         </div>
 
         {/* Logo scrolling area — starts after the label cell, never overlaps it */}
-        <div className="absolute left-[120px] top-0 right-0 h-[120px] overflow-hidden">
-          <div className="absolute top-[30px] left-0 flex h-[60px] animate-[marquee_22s_linear_infinite]">
+        <div className="absolute left-[120px] top-0 right-0 h-full overflow-hidden">
+          <div className="absolute inset-y-0 left-0 flex items-center animate-[marquee_22s_linear_infinite]">
             {[0, 1].map((set) => (
-              <div key={set} className="flex items-center gap-[24px] pr-[24px] h-[60px]" aria-hidden={set === 1}>
+              <div key={set} className="flex items-center gap-[24px] pr-[24px] h-full" aria-hidden={set === 1}>
                 {LOGOS.map((logo) => (
                   <div
                     key={logo.alt}
-                    className="h-[60px] shrink-0 bg-inverted-primary flex items-center justify-center"
-                    style={{ width: logo.chipW }}
+                    className="h-full shrink-0 flex items-center justify-center text-primary"
+                    style={{ width: logo.w, marginLeft: 24 }}
                   >
-                    <Image src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} unoptimized />
+                    <img src={logo.src} alt={logo.alt} style={{ width: logo.w, maxHeight: '60%' }} />
                   </div>
                 ))}
               </div>
