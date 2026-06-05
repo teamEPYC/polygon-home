@@ -146,3 +146,44 @@ Defined in `app/globals.css` as `@utility` rules. Apply as a single class — th
 - **Typography classes as single utilities.** Don't reconstruct type styles with individual Tailwind classes — use `text-desktop-h1`, not `text-[96px] font-light leading-[0.9]`.
 - **Sections use 60px horizontal padding** (`px-[60px]`) on desktop, `px-4` on mobile.
 - **Section vertical gap:** `gap-[120px]` between major sections (desktop spacer unit).
+- **Assets must live in the app.** All images, SVGs, icons, and 3D renders go in `public/assets/`. Never reference Figma CDN URLs (`figma.com/api/mcp/asset/...`) in code — download the asset and use a local path instead.
+
+## Component Library
+
+Shared UI components live at **`components/ui/<name>.tsx`** — flat structure, no subdirectories.
+
+**Before building any UI element, check this file and CONTEXT.md first.** If a component already exists, use it — do not create a duplicate. If a new variant is needed, add it to the existing component via props.
+
+Each component entry below documents: file path, all accepted props with types, variants, and a usage example.
+
+### Built components
+
+| File | Description | Props |
+|---|---|---|
+| `components/ui/button.tsx` | Cut-corner button, 3 variants | `label: string`, `href?: string`, `variant?: 'primary' \| 'ghost' \| 'purple'` |
+| `components/ui/eyebrow.tsx` | Bordered badge with corner tick SVGs | `text: string`, `borderColor?: 'stroke' \| 'primary' \| 'semi-transparent-blue' \| 'white'`, `textColor?: 'primary' \| 'grey-100' \| 'white-70'`, `hasDot?: boolean` |
+| `components/ui/badge.tsx` | Status label — LIVE / COMING SOON | `text: string`, `variant?: 'primary' \| 'blue'` |
+| `components/ui/spacer.tsx` | 120px section spacer | — (also exports `SpacerMobile` at 75px) |
+| `components/ui/btn-outline.tsx` | Small 44×36 arrow-only outline button | `href?: string`, `variant?: 'default' \| 'white'`, `className?: string` |
+
+### Built sections (first milestone)
+
+| File | Figma node | Description |
+|---|---|---|
+| `components/sections/nav.tsx` | `1727:43116` | Fixed sticky nav — logo, 5 links, STAKE POL + BUILD ON POLYGON |
+| `components/sections/hero.tsx` | `1727:41835` | Hero — heading, eyebrow, CTAs, trusted-by logos, social icons |
+| `components/sections/at-glance.tsx` | `1727:42063` | Polygon at a Glance — stat cards, 3D diamond, gem, hexagon |
+| `components/sections/open-money-stack.tsx` | `1727:42190` | 4 product rows + 2 secondary cards + centered 3D animation |
+
+**Button variants:**
+- `primary` — `bg-primary` (white in dark), `text-purple`, cut-corner, arrow
+- `ghost` — `bg-inverted-primary`, `text-grey-100`, cut-corner
+- `purple` — `bg-purple`, `text-primary`, cut-corner, arrow (used in nav)
+
+**Cut-corner technique:** CSS `clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)` — no image assets needed.
+
+**Assets:** All images in `public/assets/`. Many Figma exports are SVGs served with `.svg` extension. Set `dangerouslyAllowSVG: true` in `next.config.ts`.
+
+**Theme:** Homepage forces `data-theme="dark"` on the root wrapper so all sections render with dark tokens.
+
+**Figma source:** file key `Xot6Ao6SMgaUTRzC2TWHoP`, node IDs documented in `docs/superpowers/specs/2026-06-04-style-guide-design.md`

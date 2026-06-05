@@ -1,0 +1,23 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 1440 2520" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="background-gradient" clip-path="url(#clip0_0_297)">
+<rect id="shape2" x="-1" y="-12" width="1442" height="2549" fill="var(--fill-0, #141B6B)"/>
+<g id="shape1" filter="url(#filter0_f_0_297)">
+<path d="M1746.78 1200C1709.75 2566.5 1287.07 2672.83 720 2672.83C152.925 2672.83 -306.779 2454.5 -306.779 1200C-306.779 202.815 152.925 247.164 720 247.164C1287.07 247.164 1773.71 206.365 1746.78 1200Z" fill="url(#paint0_radial_0_297)"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_0_297" x="-597.379" y="-43.7323" width="2635.83" height="3007.17" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="145.3" result="effect1_foregroundBlur_0_297"/>
+</filter>
+<radialGradient id="paint0_radial_0_297" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(720.001 330.036) rotate(89.9153) scale(2042.8 1596.08)">
+<stop stop-color="#273EAD"/>
+<stop offset="0.697628" stop-color="#2941B7"/>
+<stop offset="1" stop-color="#07092C"/>
+</radialGradient>
+<clipPath id="clip0_0_297">
+<rect width="1440" height="2520" fill="white"/>
+</clipPath>
+</defs>
+</svg>

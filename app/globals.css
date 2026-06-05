@@ -285,9 +285,26 @@
   font-feature-settings: 'dlig' on;
 }
 
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* ─── Base ──────────────────────────────────────────────────────────────────── */
+html,
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
