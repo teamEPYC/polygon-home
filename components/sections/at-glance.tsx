@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { motion, useAnimationFrame } from 'framer-motion'
 import { Eyebrow } from '@/components/ui/eyebrow'
 
@@ -20,7 +20,7 @@ const CARD_SPAN_DEG = 54     // arc each card occupies → 6° gap between adjac
 const STRIPS = 12            // arc strips per card — more = smoother curve
 const STRIP_DEG = CARD_SPAN_DEG / STRIPS  // 6.25° per strip
 
-const CYLINDER_R = 230       // circumradius — controls card spacing and depth
+const CYLINDER_R = 208       // circumradius — controls card spacing and depth
 
 // Chord width of one strip (actual CSS element width)
 const STRIP_CHORD = 2 * CYLINDER_R * Math.sin((STRIP_DEG / 2) * Math.PI / 180)
@@ -39,7 +39,6 @@ const PERSPECTIVE_PX = 750   // closer perspective = more dramatic 3D depth
 
 const AUTO_SPEED = 0.00020    // rad/ms
 const MOMENTUM_DECAY = 0.90
-const RESUME_DELAY_MS = 1300
 
 /* ─── Cards ───────────────────────────────────────────────────────────────
  *  6 entries: 4 original + 2 new (random realistic stats)
@@ -73,46 +72,52 @@ function StaircaseRow({ top, left, cols }: { top: number; left: number; cols: nu
 /* ─── 3-D cylinder carousel ───────────────────────────────────────────── */
 function CylinderCarousel() {
   const angleRef = useRef(0)
+  // Extra momentum added on top of the base auto-rotation. Decays toward 0 every
+  // frame so the carousel smoothly blends back to AUTO_SPEED without any pause.
   const momentumRef = useRef(0)
   const isDraggingRef = useRef(false)
-  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const isPausedRef = useRef(false)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [, forceUpdate] = useState(0)
 
   useAnimationFrame((_t, delta) => {
-    if (isDraggingRef.current) return
-    if (isPausedRef.current) {
-      if (Math.abs(momentumRef.current) > 0.0001) {
-        angleRef.current += momentumRef.current
-        momentumRef.current *= MOMENTUM_DECAY
-      }
-      forceUpdate(n => n + 1)
-      return
+    // Decay extra momentum each frame — blends naturally back to auto-speed
+    momentumRef.current *= MOMENTUM_DECAY
+    if (!isDraggingRef.current) {
+      angleRef.current += AUTO_SPEED * delta + momentumRef.current
     }
-    angleRef.current += AUTO_SPEED * delta
     forceUpdate(n => n + 1)
   })
 
+  // Global wheel listener — fires regardless of cursor position.
+  // Only applied when the section is visible in the viewport.
+  useEffect(() => {
+    const onWheel = (e: WheelEvent) => {
+      if (isDraggingRef.current) return
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect || rect.bottom < 0 || rect.top > window.innerHeight) return
+      const kick = (e.deltaY / 100) * 0.012
+      momentumRef.current = Math.max(-0.1, Math.min(0.1, momentumRef.current + kick))
+    }
+    window.addEventListener('wheel', onWheel, { passive: true })
+    return () => window.removeEventListener('wheel', onWheel)
+  }, [])
+
   const onPanStart = useCallback(() => {
     isDraggingRef.current = true
-    isPausedRef.current = true
     momentumRef.current = 0
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current)
   }, [])
 
   const onPan = useCallback((_e: PointerEvent, info: { delta: { x: number } }) => {
     const dAngle = (info.delta.x / 650) * Math.PI * 2
-    angleRef.current -= dAngle
-    momentumRef.current = -dAngle * 0.55
+    angleRef.current += dAngle
     forceUpdate(n => n + 1)
   }, [])
 
-  const onPanEnd = useCallback(() => {
+  const onPanEnd = useCallback((_e: PointerEvent, info: { velocity: { x: number } }) => {
     isDraggingRef.current = false
-    resumeTimerRef.current = setTimeout(() => {
-      isPausedRef.current = false
-      momentumRef.current = 0
-    }, RESUME_DELAY_MS)
+    // Use Framer Motion's smoothed release velocity for the fling — capped so it
+    // stays legible. Decays naturally back to auto-speed via MOMENTUM_DECAY.
+    momentumRef.current = Math.max(-0.1, Math.min(0.1, info.velocity.x / 10000))
   }, [])
 
   const globalAngle = angleRef.current  // in radians
@@ -122,6 +127,7 @@ function CylinderCarousel() {
     <>
       {/* ── perspective container covers the whole section ── */}
       <div
+        ref={containerRef}
         style={{
           position: 'absolute',
           inset: 0,
@@ -236,7 +242,7 @@ function CylinderCarousel() {
         style={{ zIndex: 40 }}
         onPanStart={onPanStart as never}
         onPan={onPan as never}
-        onPanEnd={onPanEnd}
+        onPanEnd={onPanEnd as never}
       />
     </>
   )
