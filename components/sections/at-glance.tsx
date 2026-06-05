@@ -8,75 +8,68 @@ import { Eyebrow } from '@/components/ui/eyebrow'
 const STROKE = 'rgba(255,255,255,0.05)'
 const CELL = 120
 
-// Ellipse orbit parameters (pixels, absolute from section top-left)
-const ORB_CX = 720   // center x (1440 / 2)
-const ORB_CY = 348   // orbit center y — ~24px above diamond center
-const ORB_A = 249    // semi-major (horizontal radius)
-const ORB_B = 50     // semi-minor (vertical radius)
+// Diamond center — all orbit math is relative to this point
+const DIAMOND_CX = 720
+const DIAMOND_CY = 372   // = 932 / 2 - 94
 
-// Diamond center y for z-index cut (932/2 - 94 = 372)
-const DIAMOND_CY = 372
+// Horizontal carousel orbit
+// sin(θ) → x offset,  cos(θ) → depth (1=front, -1=back)
+const ORB_R = 240        // horizontal radius
+const ORB_VERT = 24      // slight vertical tilt: front cards slightly lower, back higher
 
-const AUTO_SPEED = 0.00035      // radians per ms
-const MOMENTUM_DECAY = 0.92     // per frame
-const RESUME_DELAY_MS = 1200    // ms after drag ends before auto-rotation resumes
+const AUTO_SPEED = 0.00030      // rad/ms
+const MOMENTUM_DECAY = 0.90
+const RESUME_DELAY_MS = 1200
 
 type CardDef = {
   value: string
   label: string
   bg: string
-  baseAngle: number   // radians — starting position on ellipse
-  size: 'lg' | 'sm'
+  baseAngle: number
 }
 
+// 4 cards at 90° intervals. baseAngle=0 → starts at FRONT (cos=1, sin=0, x=center).
+// Cards face the viewer at all times — only position and scale change.
 const CARDS: CardDef[] = [
-  // bottom-left (front, large)
-  { value: '$2.3T+', label: 'Transfer\nVolume',     bg: '/assets/stat-card-bg-3.svg', baseAngle: Math.PI * 0.65, size: 'lg' },
-  // bottom-right (front, large)
-  { value: '$3.4B',  label: 'Stablecoin supply',    bg: '/assets/stat-card-bg-4.svg', baseAngle: Math.PI * 0.35, size: 'lg' },
-  // top-left (back, small — flipped)
-  { value: '1500+',  label: 'Transactions\nPer Second', bg: '/assets/stat-card-bg-1.svg', baseAngle: Math.PI * 1.35, size: 'sm' },
-  // top-right (back, small — flipped)
-  { value: '6.3T',   label: 'Total transactions',   bg: '/assets/stat-card-bg-2.svg', baseAngle: Math.PI * 1.65, size: 'sm' },
+  { value: '$2.3T+', label: 'Transfer\nVolume',        bg: '/assets/stat-card-bg-3.svg', baseAngle: 0           },
+  { value: '$3.4B',  label: 'Stablecoin\nSupply',      bg: '/assets/stat-card-bg-4.svg', baseAngle: Math.PI / 2  },
+  { value: '6.3T',   label: 'Total\nTransactions',     bg: '/assets/stat-card-bg-2.svg', baseAngle: Math.PI      },
+  { value: '1500+',  label: 'Transactions\nPer Second', bg: '/assets/stat-card-bg-1.svg', baseAngle: 3 * Math.PI / 2 },
 ]
 
-function getCardStyle(
-  baseAngle: number,
-  globalAngle: number,
-  size: 'lg' | 'sm',
-): React.CSSProperties {
-  const φ = baseAngle + globalAngle
-  const x = ORB_CX + ORB_A * Math.cos(φ)
-  const y = ORB_CY + ORB_B * Math.sin(φ)
+const CARD_W = 222
+const CARD_H = 206
 
-  const sinPhi = Math.sin(φ)
+// Null-object carousel: the null sits at the diamond center and rotates.
+// Each card is a child of the null at its baseAngle offset. The card face
+// never rotates — only its world position and depth-based scale change.
+function getCardStyle(baseAngle: number, globalAngle: number): React.CSSProperties {
+  const θ = baseAngle + globalAngle
 
-  // ScaleY: positive at front (bottom of orbit), negative/flipped at back (top)
-  // Magnitude ~0.96 at front, ~0.86 at back — matches Figma static values
-  const depth = (sinPhi + 1) / 2
-  const scaleYSign = sinPhi >= 0 ? 1 : -1
-  const scaleYMag = 0.86 + 0.10 * depth
-  const scaleY = scaleYSign * scaleYMag
+  const sinθ = Math.sin(θ)
+  const depth = Math.cos(θ)   // 1 = front (closest), -1 = back (farthest)
 
-  // SkewX: cards lean as they curve around the ellipse
-  const skewX = -35 * Math.cos(φ)
+  const x = DIAMOND_CX + ORB_R * sinθ
+  const y = DIAMOND_CY + ORB_VERT * depth  // front cards slightly lower
 
-  // Z-index: cards below orbit center appear in front of diamond
-  const zIndex = y > DIAMOND_CY ? 20 : 5
+  // Uniform scale for depth: 1.0 at front, 0.55 at sides, 0.1 at back
+  const scale = 0.55 + 0.45 * (depth + 1) / 2
 
-  const w = size === 'lg' ? 222 : 190
-  const h = size === 'lg' ? 206 : 177
+  // Z-index: front card (z=20) above diamond (z=14), back card (z=2) below
+  const zIndex = 2 + Math.round((depth + 1) * 9)
+
+  const opacity = 0.55 + 0.45 * (depth + 1) / 2
 
   return {
     position: 'absolute',
-    left: x - w / 2,
-    top: y - h / 2,
-    width: w,
-    height: h,
-    transform: `scaleY(${scaleY.toFixed(3)}) skewX(${skewX.toFixed(1)}deg)`,
+    left: x - CARD_W / 2,
+    top: y - CARD_H / 2,
+    width: CARD_W,
+    height: CARD_H,
+    transform: `scale(${scale.toFixed(3)})`,
     transformOrigin: 'center center',
     zIndex,
-    opacity: 0.70 + 0.30 * Math.abs(sinPhi),
+    opacity,
   }
 }
 
@@ -85,31 +78,25 @@ function StatCard({
   label,
   bg,
   style,
-  size = 'lg',
 }: {
   value: string
   label: string
   bg: string
   style: React.CSSProperties
-  size?: 'lg' | 'sm'
 }) {
-  const pad = size === 'lg' ? 'p-[28px]' : 'p-[24px]'
-  const valSize = size === 'lg' ? '40px' : '34px'
-  const track = size === 'lg' ? '-0.4px' : '-0.34px'
-
   return (
     <div style={style}>
       <div className="relative overflow-hidden w-full h-full">
         <Image src={bg} alt="" fill className="object-fill" unoptimized />
-        <div className={`absolute inset-0 flex flex-col justify-between ${pad}`}>
+        <div className="absolute inset-0 flex flex-col justify-between p-[28px]">
           <p
             className="font-heading font-[300] text-primary leading-[1.25]"
-            style={{ fontSize: valSize, letterSpacing: track }}
+            style={{ fontSize: '40px', letterSpacing: '-0.4px' }}
           >
             {value}
           </p>
           <p
-            className={`${size === 'lg' ? 'text-desktop-mono-large' : 'text-desktop-mono'} text-primary uppercase whitespace-pre-line`}
+            className="text-desktop-mono-large text-primary uppercase whitespace-pre-line"
             style={{ fontFeatureSettings: '"dlig" 1' }}
           >
             {label}
@@ -137,8 +124,6 @@ function StaircaseRow({ top, left, cols }: { top: number; left: number; cols: nu
   )
 }
 
-// Returns the cards and a drag overlay as siblings (no wrapping stacking context)
-// so card z-indexes interleave properly with the diamond.
 function OrbitingCards() {
   const angleRef = useRef(0)
   const momentumRef = useRef(0)
@@ -171,9 +156,10 @@ function OrbitingCards() {
   }, [])
 
   const onPan = useCallback((_e: PointerEvent, info: { delta: { x: number } }) => {
-    const dAngle = (info.delta.x / 600) * Math.PI * 2
+    // Map drag pixels to angle: full section width ≈ one full rotation
+    const dAngle = (info.delta.x / 700) * Math.PI * 2
     angleRef.current -= dAngle
-    momentumRef.current = -dAngle * 0.5
+    momentumRef.current = -dAngle * 0.6
     forceUpdate((n) => n + 1)
   }, [])
 
@@ -186,24 +172,23 @@ function OrbitingCards() {
   }, [])
 
   const cardStyles = CARDS.map((card) =>
-    getCardStyle(card.baseAngle, angleRef.current, card.size)
+    getCardStyle(card.baseAngle, angleRef.current)
   )
 
   return (
     <>
-      {/* Cards render at the section stacking context — no z-indexed wrapper —
-          so their individual zIndexes properly interleave with the diamond (z=10) */}
+      {/* Cards rendered in the section stacking context so z-indexes interleave
+          with the diamond (z=14) and staircase rows */}
       {CARDS.map((card, i) => (
         <StatCard
           key={card.value}
           value={card.value}
           label={card.label}
           bg={card.bg}
-          size={card.size}
           style={cardStyles[i]}
         />
       ))}
-      {/* Transparent drag overlay on top of everything to capture pan events */}
+      {/* Transparent drag-capture overlay on top of everything */}
       <motion.div
         className="absolute inset-0 cursor-grab active:cursor-grabbing"
         style={{ zIndex: 40 }}
@@ -229,7 +214,7 @@ export function AtGlance() {
         />
       </div>
 
-      {/* Staircase grid — dark cells forming a pyramid at the bottom */}
+      {/* Staircase grid */}
       <StaircaseRow top={480} left={600} cols={2} />
       <StaircaseRow top={600} left={480} cols={4} />
       <StaircaseRow top={720} left={240} cols={8} />
@@ -254,16 +239,17 @@ export function AtGlance() {
         <Eyebrow text="INTRO" borderColor="grey-100" textColor="grey-100" />
       </div>
 
-      {/* 3D center diamond — z-index 10 sits between front and back cards */}
+      {/* Orbiting stat cards (rendered before diamond so diamond z-index
+          can sit above back/side cards and below front card) */}
+      <OrbitingCards />
+
+      {/* 3D diamond — z=14: above side/back cards, below front card */}
       <div
         className="absolute -translate-x-1/2 -translate-y-1/2 w-[178px] h-[244px] pointer-events-none"
-        style={{ left: '50%', top: `${DIAMOND_CY}px`, zIndex: 10 }}
+        style={{ left: '50%', top: `${DIAMOND_CY}px`, zIndex: 14 }}
       >
         <Image src="/assets/diamond-3d.png" alt="" fill className="object-cover" unoptimized />
       </div>
-
-      {/* Orbiting stat cards + drag overlay */}
-      <OrbitingCards />
 
       {/* Gem — left */}
       <div className="absolute w-[125px] h-[168px] pointer-events-none" style={{ left: 300, top: 492, zIndex: 15 }}>
