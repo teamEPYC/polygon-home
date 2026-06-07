@@ -16,7 +16,7 @@ const clipPath = `polygon(0 0, calc(100% - ${CUT}px) 0, 100% ${CUT}px, 100% 100%
 // oms-what-wrap top = row1 border (790) − 64px row margin. The video (lottie-abs)
 // is top-aligned inside this wrapper; width is 28% per live `.oms-entrace-video
 // -embed.is-capped.is-small` (28% of the 1320px wrapper ≈ 370px).
-const VIDEO_TOP = 726;
+const VIDEO_TOP = 730;
 const VIDEO_WIDTH = "28%";
 
 function ArrowIcon() {
@@ -348,54 +348,55 @@ export function OpenMoneyStack() {
         className="absolute left-1/2 -translate-x-1/2 w-[1320px]"
         style={{ top: VIDEO_TOP }}
       >
-        {/* lottie-abs — video container: top-aligned, horizontally centered, 28% */}
+        {/* lottie-abs — video container: top-aligned, horizontally centered, 28%.
+            Nudged 20px up from the structural top per design tweak. */}
         <div className="absolute inset-0 flex justify-center items-start pointer-events-none z-10">
-          <div style={{ width: VIDEO_WIDTH }}>
+          <div style={{ width: VIDEO_WIDTH, marginTop: -20 }}>
             <OmsVideoPlayer />
           </div>
         </div>
 
         {/* oms-lottie-wrap — product rows */}
         <div className="flex flex-col gap-[64px]" style={{ marginTop: 64 }}>
-        <ProductSection
-          badge="LIVE"
-          title="Wallet Infrastructure"
-          subtitle="one-click wallet creation to give your users an onchain account"
-          description="The Polygon Chain is fast, low cost, and battle-tested. Live for five years, with 99.99% uptime and millions of users, this is the best place to build onchain."
-          wireIcon="/assets/ico-wire-chains.png"
-          dotColor="#00FF08"
-          exploreText="Explore Sequence"
-          poweredByLogo="/assets/logo-sequence.png"
-        />
-        <ProductSection
-          badge="LIVE"
-          title="Crosschain Interop"
-          subtitle="one-click crypto transactions with any chain"
-          description="All-in-one integration, enabling users to transact with any wallet, any token, on any chain, bringing deep unified liquidity."
-          wireIcon="/assets/ico-wire-trails.png"
-          dotColor="#E271D7"
-          exploreText="Explore Trails"
-          poweredByLogo="/assets/logo-trails.svg"
-        />
-        <ProductSection
-          badge="LIVE"
-          title={"On/Off- and\nCash Ramps"}
-          subtitle="Physical cash and digital fiat on- and off-ramps"
-          description="Grow your revenue by offering on- and off-ramps, pay with crypto, earn yield, and more. All with enterprise-grade security."
-          wireIcon="/assets/ico-wire-wallet.png"
-          dotColor="#FF7421"
-          exploreText="Explore Coinme"
-          poweredByLogo="/assets/logo-coinme.png"
-        />
-        <ProductSection
-          badge="LIVE"
-          title="Blockchain Rails"
-          subtitle="The fastest settlement layer to move money globally"
-          description="Use crypto to offer faster, cheaper cross-border transfers."
-          wireIcon="/assets/ico-wire-bpn.png"
-          dotColor="#00BBFF"
-          exploreText="Explore Polygon Chain"
-        />
+          <ProductSection
+            badge="LIVE"
+            title="Wallet Infrastructure"
+            subtitle="one-click wallet creation to give your users an onchain account"
+            description="The Polygon Chain is fast, low cost, and battle-tested. Live for five years, with 99.99% uptime and millions of users, this is the best place to build onchain."
+            wireIcon="/assets/ico-wire-chains.png"
+            dotColor="#00FF08"
+            exploreText="Explore Sequence"
+            poweredByLogo="/assets/logo-sequence.png"
+          />
+          <ProductSection
+            badge="LIVE"
+            title="Crosschain Interop"
+            subtitle="one-click crypto transactions with any chain"
+            description="All-in-one integration, enabling users to transact with any wallet, any token, on any chain, bringing deep unified liquidity."
+            wireIcon="/assets/ico-wire-trails.png"
+            dotColor="#E271D7"
+            exploreText="Explore Trails"
+            poweredByLogo="/assets/logo-trails.svg"
+          />
+          <ProductSection
+            badge="LIVE"
+            title={"On/Off- and\nCash Ramps"}
+            subtitle="Physical cash and digital fiat on- and off-ramps"
+            description="Grow your revenue by offering on- and off-ramps, pay with crypto, earn yield, and more. All with enterprise-grade security."
+            wireIcon="/assets/ico-wire-wallet.png"
+            dotColor="#FF7421"
+            exploreText="Explore Coinme"
+            poweredByLogo="/assets/logo-coinme.png"
+          />
+          <ProductSection
+            badge="LIVE"
+            title="Blockchain Rails"
+            subtitle="The fastest settlement layer to move money globally"
+            description="Use crypto to offer faster, cheaper cross-border transfers."
+            wireIcon="/assets/ico-wire-bpn.png"
+            dotColor="#00BBFF"
+            exploreText="Explore Polygon Chain"
+          />
         </div>
       </div>
 
