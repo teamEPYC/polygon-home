@@ -303,11 +303,6 @@ export function Hero() {
           </a>
         ))}
       </div>
-
-      {/* Scroll indicator */}
-      <div className="absolute left-[calc(100%-60px)] top-[calc(50%+360px)] -translate-x-1/2 -translate-y-1/2 size-[56px] flex items-center justify-center">
-        <Image src="/assets/hero/scroll-double-arrow.svg" alt="" width={12} height={16} unoptimized />
-      </div>
     </section>
   )
 }
