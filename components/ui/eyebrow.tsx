@@ -1,7 +1,7 @@
 type EyebrowProps = {
   text: string
   className?: string
-  borderColor?: 'stroke' | 'primary' | 'grey-100' | 'semi-transparent-blue' | 'white'
+  borderColor?: 'stroke' | 'primary' | 'grey-100' | 'grey-200' | 'semi-transparent-blue' | 'white'
   textColor?: 'primary' | 'grey-100' | 'white-70'
   hasDot?: boolean
 }
@@ -17,6 +17,7 @@ export function Eyebrow({
     stroke: 'border-stroke',
     primary: 'border-primary',
     'grey-100': 'border-grey-100',
+    'grey-200': 'border-grey-200',
     'semi-transparent-blue': 'border-[var(--semi-transparent-blue)]',
     white: 'border-[rgba(255,255,255,0.5)]',
   }[borderColor]
@@ -36,7 +37,7 @@ export function Eyebrow({
           <circle cx="5" cy="4" r="3" fill="currentColor" className={textClass} />
         </svg>
       )}
-      <span className={`text-desktop-mono-small ${textClass} whitespace-nowrap pt-[2px]`}>
+      <span className={`text-desktop-mono-medium ${textClass} whitespace-nowrap pt-[2px]`}>
         {text}
       </span>
       {/* Top-left corner tick (filled triangle) */}

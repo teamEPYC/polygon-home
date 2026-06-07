@@ -171,16 +171,16 @@ export function Hero() {
       {/* Eyebrow */}
       <Eyebrow
         text="$2.4 Trillion Transfer Volume"
-        borderColor="white"
+        borderColor="grey-200"
         textColor="primary"
         className="absolute left-[60px] top-[120px]"
       />
 
       {/* Heading */}
-      <div className="absolute left-[60px] top-[176px] w-[466px] flex flex-col gap-[2px]">
-        <div className="font-heading font-[300] text-[80px] leading-[72px] tracking-[-0.8px] text-grey-100">
-          <p className="leading-[72px] mb-0">It&rsquo;s not</p>
-          <p className="leading-[72px]">our first</p>
+      <div className="absolute left-[60px] top-[168px] w-[560px] flex flex-col gap-[2px]">
+        <div className="font-heading font-[300] text-[96px] leading-[86px] tracking-[-1.92px] text-grey-100">
+          <p className="leading-[86px] mb-0">It&rsquo;s not</p>
+          <p className="leading-[86px]">our first</p>
         </div>
         <div className="flex items-end gap-[12px] w-full">
           <div className="flex flex-col items-start justify-end pb-[14px]">
@@ -196,7 +196,7 @@ export function Hero() {
               unoptimized
             />
           </div>
-          <div className="font-heading font-[300] text-[80px] leading-[72px] tracking-[-0.8px] text-grey-100 whitespace-nowrap">
+          <div className="font-heading font-[300] text-[96px] leading-[86px] tracking-[-1.92px] text-grey-100 whitespace-nowrap">
             trillion
           </div>
         </div>
