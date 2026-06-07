@@ -13,8 +13,11 @@ const clipPath = `polygon(0 0, calc(100% - ${CUT}px) 0, 100% ${CUT}px, 100% 100%
  *  chain → coil → ring → loop shape (each ~480px of the 1920px frame).
  *  Adjust these to align the objects with the product rows.
  */
-const VIDEO_TOP = 830; // px from OMS section top — where the video starts
-const VIDEO_WIDTH = "19vw"; // live site CSS value (~435px at 1440px viewport)
+// oms-what-wrap top = row1 border (790) − 64px row margin. The video (lottie-abs)
+// is top-aligned inside this wrapper; width is 28% per live `.oms-entrace-video
+// -embed.is-capped.is-small` (28% of the 1320px wrapper ≈ 370px).
+const VIDEO_TOP = 726;
+const VIDEO_WIDTH = "28%";
 
 function ArrowIcon() {
   return (
@@ -62,7 +65,13 @@ function ExploreArrow({ color }: { color: string }) {
   return (
     <div className="relative" style={{ width: 44, height: 36 }}>
       {/* default outlined box + arrow */}
-      <svg width="44" height="36" viewBox="0 0 44 36" fill="none" className="absolute inset-0">
+      <svg
+        width="44"
+        height="36"
+        viewBox="0 0 44 36"
+        fill="none"
+        className="absolute inset-0"
+      >
         <path d={ARROW_BOX} fill="none" stroke="#707bb7" />
         <path d={ARROW_TRI} fill="#707bb7" />
       </svg>
@@ -139,7 +148,10 @@ function ProductSection({
         {/* oms-button-wrap: 2-col grid, border-top */}
         <div className="grid grid-cols-2 border-t border-[var(--bc)] transition-colors -mt-px">
           {/* Left cell — oms-button-left: wire icon, border-l border-b, -translate-y-px */}
-          <div className="relative border-l border-b border-[var(--bc)] transition-colors flex items-center justify-start -translate-y-px" style={{ minHeight: 100 }}>
+          <div
+            className="relative border-l border-b border-[var(--bc)] transition-colors flex items-center justify-start -translate-y-px"
+            style={{ minHeight: 100 }}
+          >
             <Image
               src={wireIcon}
               alt=""
@@ -156,11 +168,20 @@ function ProductSection({
           </div>
 
           {/* Right cell — oms-button-right: SVG cut-corner border, explore text + arrow */}
-          <div className="relative flex flex-col justify-between items-end p-[14px] -translate-y-px" style={{ minHeight: 100 }}>
+          <div
+            className="relative flex flex-col justify-between items-end p-[14px] -translate-y-px"
+            style={{ minHeight: 100 }}
+          >
             {/* Cut-corner SVG border — oms-button-right-embed */}
             <svg
               className="absolute pointer-events-none"
-              style={{ inset: '-1px 0 0 0', zIndex: -1, color: 'var(--bc)', width: '100%', height: '100%' }}
+              style={{
+                inset: "-1px 0 0 0",
+                zIndex: -1,
+                color: "var(--bc)",
+                width: "100%",
+                height: "100%",
+              }}
               viewBox="0 0 156 100"
               preserveAspectRatio="none"
               fill="none"
@@ -209,11 +230,7 @@ type SecondaryCardProps = {
   icon: string;
 };
 
-function SecondaryCard({
-  title,
-  description,
-  icon,
-}: SecondaryCardProps) {
+function SecondaryCard({ title, description, icon }: SecondaryCardProps) {
   return (
     <div className="relative flex items-start gap-0 border-t border-[var(--semi-transparent-blue)] rounded-[2px] w-[646px] h-[164px]">
       {/* Icon area */}
@@ -280,11 +297,12 @@ export function OpenMoneyStack() {
       <OMSStaircase />
 
       {/* Eyebrow — OPEN MONEY STACK (matches live h-eyebrow above the heading) */}
-      <div
-        className="absolute left-1/2 -translate-x-1/2"
-        style={{ top: 344 }}
-      >
-        <Eyebrow text="OPEN MONEY STACK" borderColor="white" textColor="grey-100" />
+      <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 344 }}>
+        <Eyebrow
+          text="OPEN MONEY STACK"
+          borderColor="white"
+          textColor="grey-100"
+        />
       </div>
 
       {/* Heading */}
@@ -315,15 +333,30 @@ export function OpenMoneyStack() {
           clipPath,
         }}
       >
-        <span className="text-desktop-mono-small"><ScrambleText>GET EARLY ACCESS</ScrambleText></span>
+        <span className="text-desktop-mono-small">
+          <ScrambleText>GET EARLY ACCESS</ScrambleText>
+        </span>
         <ArrowIcon />
       </a>
 
-      {/* Product sections — absolute, centered 1320px wide, starts at y=790 */}
+      {/* oms-what-wrap — relative wrapper holding BOTH the video and the product
+          rows, mirroring the live structure so the video positions itself:
+            • lottie-abs : absolute, inset-0, top-aligned, centered, 28% width
+            • oms-lottie-wrap : product rows, margin-top 64px, gap 64px
+          Wrapper top = row1 border (790) − 64px row margin = 726. */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 w-[1320px] flex flex-col gap-[64px]"
-        style={{ top: 790 }}
+        className="absolute left-1/2 -translate-x-1/2 w-[1320px]"
+        style={{ top: VIDEO_TOP }}
       >
+        {/* lottie-abs — video container: top-aligned, horizontally centered, 28% */}
+        <div className="absolute inset-0 flex justify-center items-start pointer-events-none z-10">
+          <div style={{ width: VIDEO_WIDTH }}>
+            <OmsVideoPlayer />
+          </div>
+        </div>
+
+        {/* oms-lottie-wrap — product rows */}
+        <div className="flex flex-col gap-[64px]" style={{ marginTop: 64 }}>
         <ProductSection
           badge="LIVE"
           title="Wallet Infrastructure"
@@ -363,14 +396,7 @@ export function OpenMoneyStack() {
           dotColor="#00BBFF"
           exploreText="Explore Polygon Chain"
         />
-      </div>
-
-      {/* 3D animation — entrance video then seamless loop */}
-      <div
-        className="absolute left-1/2 -translate-x-1/2 pointer-events-none z-10"
-        style={{ top: VIDEO_TOP, width: VIDEO_WIDTH }}
-      >
-        <OmsVideoPlayer />
+        </div>
       </div>
 
       {/* Secondary cards */}
