@@ -173,7 +173,7 @@ export function Hero() {
         text="$2.4 Trillion Transfer Volume"
         borderColor="grey-200"
         textColor="primary"
-        className="absolute left-[60px] top-[120px]"
+        className="absolute left-[60px] top-[113px]"
       />
 
       {/* Heading */}
@@ -203,13 +203,13 @@ export function Hero() {
       </div>
 
       {/* Body */}
-      <p className="absolute left-[60px] top-[472px] w-[421px] font-body text-[18px] leading-[26px]">
+      <p className="absolute left-[60px] top-[464px] w-[421px] font-body text-[18px] leading-[26px]">
         <span className="text-white">The go-to blockchain for global payments, </span>
         <span className="text-grey-200">where trillions in assets move instantly, at scale.</span>
       </p>
 
       {/* CTAs — live button-wrap.is-cappped: 12px gap between buttons */}
-      <div className="absolute left-[60px] top-[621px] flex items-center gap-[12px]">
+      <div className="absolute left-[60px] top-[555px] flex items-center gap-[12px]">
         <CtaButton
           label="OPEN MONEY STACK"
           bgClass="bg-purple hover:bg-purple-hover"
