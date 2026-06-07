@@ -101,6 +101,48 @@ const LOGOS = [
   { src: '/assets/hero/logos/nexo.svg',       alt: 'Nexo',       w: 150 },
 ]
 
+// Hero socials — exact SVGs from the live site (fill=currentColor so the
+// whole-cell hover can recolor them). All render at 24px inside a 120px cell.
+function XIcon() {
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M19.5 18.5625L13.6341 10.913L13.6441 10.9202L18.9331 5.4375H17.1656L12.857 9.9L9.43553 5.4375H4.80013L10.2766 12.5793L10.2759 12.5787L4.5 18.5625H6.26745L11.0576 13.5977L14.8646 18.5625H19.5ZM8.73522 6.63068L16.9655 17.3693H15.5649L7.32792 6.63068H8.73522Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+function TelegramIcon() {
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M20.7175 4.1052L3.88718 10.6219C2.73858 11.0851 2.74523 11.7285 3.67645 12.0154L7.99747 13.3689L17.9951 7.03519C18.4678 6.74638 18.8997 6.90175 18.5447 7.21819L10.4447 14.5584H10.4428L10.4447 14.5594L10.1466 19.0315C10.5833 19.0315 10.7759 18.8304 11.0209 18.5931L13.1197 16.5438L17.4853 19.7817C18.2903 20.2268 18.8684 19.998 19.0687 19.0334L21.9345 5.47202C22.2278 4.29107 21.4855 3.75635 20.7175 4.1052Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+function LinkedInIcon() {
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 50 50" fill="none">
+      <path
+        d="M45.4771 0H4.52291C2.025 0 0 2.025 0 4.52291V45.477C0 47.975 2.025 50 4.52291 50H45.477C47.975 50 50 47.975 50 45.477V4.52291C50 2.025 47.975 0 45.4771 0ZM15.4721 43.1733C15.4721 43.9003 14.8829 44.4895 14.1559 44.4895H8.55301C7.82605 44.4895 7.23678 43.9003 7.23678 43.1733V19.6863C7.23678 18.9593 7.82605 18.37 8.55301 18.37H14.1559C14.8829 18.37 15.4721 18.9593 15.4721 19.6863V43.1733ZM11.3545 16.156C8.41479 16.156 6.03168 13.7729 6.03168 10.8332C6.03168 7.89359 8.41479 5.51047 11.3545 5.51047C14.2941 5.51047 16.6772 7.89359 16.6772 10.8332C16.6772 13.7729 14.2942 16.156 11.3545 16.156ZM44.7526 43.2793C44.7526 43.9476 44.2107 44.4895 43.5424 44.4895H37.5301C36.8618 44.4895 36.3199 43.9476 36.3199 43.2793V32.2626C36.3199 30.6191 36.802 25.0609 32.025 25.0609C28.3196 25.0609 27.5681 28.8653 27.4171 30.5726V43.2793C27.4171 43.9476 26.8754 44.4895 26.2069 44.4895H20.392C19.7237 44.4895 19.1818 43.9476 19.1818 43.2793V19.5802C19.1818 18.9119 19.7237 18.37 20.392 18.37H26.2069C26.8753 18.37 27.4171 18.9119 27.4171 19.5802V21.6293C28.7911 19.5674 30.833 17.9759 35.1805 17.9759C44.8077 17.9759 44.7526 26.9702 44.7526 31.912V43.2793Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+// Stacked in the rightmost grid column (col 12), rows 5–7 → tops 480/600/720.
+const SOCIALS = [
+  { label: 'Follow on X', href: 'https://x.com/0xPolygon', Icon: XIcon },
+  { label: 'Telegram', href: 'https://t.me/PolygonHQ', Icon: TelegramIcon },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/polygonlabs/', Icon: LinkedInIcon },
+]
+
 export function Hero() {
   return (
     <section className="relative w-full h-[840px] overflow-hidden bg-background">
@@ -241,21 +283,26 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Socials */}
-      <a
-        href="#"
-        aria-label="Follow on X"
-        className="absolute left-[calc(100%-72px)] top-[528px] size-[24px] flex items-center justify-center hover:opacity-80 transition-opacity"
-      >
-        <Image src="/assets/hero/social-x.svg" alt="" width={15} height={13} unoptimized />
-      </a>
-      <a
-        href="#"
-        aria-label="Join Discord"
-        className="absolute left-[calc(100%-72px)] top-[648px] size-[24px] flex items-center justify-center hover:opacity-80 transition-opacity"
-      >
-        <Image src="/assets/hero/social-discord.svg" alt="" width={18} height={13} unoptimized />
-      </a>
+      {/* Socials — rightmost grid column (col 12), three stacked 120px cells.
+          Each cell is opaque (covers the 3D scene) with stroke border-b/border-r,
+          matching live `.hero-social-wrap`. Hovering anywhere in the cell recolors
+          the icon to purple (live `.hero-social-wrap:hover{color:purple}`). */}
+      <div className="absolute right-0 top-[480px] w-[120px] flex flex-col">
+        {SOCIALS.map(({ label, href, Icon }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={label}
+            className="flex h-[120px] w-[120px] items-center justify-center border-b border-r border-stroke bg-background text-primary transition-colors duration-200 hover:text-purple"
+          >
+            <span className="size-[24px]">
+              <Icon />
+            </span>
+          </a>
+        ))}
+      </div>
 
       {/* Scroll indicator */}
       <div className="absolute left-[calc(100%-60px)] top-[calc(50%+360px)] -translate-x-1/2 -translate-y-1/2 size-[56px] flex items-center justify-center">

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { BtnOutline } from "@/components/ui/btn-outline";
+import { Eyebrow } from "@/components/ui/eyebrow";
 import { OMSStaircase } from "./oms-staircase";
 import { OmsVideoPlayer } from "@/components/ui/oms-video-player";
 import { ScrambleText } from "@/components/ui/scramble-text";
@@ -36,6 +36,51 @@ function ArrowIcon() {
   );
 }
 
+// Per-row dot — elongated hexagon (live `oms-button-indicator`, 10×8), colored per row.
+function DotHex({ color }: { color: string }) {
+  return (
+    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M6.75476 0C7.09909 0 7.4192 0.177151 7.60207 0.468909L9.48846 3.47849C9.69252 3.80405 9.692 4.21773 9.48713 4.54278L7.60238 7.5332C7.41925 7.82375 7.09983 8 6.75638 8H2.86709C2.52211 8 2.2015 7.82219 2.01882 7.52956L0.151952 4.53916C-0.0498799 4.21585 -0.0503885 3.80594 0.150641 3.48214L2.01913 0.472543C2.20155 0.178711 2.52286 0 2.86871 0H6.75476Z"
+        fill={color}
+      />
+    </svg>
+  );
+}
+
+// Explore arrow box — live `oms-what-button-arrow` (44×36 cut-corner). Always
+// visible as a #707bb7 outline; on row hover the colored fill (row dot color +
+// dark arrow) fades in over it.
+const ARROW_BOX =
+  "M40 0C42.2091 0 44 1.79086 44 4V19.20559C44 21.406 43.1345 23.466 41.5986 24.9707L31.5059 34.8574C30.7582 35.5897 29.7535 36 28.707 36H4C1.79086 36 0 34.2091 0 32V4C0 1.79086 1.79086 0 4 0H40Z";
+const ARROW_TRI =
+  "M23.8612 17.3865C24.0701 17.5838 24.0701 17.9162 23.8612 18.1135L20.5894 21.2035C20.2705 21.5047 19.7461 21.2786 19.7461 20.84L19.7461 14.66C19.7461 14.2214 20.2705 13.9953 20.5894 14.2965L23.8612 17.3865Z";
+
+function ExploreArrow({ color }: { color: string }) {
+  return (
+    <div className="relative" style={{ width: 44, height: 36 }}>
+      {/* default outlined box + arrow */}
+      <svg width="44" height="36" viewBox="0 0 44 36" fill="none" className="absolute inset-0">
+        <path d={ARROW_BOX} fill="none" stroke="#707bb7" />
+        <path d={ARROW_TRI} fill="#707bb7" />
+      </svg>
+      {/* colored fill, revealed on row hover */}
+      <svg
+        width="44"
+        height="36"
+        viewBox="0 0 44 36"
+        fill="none"
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+      >
+        <path d={ARROW_BOX} fill={color} />
+        <path d={ARROW_TRI} fill="#07060D" />
+      </svg>
+    </div>
+  );
+}
+
 type ProductSectionProps = {
   badge: string;
   title: string;
@@ -58,7 +103,7 @@ function ProductSection({
   poweredByLogo,
 }: ProductSectionProps) {
   return (
-    <div className="scramble-host group flex justify-between border-t border-[#707bb7] hover:border-white transition-colors w-full [--bc:#707bb7] hover:[--bc:white] pt-[28px]">
+    <div className="scramble-host group flex justify-between border-t border-[#707bb7] hover:border-white transition-colors w-full [--bc:#707bb7] hover:[--bc:white] cursor-pointer">
       {/* LEFT — oms-lottie-left */}
       <div className="flex flex-col gap-[16px] max-w-[70%]">
         {/* Badge — oms-product-tag: border + corner ticks */}
@@ -68,7 +113,7 @@ function ProductSection({
               <path d="M0 0H6L0 6V0Z" fill="currentColor" />
             </svg>
           </span>
-          <span className="font-mono text-[12px] leading-[1.1] tracking-[0.12px] uppercase text-[rgba(255,255,255,0.7)] group-hover:text-white transition-colors whitespace-nowrap pt-[1px]">
+          <span className="font-mono text-[14px] leading-[1] tracking-[0.14px] uppercase text-[rgba(255,255,255,0.7)] group-hover:text-white transition-colors whitespace-nowrap pt-[1px]">
             {badge}
           </span>
           <span className="absolute bottom-0 right-0 size-[6px] pointer-events-none text-[var(--bc)] transition-colors">
@@ -92,7 +137,7 @@ function ProductSection({
       {/* RIGHT — oms-card-right: max 30%, flex-col, gap-24px */}
       <div className="flex flex-col gap-[24px] w-[30%] min-w-[30%] shrink-0">
         {/* oms-button-wrap: 2-col grid, border-top */}
-        <div className="grid grid-cols-2 border-t border-[var(--bc)] transition-colors -mt-[28px]">
+        <div className="grid grid-cols-2 border-t border-[var(--bc)] transition-colors -mt-px">
           {/* Left cell — oms-button-left: wire icon, border-l border-b, -translate-y-px */}
           <div className="relative border-l border-b border-[var(--bc)] transition-colors flex items-center justify-start -translate-y-px" style={{ minHeight: 100 }}>
             <Image
@@ -104,10 +149,9 @@ function ProductSection({
               unoptimized
             />
             {dotColor && (
-              <div
-                className="absolute rounded-full"
-                style={{ left: 12, top: 12, width: 10, height: 8, backgroundColor: dotColor }}
-              />
+              <div className="absolute" style={{ left: 11, top: 11 }}>
+                <DotHex color={dotColor} />
+              </div>
             )}
           </div>
 
@@ -129,9 +173,7 @@ function ProductSection({
             <span className="text-desktop-mono-small uppercase text-[rgba(255,255,255,0.7)] group-hover:text-white transition-colors text-right">
               <ScrambleText>{exploreText}</ScrambleText>
             </span>
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-              <BtnOutline variant="white" />
-            </div>
+            <ExploreArrow color={dotColor ?? "#707bb7"} />
           </div>
         </div>
 
@@ -163,14 +205,12 @@ function ProductSection({
 
 type SecondaryCardProps = {
   title: string;
-  subtitle: string;
   description: string;
   icon: string;
 };
 
 function SecondaryCard({
   title,
-  subtitle,
   description,
   icon,
 }: SecondaryCardProps) {
@@ -188,26 +228,22 @@ function SecondaryCard({
         <Image src={icon} alt="" fill className="object-contain" unoptimized />
       </div>
 
-      {/* Content */}
-      <div className="flex flex-col justify-between h-[120px] mt-[43px] pl-[24px]">
+      {/* Content — badge, title, description (no CTA, matching live) */}
+      <div className="flex flex-col h-[120px] mt-[43px] pl-[24px]">
         <div className="flex flex-col gap-[12px]">
           <Badge text="coming soon" variant="blue" />
-          <div className="flex items-baseline gap-[8px] mt-[8px]">
-            <span className="font-heading font-[300] text-[28px] leading-[1.14] text-[rgba(255,255,255,0.7)] whitespace-nowrap">
-              Polygon
-            </span>
-            <span className="font-heading font-[300] text-[28px] leading-[1.14] text-grey-100 whitespace-nowrap">
+          <div className="mt-[8px]">
+            <span className="font-heading font-[300] text-[28px] leading-[1.14] text-grey-100">
               {title}
             </span>
           </div>
           <p
-            className="text-desktop-mono-medium text-[rgba(255,255,255,0.7)] uppercase"
+            className="text-desktop-mono-medium text-[rgba(255,255,255,0.7)] uppercase max-w-[320px]"
             style={{ fontFeatureSettings: '"dlig" 1' }}
           >
             {description}
           </p>
         </div>
-        <BtnOutline />
       </div>
     </div>
   );
@@ -243,12 +279,20 @@ export function OpenMoneyStack() {
       {/* Inverted staircase — animates in on scroll */}
       <OMSStaircase />
 
+      {/* Eyebrow — OPEN MONEY STACK (matches live h-eyebrow above the heading) */}
+      <div
+        className="absolute left-1/2 -translate-x-1/2"
+        style={{ top: 344 }}
+      >
+        <Eyebrow text="OPEN MONEY STACK" borderColor="white" textColor="grey-100" />
+      </div>
+
       {/* Heading */}
       <p
         className="absolute left-1/2 -translate-x-1/2 font-heading font-[300] text-[56px] leading-[60px] tracking-[-0.56px] text-grey-100 text-center w-[652px]"
         style={{ top: 416 }}
       >
-        One open stack for money movement.
+        One open stack for money movement
       </p>
 
       {/* Body text */}
@@ -277,7 +321,7 @@ export function OpenMoneyStack() {
 
       {/* Product sections — absolute, centered 1320px wide, starts at y=790 */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 w-[1320px] flex flex-col gap-[48px]"
+        className="absolute left-1/2 -translate-x-1/2 w-[1320px] flex flex-col gap-[64px]"
         style={{ top: 790 }}
       >
         <ProductSection
@@ -296,9 +340,9 @@ export function OpenMoneyStack() {
           subtitle="one-click crypto transactions with any chain"
           description="All-in-one integration, enabling users to transact with any wallet, any token, on any chain, bringing deep unified liquidity."
           wireIcon="/assets/ico-wire-trails.png"
-          dotColor="#00BBFF"
+          dotColor="#E271D7"
           exploreText="Explore Trails"
-          poweredByLogo="/assets/logo-trails.png"
+          poweredByLogo="/assets/logo-trails.svg"
         />
         <ProductSection
           badge="LIVE"
@@ -306,7 +350,7 @@ export function OpenMoneyStack() {
           subtitle="Physical cash and digital fiat on- and off-ramps"
           description="Grow your revenue by offering on- and off-ramps, pay with crypto, earn yield, and more. All with enterprise-grade security."
           wireIcon="/assets/ico-wire-wallet.png"
-          dotColor="#C590E5"
+          dotColor="#FF7421"
           exploreText="Explore Coinme"
           poweredByLogo="/assets/logo-coinme.png"
         />
@@ -316,7 +360,7 @@ export function OpenMoneyStack() {
           subtitle="The fastest settlement layer to move money globally"
           description="Use crypto to offer faster, cheaper cross-border transfers."
           wireIcon="/assets/ico-wire-bpn.png"
-          dotColor="#FF7421"
+          dotColor="#00BBFF"
           exploreText="Explore Polygon Chain"
         />
       </div>
@@ -335,15 +379,13 @@ export function OpenMoneyStack() {
         style={{ top: 2068, left: 60 }}
       >
         <SecondaryCard
-          title="Business Kit"
-          subtitle="Polygon Business Kit"
-          description="Scale your business with crypto payments"
+          title="Stablecoin Orchestration"
+          description="Enterprise payments infrastructure for stablecoins and tokenized deposits"
           icon="/assets/ico-kit.png"
         />
         <SecondaryCard
-          title="Pay"
-          subtitle="Polygon Pay"
-          description="One app for crypto payments"
+          title="KYC Hub"
+          description="Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest."
           icon="/assets/ico-pay.png"
         />
       </div>

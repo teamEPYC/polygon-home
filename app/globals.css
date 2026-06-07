@@ -311,3 +311,20 @@ html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;
 }
+
+/* All interactive/clickable elements get a pointer cursor. <button> and
+   hrefless <a> don't get one by default, so this covers them site-wide. */
+a,
+button,
+summary,
+label[for],
+[role="button"],
+[role="link"],
+[role="tab"] {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: default;
+}
