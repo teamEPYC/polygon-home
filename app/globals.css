@@ -17,6 +17,8 @@
   --grey-600-hover: #DCDBDE;
   --stroke: #E1E1E5;
   --purple-subtle: #DDCFF2;
+  /* Faint grid lines drawn on inverted-primary surfaces (staircases) */
+  --grid-stroke: rgba(0, 0, 0, 0.06);
 
   /* Accent colors — no theme flip */
   --purple: #670DE5;
@@ -48,6 +50,7 @@
   --grey-600-hover: #1D1D1F;
   --stroke: #1B1B1D;
   --purple-subtle: #290958;
+  --grid-stroke: rgba(255, 255, 255, 0.05);
 }
 
 /* ─── Tailwind Token Map ────────────────────────────────────────────────────── */

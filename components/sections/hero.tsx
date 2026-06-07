@@ -1,9 +1,37 @@
 'use client'
 
 import Image from 'next/image'
+import { useEffect, useRef } from 'react'
 import { Eyebrow } from '@/components/ui/eyebrow'
+import { ScrambleText } from '@/components/ui/scramble-text'
 
 const HERO_VIDEO = '/assets/hero-loop.mp4'
+
+function HeroVideo() {
+  const ref = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    el.muted = true
+    el.play().catch(() => {})
+  }, [])
+
+  return (
+    <video
+      ref={ref}
+      autoPlay
+      muted
+      loop
+      playsInline
+      className="w-full h-full object-cover"
+      poster="/assets/hero/hero-scene.png"
+    >
+      <source src={HERO_VIDEO} type='video/mp4; codecs="avc1.42E01E"' />
+      <source src={HERO_VIDEO} type="video/mp4" />
+    </video>
+  )
+}
 
 // Alpha-mask that carves the 3D scene into its Figma silhouette.
 const SCENE_MASK = {
@@ -45,9 +73,11 @@ function CtaButton({
   prClass: string
 }) {
   return (
-    <a href="#" className="inline-flex items-center">
+    <a href="#" className="scramble-host inline-flex items-center">
       <div className={`flex h-[52px] items-center pl-[16px] ${prClass} rounded-l-[4px] ${bgClass}`}>
-        <span className={`text-desktop-mono-small ${textClass}`}>{label}</span>
+        <span className={`text-desktop-mono-small ${textClass}`}>
+          <ScrambleText>{label}</ScrambleText>
+        </span>
       </div>
       <div className="relative h-[52px] w-[28px] overflow-hidden shrink-0">
         <img src={corner} alt="" className="absolute left-[-1px] top-0 h-[52px] w-[29px]" />
@@ -89,16 +119,7 @@ export function Hero() {
         className="absolute left-[24px] top-[-94px] w-[1392px] h-[1044px] pointer-events-none"
         style={{ ...SCENE_MASK, WebkitMaskSize: '1392px 740px', maskSize: '1392px 740px', WebkitMaskPosition: '0px 170px', maskPosition: '0px 170px' }}
       >
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-          poster="/assets/hero/hero-scene.png"
-        >
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
+        <HeroVideo />
       </div>
 
       {/* Overlay — darkens the left of the scene so the heading reads */}

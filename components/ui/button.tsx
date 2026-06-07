@@ -1,7 +1,11 @@
+import { ScrambleText } from '@/components/ui/scramble-text'
+
 type ButtonProps = {
   label: string
   href?: string
   variant?: 'primary' | 'ghost' | 'purple'
+  /** Gibberish-reveal text animation on hover (on by default; pass false e.g. for nav buttons). */
+  scramble?: boolean
 }
 
 const CUT = 14
@@ -16,7 +20,7 @@ function ArrowIcon({ color = 'currentColor' }: { color?: string }) {
   )
 }
 
-export function Button({ label, href = '#', variant = 'primary' }: ButtonProps) {
+export function Button({ label, href = '#', variant = 'primary', scramble = true }: ButtonProps) {
   const styles = {
     primary: {
       bg: 'bg-primary',
@@ -38,10 +42,12 @@ export function Button({ label, href = '#', variant = 'primary' }: ButtonProps) 
   return (
     <a
       href={href}
-      className={`inline-flex items-center h-[52px] pl-[16px] pr-[28px] gap-[8px] transition-opacity hover:opacity-90 ${styles.bg} ${styles.text}`}
+      className={`inline-flex items-center h-[52px] pl-[16px] pr-[28px] gap-[8px] transition-opacity hover:opacity-90 ${styles.bg} ${styles.text}${scramble ? ' scramble-host' : ''}`}
       style={{ clipPath }}
     >
-      <span className="text-desktop-mono-small">{label}</span>
+      <span className="text-desktop-mono-small">
+        {scramble ? <ScrambleText>{label}</ScrambleText> : label}
+      </span>
       {variant !== 'ghost' && <ArrowIcon color={styles.arrowColor} />}
     </a>
   )

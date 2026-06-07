@@ -2,6 +2,7 @@
 
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
+import { ScrambleText } from '@/components/ui/scramble-text'
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme()
@@ -18,10 +19,10 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="text-desktop-mono-small text-primary border border-stroke px-3 py-1.5 hover:bg-grey-600 transition-colors cursor-pointer"
+      className="scramble-host text-desktop-mono-small text-primary border border-stroke px-3 py-1.5 hover:bg-grey-600 transition-colors cursor-pointer"
       aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
     >
-      {isDark ? 'LIGHT' : 'DARK'}
+      <ScrambleText>{isDark ? 'LIGHT' : 'DARK'}</ScrambleText>
     </button>
   )
 }
