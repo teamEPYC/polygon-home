@@ -43,6 +43,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <clipPath id="navClipLeft" clipPathUnits="objectBoundingBox">
               <path d="M0 0 H0.833 H1 V0.628 C1 0.67 0.993 0.71 0.98 0.739 L0.873 0.978 C0.866 0.992 0.858 1 0.849 1 H0.833 H0 V0 Z" />
             </clipPath>
+            <clipPath id="buttonClip" clipPathUnits="objectBoundingBox" transform="scale(0.0052, 0.0192)">
+              <path d="M0 4C0 1.79086 1.79086 0 4 0H164V52H4C1.79086 52 0 50.2091 0 48V4Z" />
+              <path d="M188 0C190.209 0 192 1.79086 192 4V32.6784C192 34.8433 191.123 36.9157 189.568 38.4225L176.726 50.872C175.979 51.5955 174.981 52 173.941 52H163V0H188Z" />
+            </clipPath>
             <clipPath id="glanceCards" clipPathUnits="objectBoundingBox" transform="scale(0.0045045045, 0.0048543689)">
               <path fillRule="evenodd" clipRule="evenodd" d="M218.004 0C220.213 0.000174788 222.004 1.79108 222.004 4V179H222V183.398C222 184.463 221.575 185.484 220.82 186.234L202.118 204.837C201.369 205.582 200.355 206.001 199.298 206.001H4C1.79107 206.001 9.989e-05 204.21 0 202.001V178.001H0.00390625V22.6025C0.00395409 21.538 0.428859 20.5173 1.18359 19.7666L19.8857 1.16406C20.6352 0.418759 21.6491 3.8124e-05 22.7061 0H218.004Z" />
             </clipPath>

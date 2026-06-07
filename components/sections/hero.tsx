@@ -41,50 +41,42 @@ const SCENE_MASK = {
   maskRepeat: 'no-repeat',
 } as const
 
-// NE arrow that lives inside the button corner cap.
-function ArrowIcon({ color = 'currentColor' }: { color?: string }) {
+// Solid ▸ triangle — the live `oms-button-icon` arrow (same as nav).
+function TriangleArrow({ color = 'currentColor' }: { color?: string }) {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
       <path
-        d="M3 9L9 3M9 3H4M9 3V8"
-        stroke={color}
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M7.86511 5.38649C8.07403 5.5838 8.07403 5.9162 7.86511 6.11351L4.59331 9.20354C4.27444 9.50469 3.75 9.27863 3.75 8.84003L3.75 2.65997C3.75 2.22137 4.27444 1.99531 4.59331 2.29646L7.86511 5.38649Z"
+        fill={color}
       />
     </svg>
   )
 }
 
-// Cut-corner CTA built from the real Figma corner SVG + a left text block.
+// Hero CTA — live `.btn-new`: flex with a 60px gap between label and arrow,
+// 18px/16px padding, `clip-path: url(#buttonClip)` bottom-right cut, mono 14px.
+// `tilt` rotates the ▸ arrow −45° → ↗ (live `.btn-icon-tilt`, used on external links).
 function CtaButton({
   label,
-  corner,
   bgClass,
-  textClass,
-  arrowColor,
-  prClass,
+  tilt,
 }: {
   label: string
-  corner: string
   bgClass: string
-  textClass: string
-  arrowColor: string
-  prClass: string
+  tilt?: boolean
 }) {
   return (
-    <a href="#" className="scramble-host inline-flex items-center">
-      <div className={`flex h-[52px] items-center pl-[16px] ${prClass} rounded-l-[4px] ${bgClass}`}>
-        <span className={`text-desktop-mono-small ${textClass}`}>
-          <ScrambleText>{label}</ScrambleText>
-        </span>
-      </div>
-      <div className="relative h-[52px] w-[28px] overflow-hidden shrink-0">
-        <img src={corner} alt="" className="absolute left-[-1px] top-0 h-[52px] w-[29px]" />
-        <span className="absolute left-0 top-[20px] size-[12px]">
-          <ArrowIcon color={arrowColor} />
-        </span>
-      </div>
+    <a
+      href="#"
+      className={`scramble-host flex items-center justify-between gap-[60px] py-[18px] px-[16px] text-desktop-mono-medium leading-[1.2] text-white transition-colors ${bgClass}`}
+      style={{ clipPath: 'url(#buttonClip)' }}
+    >
+      <span>
+        <ScrambleText>{label}</ScrambleText>
+      </span>
+      <span className={tilt ? '-rotate-45' : ''}>
+        <TriangleArrow color="white" />
+      </span>
     </a>
   )
 }
@@ -216,23 +208,16 @@ export function Hero() {
         <span className="text-grey-200">where trillions in assets move instantly, at scale.</span>
       </p>
 
-      {/* CTAs */}
-      <div className="absolute left-[60px] top-[570px] flex items-center gap-[2px]">
+      {/* CTAs — live button-wrap.is-cappped: 12px gap between buttons */}
+      <div className="absolute left-[60px] top-[621px] flex items-center gap-[12px]">
         <CtaButton
           label="OPEN MONEY STACK"
-          corner="/assets/hero/btn-corner-purple.svg"
-          bgClass="bg-purple"
-          textClass="text-primary"
-          arrowColor="var(--color-primary)"
-          prClass="pr-[16px]"
+          bgClass="bg-purple hover:bg-purple-hover"
         />
         <CtaButton
           label="BUILD ON POLYGON"
-          corner="/assets/hero/btn-corner-grey.svg"
-          bgClass="bg-grey-500"
-          textClass="text-primary"
-          arrowColor="var(--color-primary)"
-          prClass="pr-[16px]"
+          bgClass="bg-inverted-primary hover:bg-inverted-primary-hover"
+          tilt
         />
       </div>
 
