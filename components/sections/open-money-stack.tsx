@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Eyebrow } from "@/components/ui/eyebrow";
 import { OMSStaircase } from "./oms-staircase";
 import { OmsVideoPlayer } from "@/components/ui/oms-video-player";
 import { ScrambleText } from "@/components/ui/scramble-text";
@@ -294,16 +293,8 @@ export function OpenMoneyStack() {
       />
 
       {/* Inverted staircase — animates in on scroll */}
+      {/* OMSStaircase already renders the OPEN MONEY STACK eyebrow (with dot). */}
       <OMSStaircase />
-
-      {/* Eyebrow — OPEN MONEY STACK (matches live h-eyebrow above the heading) */}
-      <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 344 }}>
-        <Eyebrow
-          text="OPEN MONEY STACK"
-          borderColor="white"
-          textColor="grey-100"
-        />
-      </div>
 
       {/* Heading */}
       <p
