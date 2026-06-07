@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Eyebrow } from '@/components/ui/eyebrow'
 
-const STROKE = 'rgba(255,255,255,0.05)'
+const STROKE = 'var(--grid-stroke)'
 const CELL = 120
 
 const ROWS = [
@@ -28,7 +28,7 @@ export function OMSStaircase() {
       {ROWS.map((row, i) => (
         <motion.div
           key={i}
-          className="absolute bg-[#07060D]"
+          className="absolute bg-inverted-primary"
           style={{
             top: row.top,
             left: row.left,

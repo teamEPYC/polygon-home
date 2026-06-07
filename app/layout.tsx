@@ -37,6 +37,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${polySansSlimWide.variable} ${polySansNeutral.variable} ${polySansMono.variable}`}
     >
       <body>
+        {/* Shared SVG clip-path defs — referenced via url(#id) across all sections */}
+        <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
+          <defs>
+            <clipPath id="navClipLeft" clipPathUnits="objectBoundingBox">
+              <path d="M0 0 H0.833 H1 V0.628 C1 0.67 0.993 0.71 0.98 0.739 L0.873 0.978 C0.866 0.992 0.858 1 0.849 1 H0.833 H0 V0 Z" />
+            </clipPath>
+            <clipPath id="glanceCards" clipPathUnits="objectBoundingBox" transform="scale(0.0045045045, 0.0048543689)">
+              <path fillRule="evenodd" clipRule="evenodd" d="M218.004 0C220.213 0.000174788 222.004 1.79108 222.004 4V179H222V183.398C222 184.463 221.575 185.484 220.82 186.234L202.118 204.837C201.369 205.582 200.355 206.001 199.298 206.001H4C1.79107 206.001 9.989e-05 204.21 0 202.001V178.001H0.00390625V22.6025C0.00395409 21.538 0.428859 20.5173 1.18359 19.7666L19.8857 1.16406C20.6352 0.418759 21.6491 3.8124e-05 22.7061 0H218.004Z" />
+            </clipPath>
+          </defs>
+        </svg>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
