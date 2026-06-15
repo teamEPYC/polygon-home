@@ -43,6 +43,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <clipPath id="navClipLeft" clipPathUnits="objectBoundingBox">
               <path d="M0 0 H0.833 H1 V0.628 C1 0.67 0.993 0.71 0.98 0.739 L0.873 0.978 C0.866 0.992 0.858 1 0.849 1 H0.833 H0 V0 Z" />
             </clipPath>
+            <clipPath id="navMenuMobile" clipPathUnits="objectBoundingBox">
+              <path d="M0.077 1 H0.615 H0.653 C0.673 1 0.692 0.991 0.706 0.975 L0.953 0.691 C0.983 0.657 1 0.61 1 0.561 V0 H0.615 H0 V0.909 C0 0.959 0.034 1 0.077 1Z" />
+            </clipPath>
             <clipPath id="buttonClip" clipPathUnits="objectBoundingBox" transform="scale(0.0052, 0.0192)">
               <path d="M0 4C0 1.79086 1.79086 0 4 0H164V52H4C1.79086 52 0 50.2091 0 48V4Z" />
               <path d="M188 0C190.209 0 192 1.79086 192 4V32.6784C192 34.8433 191.123 36.9157 189.568 38.4225L176.726 50.872C175.979 51.5955 174.981 52 173.941 52H163V0H188Z" />
