@@ -15,7 +15,7 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <NoiseOverlay />
       <Nav />
-      <main className="max-w-[1440px] mx-auto overflow-hidden border-x border-stroke">
+      <main className="max-w-[1440px] mx-auto overflow-hidden">
         <Hero />
         <Spacer />
         <AtGlance />

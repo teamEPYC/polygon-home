@@ -29,7 +29,7 @@ function ArrowIcon() {
     >
       <path
         d="M3 9L9 3M9 3H4M9 3V8"
-        stroke="var(--color-primary)"
+        stroke="#FFFFFF"
         strokeWidth="1.2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -112,8 +112,8 @@ function ProductSection({
 }: ProductSectionProps) {
   return (
     <div className="scramble-host group flex justify-between border-t border-[#707bb7] hover:border-white transition-colors w-full [--bc:#707bb7] hover:[--bc:white] cursor-pointer">
-      {/* LEFT — oms-lottie-left */}
-      <div className="flex flex-col gap-[16px] max-w-[70%]">
+      {/* LEFT — oms-lottie-left.is-capped: max-width 32% (live) */}
+      <div className="flex flex-col gap-[16px] max-w-[32%]">
         {/* Badge — oms-product-tag: border + corner ticks */}
         <div className="relative inline-flex items-center gap-[10px] px-[12px] py-[6px] border border-[var(--bc)] transition-colors self-start">
           <span className="absolute top-0 left-0 size-[6px] pointer-events-none text-[var(--bc)] transition-colors">
@@ -121,7 +121,7 @@ function ProductSection({
               <path d="M0 0H6L0 6V0Z" fill="currentColor" />
             </svg>
           </span>
-          <span className="font-mono text-[14px] leading-[1] tracking-[0.14px] uppercase text-[rgba(255,255,255,0.7)] group-hover:text-white transition-colors whitespace-nowrap pt-[1px]">
+          <span className="text-desktop-mono-medium text-[rgba(255,255,255,0.7)] group-hover:text-white transition-colors whitespace-nowrap pt-[1px]">
             {badge}
           </span>
           <span className="absolute bottom-0 right-0 size-[6px] pointer-events-none text-[var(--bc)] transition-colors">
@@ -132,12 +132,14 @@ function ProductSection({
         </div>
 
         {/* Title — u-h3-new: 36px, 1.25 line-height, -0.01em tracking */}
-        <h3 className="font-heading font-[300] text-[36px] leading-[1.25] tracking-[-0.01em] text-[rgba(255,255,255,0.7)] group-hover:text-white transition-colors whitespace-pre-line">
+        <h3 className="text-desktop-h3 text-[rgba(255,255,255,0.7)] group-hover:text-white transition-colors whitespace-pre-line">
           {title}
         </h3>
 
-        {/* Subtitle — mono-medium, 70% opacity */}
-        <p className="text-desktop-mono-medium uppercase text-[rgba(255,255,255,0.7)] group-hover:text-[rgba(255,255,255,0.7)]">
+        {/* Subtitle — mono-medium, 70% opacity. max-w-[80%] = live oms-lottie-para-wrap
+            (80% of the 32% left column ≈ 339px), so it wraps to 2 lines instead of
+            running into the 3D art. */}
+        <p className="max-w-[80%] text-desktop-mono-medium uppercase text-[rgba(255,255,255,0.7)] group-hover:text-[rgba(255,255,255,0.7)]">
           {subtitle}
         </p>
       </div>
@@ -249,7 +251,7 @@ function SecondaryCard({ title, description, icon }: SecondaryCardProps) {
         <div className="flex flex-col gap-[12px]">
           <Badge text="coming soon" variant="blue" />
           <div className="mt-[8px]">
-            <span className="font-heading font-[300] text-[28px] leading-[1.14] text-grey-100">
+            <span className="text-desktop-h4 text-white">
               {title}
             </span>
           </div>
@@ -269,18 +271,25 @@ export function OpenMoneyStack() {
   return (
     <section
       className="relative w-full overflow-hidden bg-[#3449c1]"
-      style={{ height: 2521 }}
+      style={{ containerType: "inline-size" }}
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 pointer-events-none">
-        <Image
-          src="/assets/products-bg.svg"
-          alt=""
-          fill
-          className="object-cover object-top"
-          unoptimized
-        />
-      </div>
+      {/* Fixed 1440×2521 design stage, scaled to the section width (scale-to-fit,
+          same as hero/purpose/news/use-cases/footer). */}
+      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "1440 / 2521" }}>
+        <div
+          className="absolute left-0 top-0 origin-top-left"
+          style={{ width: 1440, height: 2521, transform: "scale(calc(100cqw / 1440px))" }}
+        >
+      {/* Background gradient — live `.blue-bg-circle.is-oms.is-home-new`:
+          full-size CSS radial (width/height 100%, centered, top-aligned), NOT an
+          image. circle at 50% 40%, stops #273ead → #2941b7 39% → #07092c 75%. */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 50% 40%, #273ead, #2941b7 39%, #07092c 75%)",
+        }}
+      />
 
       {/* Faint global grid */}
       <div
@@ -296,27 +305,33 @@ export function OpenMoneyStack() {
       {/* OMSStaircase already renders the OPEN MONEY STACK eyebrow (with dot). */}
       <OMSStaircase />
 
-      {/* Heading */}
+      {/* Heading — live u-h2-new = desktop-h2 token: 64px / 1.06 line-height /
+          -1.28px (-0.02em) tracking. Width forces the live 2-line break
+          ("One open stack for" / "money movement"). */}
       <p
-        className="absolute left-1/2 -translate-x-1/2 font-heading font-[300] text-[56px] leading-[60px] tracking-[-0.56px] text-grey-100 text-center w-[652px]"
+        className="absolute left-1/2 -translate-x-1/2 text-desktop-h2 text-white text-center w-[652px]"
         style={{ top: 416 }}
       >
         One open stack for money movement
       </p>
 
-      {/* Body text */}
+      {/* Body text — 18px/1.4 (body-large). Width = 400px to reproduce the live
+          2-line wrap (line1 ends "…onchain", measured 374px). */}
       <p
-        className="absolute left-1/2 -translate-x-1/2 text-desktop-body-large text-white text-center w-[778px]"
+        className="absolute left-1/2 -translate-x-1/2 text-desktop-body-large text-white text-center w-[400px]"
         style={{ top: 580 }}
       >
         A single place to instantly access the onchain economy, with worldwide
         distribution.
       </p>
 
-      {/* GET EARLY ACCESS button */}
+      {/* GET EARLY ACCESS button.
+          Live: DARK = solid #07060D cut-corner fill, white text+arrow.
+                LIGHT = transparent cut-corner with a light outline, white text+arrow.
+          Both states keep WHITE text/arrow (fixed) on the blue band. */}
       <a
         href="#"
-        className="scramble-host absolute inline-flex items-center gap-[8px] h-[52px] pl-[16px] pr-[32px] bg-inverted-primary text-primary hover:opacity-90 transition-opacity"
+        className="scramble-host group absolute inline-flex items-center justify-between w-[245px] h-[52px] pl-[16px] pr-[20px] text-white hover:opacity-90 transition-opacity [[data-theme=dark]_&]:bg-[#07060D]"
         style={{
           top: 662,
           left: "50%",
@@ -324,7 +339,23 @@ export function OpenMoneyStack() {
           clipPath,
         }}
       >
-        <span className="text-desktop-mono-small">
+        {/* Light-mode outline — only rendered (visible) on the light band.
+            viewBox matches the 245px fixed width (14px top-right cut). */}
+        <svg
+          className="pointer-events-none absolute inset-0 hidden [[data-theme=light]_&]:block"
+          width="100%"
+          height="100%"
+          viewBox="0 0 245 52"
+          preserveAspectRatio="none"
+          fill="none"
+          aria-hidden
+        >
+          <path
+            d="M0.5 0.5H229.79C230.444 0.5 231.07 0.764 231.526 1.232L243.736 13.793C244.176 14.246 244.422 14.853 244.422 15.485V51.5H0.5V0.5Z"
+            stroke="rgba(255,255,255,0.7)"
+          />
+        </svg>
+        <span className="text-desktop-mono-medium">
           <ScrambleText>GET EARLY ACCESS</ScrambleText>
         </span>
         <ArrowIcon />
@@ -441,6 +472,8 @@ export function OpenMoneyStack() {
           stroke="var(--grid-stroke)"
         />
       </svg>
+        </div>
+      </div>
     </section>
   );
 }

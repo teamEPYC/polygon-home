@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import type { ReactNode } from "react";
+import { type ReactNode, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { Spacer } from "../ui/spacer";
@@ -74,104 +75,159 @@ function RWAIcon() {
   );
 }
 
-function DeFiIcon() {
-  return (
-    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden>
-      <g
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        {/* top node */}
-        <rect x="30" y="18" width="12" height="10" rx="1" />
-        {/* bottom nodes */}
-        <rect x="16" y="44" width="12" height="10" rx="1" />
-        <rect x="30" y="44" width="12" height="10" rx="1" />
-        <rect x="44" y="44" width="12" height="10" rx="1" />
-        {/* connectors */}
-        <path d="M36 28v6M22 44v-4h28v4M36 40v4" />
-      </g>
-    </svg>
-  );
-}
 
 type UseCase = {
   number: string;
   label: string;
   width: number;
   icon: ReactNode;
+  desc: string;
 };
 
 const USE_CASES: UseCase[] = [
-  { number: "01", label: "Payments", width: 840, icon: <PaymentsIcon /> },
-  { number: "02", label: "Stablecoins", width: 960, icon: <StablecoinsIcon /> },
-  { number: "03", label: "RWA", width: 1080, icon: <RWAIcon /> },
-  { number: "04", label: "DeFi", width: 1200, icon: <DeFiIcon /> },
+  {
+    number: "01",
+    label: "Payments",
+    width: 840,
+    icon: <PaymentsIcon />,
+    desc: "When moving money is part of your product, you can’t afford wires, wait times, or weekend breaks. On Polygon, payments never hit pause.",
+  },
+  {
+    number: "02",
+    label: "Stablecoins",
+    width: 960,
+    icon: <StablecoinsIcon />,
+    desc: "Call us stable. That’s the point. The most trusted stablecoins run on Polygon—$3.4B+ in liquidity, full reserve coverage, and the global distribution banks wish they had.",
+  },
+  {
+    number: "03",
+    label: "RWA",
+    width: 1080,
+    icon: <RWAIcon />,
+    desc: "You wouldn’t sell a Van Gogh on Facebook Marketplace. Tokenized assets belong on rails with reputation. Polygon delivers trust, distribution, and infrastructure that’s already proven.",
+  },
 ];
 
-// Icon-box cut-corner: top-right corner clipped (matches Figma container).
+// Icon-box cut-corner: BOTTOM-RIGHT corner clipped (live .h-uc-card icon box).
 const ICO_CUT = 16;
-const icoClip = `polygon(0 0, calc(100% - ${ICO_CUT}px) 0, 100% ${ICO_CUT}px, 100% 100%, 0 100%)`;
+const icoClip = `polygon(0 0, 100% 0, 100% calc(100% - ${ICO_CUT}px), calc(100% - ${ICO_CUT}px) 100%, 0 100%)`;
 
-function UseCaseBar({ uc }: { uc: UseCase }) {
+// Tooltip shape — live .uc-detail-card (#ucDetailCardClip): top-left AND
+// bottom-right corners cut (~20px), like the purpose feature cards.
+const TIP_CUT = 20;
+const tipClip = `polygon(${TIP_CUT}px 0, 100% 0, 100% calc(100% - ${TIP_CUT}px), calc(100% - ${TIP_CUT}px) 100%, 0 100%, 0 ${TIP_CUT}px)`;
+
+// Hover fill — exact live radial gradient, painted as a grid of "pixels" that
+// reveal in a scattered (mosaic) order on enter and vanish instantly on exit.
+const BOX_W = 120;
+const BOX_H = 108;
+const M_CELL = 12; // mosaic pixel size
+const M_GRAD = "radial-gradient(circle, #190B38, #5D0FD3 62%, #00C4FF)";
+const MOSAIC_CELLS: { x: number; y: number; delay: number }[] = [];
+for (let y = 0; y < BOX_H; y += M_CELL) {
+  for (let x = 0; x < BOX_W; x += M_CELL) {
+    // deterministic pseudo-random (no Math.random → SSR-safe) for the scatter
+    const frac = Math.abs(Math.sin(x * 12.9898 + y * 78.233) * 43758.5453) % 1;
+    MOSAIC_CELLS.push({ x, y, delay: Math.round(frac * 240) });
+  }
+}
+
+// Live values (extracted from .h-uc-card-container): bar 156 tall, grey-200 border,
+// number at (7,9), icon box 120×108 at (0,28), label at (144,52). Bars overlap 2px
+// (step 154) via -2 margin so the 1px borders share an edge.
+function UseCaseBar({ uc, first }: { uc: UseCase; first?: boolean }) {
+  const [hover, setHover] = useState(false);
   return (
     <div
-      className="relative bg-inverted-primary overflow-clip rounded-tl-[2px] shrink-0"
+      className="group relative bg-inverted-primary overflow-visible shrink-0 cursor-pointer"
       style={{
         width: uc.width,
-        height: 168,
+        height: 156,
         borderTop: "1px solid var(--grey-200)",
+        marginTop: first ? 0 : -2,
+        zIndex: hover ? 1 : 0,
       }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
     >
-      {/* content column — number badge on top, icon+label centered */}
-      <div className="flex h-full flex-col items-start justify-center">
-        {/* number badge */}
+      {/* number badge — top-left, grey-200 border */}
+      <div
+        className="absolute left-0 top-0 flex items-center justify-center bg-inverted-primary px-[7px] py-[6px]"
+        style={{ border: "1px solid var(--grey-200)" }}
+      >
+        <span className="text-desktop-mono-small text-primary">{uc.number}</span>
+      </div>
+
+      {/* cut-corner icon box — (0,28), 120×108. Outline grey-200 → white on hover. */}
+      <div className="absolute" style={{ left: 0, top: 28, width: BOX_W, height: BOX_H }}>
         <div
-          className="absolute left-0 top-0 flex items-center justify-center bg-inverted-primary p-[8px] rounded-tl-[2px]"
-          style={{ border: "1px solid var(--grey-200)" }}
-        >
-          <span className="font-mono text-[12px] leading-[1.1] tracking-[0.12px] uppercase text-grey-200">
-            {uc.number}
-          </span>
+          className="absolute inset-0 bg-grey-200 transition-colors group-hover:bg-primary"
+          style={{ clipPath: icoClip }}
+        />
+        <div className="absolute bg-inverted-primary" style={{ inset: 1, clipPath: icoClip }} />
+
+        {/* Mosaic gradient fill — each pixel is a tile of the full radial gradient
+            (continuous via background-position). Entry: staggered per-pixel fade
+            in. Exit: transition only exists while hovered, so it disappears at once. */}
+        <div className="absolute overflow-hidden" style={{ inset: 1, clipPath: icoClip }}>
+          {MOSAIC_CELLS.map((c, i) => (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: c.x,
+                top: c.y,
+                width: M_CELL + 1,
+                height: M_CELL + 1,
+                backgroundImage: M_GRAD,
+                backgroundSize: `${BOX_W}px ${BOX_H}px`,
+                backgroundPosition: `-${c.x}px -${c.y}px`,
+                backgroundRepeat: "no-repeat",
+                opacity: hover ? 1 : 0,
+                transition: hover ? `opacity 120ms ease ${c.delay}ms` : "none",
+              }}
+            />
+          ))}
         </div>
 
-        {/* icon + label */}
-        <div className="flex items-center gap-[24px]">
-          {/* cut-corner icon box */}
-          <div
-            className="relative shrink-0 bg-inverted-primary"
-            style={{ width: 120, height: 108, clipPath: icoClip }}
-          >
-            <div
-              className="absolute inset-0 bg-grey-200"
-              style={{ clipPath: icoClip }}
-            />
-            <div
-              className="absolute bg-inverted-primary"
-              style={{ inset: 1, clipPath: icoClip }}
-            />
-            <div
-              className="absolute text-grey-200"
-              style={{ left: 24, top: 18 }}
-            >
-              {uc.icon}
-            </div>
-          </div>
-
-          {/* label */}
-          <p
-            className="font-heading font-[300] whitespace-nowrap text-grey-100"
-            style={{
-              fontSize: 80,
-              lineHeight: "72px",
-              letterSpacing: "-0.8px",
-            }}
-          >
-            {uc.label}
-          </p>
+        {/* icon — on top of the mosaic, white on hover for contrast */}
+        <div
+          className={`absolute transition-colors ${hover ? "text-white" : "text-grey-200"}`}
+          style={{ left: 24, top: 18 }}
+        >
+          {uc.icon}
         </div>
       </div>
+
+      {/* label — 96px h1. White → grey-200 on hover (live: the outline lights up,
+          the label recedes). */}
+      <p
+        className="absolute text-desktop-h1 whitespace-nowrap text-primary transition-colors group-hover:text-grey-200"
+        style={{ left: 144, top: 52 }}
+      >
+        {uc.label}
+      </p>
+
+      {/* Tooltip — live .uc-detail-card: 368px, top-left + bottom-right cut,
+          grey-200 outline, #07060D fill, 20px padding, body-large copy. Border
+          via two-layer clip so the outline follows the diagonal cuts (a plain CSS
+          border gets sliced off by the clip). */}
+      {hover && (
+        <div
+          className="absolute z-30 pointer-events-none"
+          style={{ left: 175, top: 10, width: 368 }}
+        >
+          <div className="absolute inset-0 bg-grey-200" style={{ clipPath: tipClip }} />
+          <div
+            className="absolute bg-inverted-primary"
+            style={{ inset: 1, clipPath: tipClip }}
+          />
+          <div className="relative flex flex-col gap-[12px] p-[20px]">
+            <span className="text-desktop-mono-small text-grey-200">{uc.label}</span>
+            <p className="text-desktop-body-large text-white">{uc.desc}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -183,19 +239,20 @@ export function UseCasesCta() {
         className="relative w-full bg-inverted-primary"
         style={{ containerType: "inline-size" }}
       >
-        <div className="relative w-full" style={{ aspectRatio: "1440 / 840" }}>
-          {/* Fixed 1440×840 design stage, scaled to the section width */}
+        <div className="relative w-full" style={{ aspectRatio: "1440 / 720" }}>
+          {/* Fixed 1440×720 design stage (6 rows) — sized for the 3 bars; one
+              fewer row than before so there's no extra empty band before the CTA. */}
           <div
             className="absolute left-0 top-0 origin-top-left"
             style={{
               width: 1440,
-              height: 840,
-              transform: "scale(calc(100cqw / 1440))",
+              height: 720,
+              transform: "scale(calc(100cqw / 1440px))",
             }}
           >
-            {/* Background grid — full 12×7 grid of 120px cells */}
+            {/* Background grid — full 12×6 grid of 120px cells */}
             <div className="absolute inset-0 z-[1]">
-              {Array.from({ length: 7 }).flatMap((_, row) =>
+              {Array.from({ length: 6 }).flatMap((_, row) =>
                 Array.from({ length: 12 }).map((__, col) => (
                   <div
                     key={`${row}-${col}`}
@@ -211,11 +268,17 @@ export function UseCasesCta() {
               )}
             </div>
 
+            {/* Right-edge vertical line — a cell border at the extreme scaled
+                edge (x=1440) gets clipped, so draw it explicitly. Sits ABOVE the
+                opaque staircase bars (z-2) so it stays continuous through the
+                bar rows instead of being covered. */}
+            <div className="absolute right-0 top-0 z-[3] h-full w-px bg-stroke" />
+
             {/* Eyebrow */}
-            <div className="absolute z-[3]" style={{ left: 60, top: 120 }}>
+            <div className="absolute z-[3]" style={{ left: 60, top: 122 }}>
               <Eyebrow
                 text="WHAT POLYGON CAN DO FOR YOU"
-                borderColor="grey-100"
+                borderColor="grey-200"
                 textColor="primary"
                 hasDot
               />
@@ -224,10 +287,10 @@ export function UseCasesCta() {
             {/* Staircase list — right-aligned, stepping left going down */}
             <div
               className="absolute z-[2] flex flex-col items-end"
-              style={{ left: 240, top: 120, width: 1200 }}
+              style={{ left: 240, top: 122, width: 1200 }}
             >
-              {USE_CASES.map((uc) => (
-                <UseCaseBar key={uc.number} uc={uc} />
+              {USE_CASES.map((uc, i) => (
+                <UseCaseBar key={uc.number} uc={uc} first={i === 0} />
               ))}
             </div>
           </div>
@@ -254,9 +317,9 @@ const CTA_BUTTONS: CtaButton[] = [
   { label: "OPEN MONEY STACK", href: "#open-money-stack", left: 960 },
 ];
 
-// Solid grid cells (bg-inverted-primary + border-stroke). Everything else faint.
+// Solid grid cells (bg-inverted-primary + border-stroke) — the top inverted
+// staircase / funnel toward the LET'S BUILD eyebrow.
 const SOLID_CELLS: [number, number][] = [
-  // Top inverted staircase
   [240, 0],
   [360, 0],
   [480, 0],
@@ -271,36 +334,33 @@ const SOLID_CELLS: [number, number][] = [
   [840, 120],
   [600, 240],
   [720, 240],
-  // Bottom corner band @ y1320 (x0 handled separately by row-corner.svg)
-  [120, 1320],
-  [240, 1320],
-  [360, 1320],
-  [480, 1320],
-  [600, 1320],
-  [720, 1320],
-  [840, 1320],
-  [960, 1320],
-  [1080, 1320],
-  [1200, 1320],
-  [1320, 1320],
 ];
 const isSolid = (x: number, y: number) =>
   SOLID_CELLS.some(([sx, sy]) => sx === x && sy === y);
 
+// Funnel stagger — same drop-in animation as the OMS staircase: each row
+// drops from one cell above, top row first, then the LET'S BUILD eyebrow fades
+// in once all rows have landed.
+const FUNNEL_ROW_DELAY = 0.14;
+const FUNNEL_EYEBROW_DELAY = 3 * FUNNEL_ROW_DELAY; // 3 funnel rows → 0.42s
+
 function GetStartedCta() {
+  const funnelRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(funnelRef, { once: true, margin: "0px 0px -80px 0px" });
   return (
     <section
       id="get-started"
       className="relative w-full overflow-hidden bg-[#3449c1]"
-      style={{ containerType: "inline-size", aspectRatio: "1440 / 1440" }}
+      style={{ containerType: "inline-size", aspectRatio: "1440 / 1200" }}
     >
-      {/* Fixed 1440×1440 design stage, scaled to section width */}
+      {/* Fixed 1440×1200 design stage (live .section is ~1217) — cards sit just
+          below the heading, then the footer follows. */}
       <div
         className="absolute left-0 top-0 origin-top-left"
         style={{
           width: 1440,
-          height: 1440,
-          transform: "scale(calc(100cqw / 1440))",
+          height: 1200,
+          transform: "scale(calc(100cqw / 1440px))",
         }}
       >
         {/* Background glow */}
@@ -313,27 +373,12 @@ function GetStartedCta() {
           className="absolute inset-0 z-[0] pointer-events-none select-none"
         />
 
-        {/* Background grid — 12 cols × 12 rows of 120px cells */}
+        {/* Background grid — 12 cols × 10 rows of 120px cells */}
         <div className="absolute inset-0 z-[1]">
-          {Array.from({ length: 12 }).flatMap((_, row) =>
+          {Array.from({ length: 10 }).flatMap((_, row) =>
             Array.from({ length: 12 }).map((__, col) => {
               const x = col * 120;
               const y = row * 120;
-              // Bottom-left corner-cut piece replaces the plain cell at x0/y1320.
-              if (x === 0 && y === 1320) {
-                return (
-                  <Image
-                    key={`${x}-${y}`}
-                    src="/assets/getstarted/row-corner.svg"
-                    alt=""
-                    width={120}
-                    height={120}
-                    unoptimized
-                    className="absolute pointer-events-none select-none"
-                    style={{ left: x, top: y, width: 120, height: 120 }}
-                  />
-                );
-              }
               return (
                 <div
                   key={`${x}-${y}`}
@@ -351,42 +396,93 @@ function GetStartedCta() {
               );
             }),
           )}
-          {/* Solid cells layered on top (semantic tokens) */}
-          {SOLID_CELLS.map(([x, y]) => (
+          {/* Right-edge vertical line — a cell border at the extreme scaled
+              edge (x=1440) gets clipped, so draw it explicitly. */}
+          <div
+            className="absolute right-0 top-0 h-full w-px"
+            style={{ background: "var(--grid-stroke)" }}
+          />
+          {/* Trigger anchor for the funnel/eyebrow drop-in (top of the funnel). */}
+          <div
+            ref={funnelRef}
+            className="absolute left-0 top-0 h-px w-px pointer-events-none"
+          />
+          {/* Solid cells (the inverted-triangle funnel) — same drop-in stagger as
+              the OMS staircase: each ROW drops from one cell above, top row first,
+              converging toward the LET'S BUILD apex. */}
+          {SOLID_CELLS.map(([x, y]) => {
+            const rowIndex = y / 120;
+            return (
+              <motion.div
+                key={`solid-${x}-${y}`}
+                className="absolute border border-stroke bg-inverted-primary"
+                style={{ left: x, top: y, width: 120, height: 120 }}
+                initial={{ y: -120, opacity: 0 }}
+                animate={inView ? { y: 0, opacity: 1 } : undefined}
+                transition={{
+                  duration: 0.55,
+                  delay: rowIndex * FUNNEL_ROW_DELAY,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              />
+            );
+          })}
+          {/* Shape row — dark band across the bottom row (the transition above the
+              footer). Its top border is the black line separating the blue section
+              from the dark band; the bottom-left corner is cut (row-corner.svg). */}
+          {[120, 240, 360, 480, 600, 720, 840, 960, 1080, 1200, 1320].map((x) => (
             <div
-              key={`solid-${x}-${y}`}
-              className="absolute border border-stroke bg-inverted-primary"
-              style={{ left: x, top: y, width: 120, height: 120 }}
+              key={`band-${x}`}
+              className="absolute z-[2] border border-stroke bg-inverted-primary"
+              style={{ left: x, top: 1080, width: 120, height: 120 }}
             />
           ))}
-        </div>
-
-        {/* Eyebrow — centered */}
-        <div
-          className="absolute z-[3] -translate-x-1/2"
-          style={{ left: 720, top: 284 }}
-        >
-          <Eyebrow
-            text="LET'S BUILD"
-            borderColor="grey-100"
-            textColor="primary"
-            hasDot
+          <Image
+            src="/assets/getstarted/row-corner.svg"
+            alt=""
+            width={120}
+            height={120}
+            unoptimized
+            className="absolute z-[2] pointer-events-none select-none"
+            style={{ left: 0, top: 1080, width: 120, height: 120 }}
           />
         </div>
 
-        {/* Heading — centered */}
+        {/* Eyebrow — centered. Fades in after the funnel rows have landed
+            (same timing as the OMS staircase eyebrow). */}
+        <motion.div
+          className="absolute z-[3] -translate-x-1/2"
+          style={{ left: 720, top: 284 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={inView ? { opacity: 1, y: 0 } : undefined}
+          transition={{
+            duration: 0.4,
+            delay: FUNNEL_EYEBROW_DELAY,
+            ease: "easeOut",
+          }}
+        >
+          <Eyebrow
+            text="LET'S BUILD"
+            borderColor="grey-200"
+            textColor="primary"
+            hasDot
+          />
+        </motion.div>
+
+        {/* Heading — centered. FIXED white in both themes (live: rgb(255,255,255)
+         * light AND dark — it sits directly over the fixed blue band). */}
         <h2
-          className="absolute z-[3] -translate-x-1/2 text-center font-heading font-[300] text-grey-100"
+          className="absolute z-[3] -translate-x-1/2 text-center font-heading font-[300] text-white"
           style={{
             left: 720,
             top: 504,
-            width: 665,
-            fontSize: 80,
-            lineHeight: "72px",
-            letterSpacing: "-0.8px",
+            width: 700,
+            fontSize: 96,
+            lineHeight: "86.4px",
+            letterSpacing: "-1.92px",
           }}
         >
-          Get Started with Polygon
+          Get started with Polygon
         </h2>
 
         {/* Footer button cards */}
@@ -394,29 +490,35 @@ function GetStartedCta() {
           <div
             key={btn.label}
             className="absolute z-[4]"
-            style={{ left: btn.left, top: 960, width: 420, height: 164 }}
+            style={{ left: btn.left, top: 736, width: 420, height: 164 }}
           >
-            {/* Cut-corner outlined card frame */}
-            <Image
-              src="/assets/getstarted/btn-card.svg"
-              alt=""
+            {/* Cut-corner card frame — exact live .h-uc-card path (big top-left
+                cut + small bottom-right cut), faint fill + subtle outline. */}
+            <svg
+              className="absolute inset-0 pointer-events-none select-none"
               width={420}
               height={164}
-              unoptimized
-              className="absolute inset-0 pointer-events-none select-none"
-              style={{ width: 420, height: 164 }}
-            />
-            {/* Rotated diamond tick at the card's top-left */}
-            <div
-              className="absolute border border-grey-100 bg-inverted-primary"
-              style={{
-                left: 8,
-                top: 8,
-                width: 10,
-                height: 10,
-                transform: "rotate(45deg)",
-              }}
-            />
+              viewBox="0 0 420 164"
+              fill="none"
+              preserveAspectRatio="none"
+              aria-hidden
+            >
+              <path
+                d="M420 124.055C420 125.145 419.554 126.19 418.767 126.944L381.238 162.889C380.494 163.602 379.502 164 378.471 164H4C1.79086 164 0 162.209 0 160V64H0.0214844L0.00683594 60.1904C0.00278726 59.1078 0.437335 58.0698 1.21191 57.3135L58.7539 1.1377C59.5011 0.408371 60.5037 0 61.5479 0H415.98C418.189 0 419.98 1.79048 419.98 3.99902L420 64V124.055Z"
+                fill="rgba(255,255,255,0.04)"
+                stroke="rgba(243,242,246,0.55)"
+              />
+            </svg>
+            {/* Diamond tick at the top-left cut (live trail-poly.svg), 10px at (8,3). */}
+            <svg
+              className="absolute"
+              style={{ left: 8, top: 3, width: 10, height: 10 }}
+              viewBox="0 0 10 10"
+              fill="none"
+              aria-hidden
+            >
+              <path d="M5 0L10 5L5 10L0 5L5 0Z" fill="#F3F2F6" />
+            </svg>
             {/* Centered button */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
               <CtaCornerButton label={btn.label} href={btn.href} />
@@ -453,7 +555,7 @@ function CtaCornerButton({ label, href }: { label: string; href: string }) {
   return (
     <a
       href={href}
-      className="scramble-host inline-flex h-[44px] items-center gap-[10px] border border-primary pl-[16px] pr-[24px] text-primary transition-opacity hover:opacity-90"
+      className="scramble-host inline-flex h-[44px] items-center gap-[10px] border border-white pl-[16px] pr-[24px] text-white transition-opacity hover:opacity-90"
       style={{ clipPath }}
     >
       <span className="text-desktop-mono-small">

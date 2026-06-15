@@ -6,19 +6,28 @@ import Image from "next/image";
    ─────────────────────────────────────────────────────────────────────────── */
 
 const FRAME_W = 1440;
+// Live's .section.is-featured is 1207 + a 122px spacer. We use 1320 (a clean 120px
+// multiple) so the background grid ends exactly on a cell line and flows straight
+// into the next section — the extra ~113px below the cards is the gridded gap,
+// which avoids a blank/misaligned spacer band between the two grids.
 const FRAME_H = 1320;
 const CELL = 120;
 const COLS = FRAME_W / CELL; // 12
-const ROWS = FRAME_H / CELL; // 11
-const CARD_W = 420;
-const CARD_H = 248;
+const ROWS = Math.ceil(FRAME_H / CELL); // grid rows to cover the frame
+// Live .h-feature-card.is-small = 431×254. Cards sit on a 3-col grid (x 58/505/951,
+// 16px gaps) at rows 0/238/477/715/953 — all extracted from the live site.
+const CARD_W = 431;
+const CARD_H = 254;
 
 /* ─── Feature Card data — exact copy + positions from Figma ───────────────── */
 type CardData = {
   label: string;
   number: string;
   description: string;
+  /** Dark-theme illustration (also used in light when no light variant exists). */
   image: string;
+  /** Light-theme illustration. Omit when the card uses the same render in both themes. */
+  imageLight?: string;
   left: number;
   top: number;
 };
@@ -28,8 +37,9 @@ const CARDS: CardData[] = [
     label: "Reliability",
     number: "01",
     description: "5B+ transactions. 99.99% uptime. 0 calls to customer support.",
+    // Live has only a single reliability render (no light variant) — same in both themes.
     image: "/assets/purpose/reliability.webp",
-    left: 960,
+    left: 951,
     top: 0,
   },
   {
@@ -38,8 +48,9 @@ const CARDS: CardData[] = [
     description:
       "Why pay more to wait longer? Polygon settles instantly—yes, even on Sundays.",
     image: "/assets/purpose/speed.webp",
-    left: 510,
-    top: 248,
+    imageLight: "/assets/purpose/speed-light.webp",
+    left: 505,
+    top: 238,
   },
   {
     label: "Cost",
@@ -47,8 +58,9 @@ const CARDS: CardData[] = [
     description:
       "Pay $0.001 to settle onchain. Keep the other $34.999. Wire transfer fee has left the chat.",
     image: "/assets/purpose/cost.webp",
-    left: 960,
-    top: 432,
+    imageLight: "/assets/purpose/cost-light.webp",
+    left: 951,
+    top: 477,
   },
   {
     label: "Enterprise ready",
@@ -56,8 +68,9 @@ const CARDS: CardData[] = [
     description:
       "Wallets? Yes. Onramps? Covered. Compliance-ready? Absolutely. Everything you need is already here.",
     image: "/assets/purpose/enterprise.webp",
-    left: 60,
-    top: 496,
+    imageLight: "/assets/purpose/enterprise-light.webp",
+    left: 58,
+    top: 477,
   },
   {
     label: "Distribution",
@@ -65,8 +78,9 @@ const CARDS: CardData[] = [
     description:
       "You don’t need to find liquidity and users. 156M active addresses are already doing business on Polygon.",
     image: "/assets/purpose/distribution.webp",
-    left: 510,
-    top: 680,
+    imageLight: "/assets/purpose/distribution-light.webp",
+    left: 505,
+    top: 715,
   },
   {
     label: "Liquidity",
@@ -74,13 +88,22 @@ const CARDS: CardData[] = [
     description:
       "Tap into billions in stablecoins and every major asset on a deeply liquid chain.",
     image: "/assets/purpose/liquidity.webp",
-    left: 60,
-    top: 928,
+    imageLight: "/assets/purpose/liquidity-light.webp",
+    left: 58,
+    top: 953,
   },
 ];
 
 /* ─── Feature Card ───────────────────────────────────────────────────────── */
-function FeatureCard({ label, number, description, image, left, top }: CardData) {
+function FeatureCard({
+  label,
+  number,
+  description,
+  image,
+  imageLight,
+  left,
+  top,
+}: CardData) {
   return (
     <div
       className="absolute overflow-hidden"
@@ -95,9 +118,10 @@ function FeatureCard({ label, number, description, image, left, top }: CardData)
         }}
       />
 
-      {/* Cut-corner border */}
+      {/* Cut-corner border — live stroke is grey-200 (#A0A1A6), not the faint
+          background-grid stroke, so the cards read brighter than the grid. */}
       <svg
-        className="absolute inset-0 h-full w-full text-stroke"
+        className="absolute inset-0 h-full w-full text-grey-200"
         viewBox="0 0 420 248"
         preserveAspectRatio="none"
         fill="none"
@@ -109,10 +133,11 @@ function FeatureCard({ label, number, description, image, left, top }: CardData)
         />
       </svg>
 
-      {/* Corner diamond tick — top-left, 10px at (12,12) */}
+      {/* Corner diamond tick — top-left, 10px at (13,13). Live fill is WHITE
+          (text-primary: #FFF dark / #07060D light), brighter than the border. */}
       <svg
-        className="absolute text-grey-200"
-        style={{ top: 12, left: 12, width: 10, height: 10 }}
+        className="absolute text-primary"
+        style={{ top: 13, left: 13, width: 10, height: 10 }}
         viewBox="0 0 10 10"
         fill="none"
         aria-hidden="true"
@@ -123,38 +148,54 @@ function FeatureCard({ label, number, description, image, left, top }: CardData)
         />
       </svg>
 
-      {/* Feature icon — 108×102 at (280,32) */}
-      <div className="absolute" style={{ left: 280, top: 32 }}>
+      {/* Feature icon — 108×102 at (280,32).
+          Live swaps the illustration per theme (dark render vs light render).
+          CSS dual-render: both in DOM, toggled by [data-theme] (an <img> src
+          can't read CSS vars). Cards without a light variant show one image. */}
+      <div className="absolute" style={{ left: 299, top: 36, width: 108, height: 102 }}>
         <Image
           src={image}
           alt={label}
           width={108}
           height={102}
-          className="object-contain"
+          className={`object-contain ${imageLight ? "purpose-img-dark" : ""}`}
           unoptimized
         />
+        {imageLight && (
+          <Image
+            src={imageLight}
+            alt={label}
+            width={108}
+            height={102}
+            className="purpose-img-light object-contain"
+            unoptimized
+          />
+        )}
       </div>
 
-      {/* Label — mono, at (80,32) */}
+      {/* Label — mono-medium grey-200, at (60,36) per live */}
       <p
         className="absolute text-desktop-mono-medium text-grey-200"
-        style={{ left: 80, top: 32 }}
+        style={{ left: 60, top: 36 }}
       >
         {label}
       </p>
 
-      {/* Number + description — bottom-aligned at (20, bottom 32), gap 45 */}
-      <div
-        className="absolute flex items-start"
-        style={{ left: 20, bottom: 32, width: 356, gap: 45 }}
+      {/* Number — mono-small grey-200, at (24,178) per live */}
+      <p
+        className="absolute text-desktop-mono-small text-grey-200"
+        style={{ left: 24, top: 178 }}
       >
-        <div className="flex flex-1 flex-col items-center justify-center pt-[4px]">
-          <p className="text-desktop-mono-small text-grey-200">{number}</p>
-        </div>
-        <p className="text-desktop-body text-grey-100" style={{ width: 296 }}>
-          {description}
-        </p>
-      </div>
+        {number}
+      </p>
+
+      {/* Description — body (16px) text-primary, at (60,173) width 347 per live */}
+      <p
+        className="absolute text-desktop-body text-primary"
+        style={{ left: 60, top: 173, width: 347 }}
+      >
+        {description}
+      </p>
     </div>
   );
 }
@@ -181,9 +222,10 @@ function Eyebrow() {
   return (
     <div
       className="absolute flex h-[32px] items-center justify-center gap-[10px] rounded-[2px] border border-grey-200 bg-inverted-primary px-[12px] py-[8px]"
-      style={{ left: 60, top: 16 }}
+      style={{ left: 58, top: 15 }}
     >
-      <span className="pt-px text-desktop-mono text-grey-200">BENEFITS</span>
+      {/* Live "BENEFITS" text is 14px mono (mono-medium), text-primary. */}
+      <span className="pt-px text-desktop-mono-medium text-primary">BENEFITS</span>
       {/* corner ticks */}
       <span
         className="absolute left-0 top-0 size-[6px] border-l border-t border-grey-200"
@@ -209,20 +251,13 @@ function TrustedBy() {
         <span className="text-desktop-mono text-grey-200">+</span>
       </div>
 
+      {/* Live: the whole line is text-primary (#07060D light / #FFFFFF dark) —
+          both spans share one colour, no grey distinction. */}
       <p
-        className="absolute left-0 w-[539px] text-grey-200"
-        style={{
-          top: "calc(50% - 21.5px)",
-          textIndent: 70,
-          fontFamily: "var(--font-heading)",
-          fontSize: 28,
-          fontWeight: 300,
-          lineHeight: "32px",
-          letterSpacing: "-0.28px",
-        }}
+        className="absolute left-0 w-[539px] text-desktop-h4-indent text-primary"
+        style={{ top: "calc(50% - 23.5px)" }}
       >
-        <span style={{ color: "#f2f3f7" }}>Trusted by</span> leading enterprises
-        and millions of users.
+        <span>Trusted by</span> leading enterprises and millions of users.
       </p>
     </div>
   );
@@ -232,20 +267,12 @@ function TrustedBy() {
 function Heading() {
   return (
     <h2
-      className="absolute"
-      style={{
-        left: 60,
-        top: 0,
-        width: 540,
-        textIndent: 120,
-        fontFamily: "var(--font-heading)",
-        fontSize: 56,
-        fontWeight: 300,
-        lineHeight: "60px",
-        letterSpacing: "-0.56px",
-      }}
+      className="absolute text-desktop-h2-indent"
+      style={{ left: 58, top: 8, width: 540 }}
     >
-      <span style={{ color: "#f2f3f7" }}>Polygon is purpose-built</span>{" "}
+      {/* Live: span1 is text-primary (#07060D light / #FFFFFF dark);
+          span2 is muted (#686D73 light / #A0A1A6 dark — grey-200 only matches dark). */}
+      <span className="text-primary">Polygon is purpose-built</span>{" "}
       <span className="text-grey-200">to scale money.</span>
     </h2>
   );
@@ -255,6 +282,13 @@ function Heading() {
 export function PurposeSection() {
   return (
     <section className="bg-background">
+      {/* Theme-toggled feature illustrations (CSS dual-render — an <img> src
+          can't read CSS vars, so both variants live in the DOM). */}
+      <style>{`
+        .purpose-img-light { display: none !important; }
+        [data-theme="light"] .purpose-img-dark { display: none !important; }
+        [data-theme="light"] .purpose-img-light { display: block !important; }
+      `}</style>
       <div className="mx-auto w-full max-w-[1440px]">
         {/* Aspect-ratio box keeps the stage proportional below 1440px */}
         <div
@@ -270,7 +304,7 @@ export function PurposeSection() {
             style={{
               width: FRAME_W,
               height: FRAME_H,
-              transform: "scale(calc(100cqw / 1440))",
+              transform: "scale(calc(100cqw / 1440px))",
             }}
           >
             <BackgroundGrid />

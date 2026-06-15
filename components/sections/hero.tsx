@@ -1,21 +1,21 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { useEffect, useRef } from 'react'
-import { Eyebrow } from '@/components/ui/eyebrow'
-import { ScrambleText } from '@/components/ui/scramble-text'
+import Image from "next/image";
+import { useEffect, useRef } from "react";
+import { Eyebrow } from "@/components/ui/eyebrow";
+import { ScrambleText } from "@/components/ui/scramble-text";
 
-const HERO_VIDEO = '/assets/hero-loop.mp4'
+const HERO_VIDEO = "/assets/hero-loop.mp4";
 
 function HeroVideo() {
-  const ref = useRef<HTMLVideoElement>(null)
+  const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    el.muted = true
-    el.play().catch(() => {})
-  }, [])
+    const el = ref.current;
+    if (!el) return;
+    el.muted = true;
+    el.play().catch(() => {});
+  }, []);
 
   return (
     <video
@@ -30,27 +30,33 @@ function HeroVideo() {
       <source src={HERO_VIDEO} type='video/mp4; codecs="avc1.42E01E"' />
       <source src={HERO_VIDEO} type="video/mp4" />
     </video>
-  )
+  );
 }
 
 // Alpha-mask that carves the 3D scene into its Figma silhouette.
 const SCENE_MASK = {
-  WebkitMaskImage: 'url(/assets/hero/hero-scene-mask.svg)',
-  maskImage: 'url(/assets/hero/hero-scene-mask.svg)',
-  WebkitMaskRepeat: 'no-repeat',
-  maskRepeat: 'no-repeat',
-} as const
+  WebkitMaskImage: "url(/assets/hero/hero-scene-mask.svg)",
+  maskImage: "url(/assets/hero/hero-scene-mask.svg)",
+  WebkitMaskRepeat: "no-repeat",
+  maskRepeat: "no-repeat",
+} as const;
 
 // Solid ▸ triangle — the live `oms-button-icon` arrow (same as nav).
-function TriangleArrow({ color = 'currentColor' }: { color?: string }) {
+function TriangleArrow({ color = "currentColor" }: { color?: string }) {
   return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      className="shrink-0"
+    >
       <path
         d="M7.86511 5.38649C8.07403 5.5838 8.07403 5.9162 7.86511 6.11351L4.59331 9.20354C4.27444 9.50469 3.75 9.27863 3.75 8.84003L3.75 2.65997C3.75 2.22137 4.27444 1.99531 4.59331 2.29646L7.86511 5.38649Z"
         fill={color}
       />
     </svg>
-  )
+  );
 }
 
 // Hero CTA — live `.btn-new`: flex with a 60px gap between label and arrow,
@@ -60,38 +66,88 @@ function CtaButton({
   label,
   bgClass,
   tilt,
+  textClass = "text-white",
 }: {
-  label: string
-  bgClass: string
-  tilt?: boolean
+  label: string;
+  bgClass: string;
+  tilt?: boolean;
+  textClass?: string;
 }) {
   return (
     <a
       href="#"
-      className={`scramble-host flex items-center justify-between gap-[60px] py-[18px] px-[16px] text-desktop-mono-medium leading-[1.2] text-white transition-colors ${bgClass}`}
-      style={{ clipPath: 'url(#buttonClip)' }}
+      className={`scramble-host flex items-center justify-between gap-[60px] py-[18px] px-[16px] text-desktop-mono-medium leading-[1.2] transition-colors ${textClass} ${bgClass}`}
+      style={{ clipPath: "url(#buttonClip)" }}
     >
       <span>
         <ScrambleText>{label}</ScrambleText>
       </span>
-      <span className={tilt ? '-rotate-45' : ''}>
-        <TriangleArrow color="white" />
+      <span className={tilt ? "-rotate-45" : ""}>
+        <TriangleArrow color="currentColor" />
       </span>
     </a>
-  )
+  );
 }
 
-// Widths from live site CSS: is-capped=88px, is-large=120px, is-xlarge=150px
-// Order and sizes extracted from source.html hero-marquee-wrap is-grid is-capped
+// Order, sizes, and viewBox aspect ratios extracted from the live hero
+// `.hero-marquee-wrap.is-capped` inline SVGs. Each live logo is a
+// fill="currentColor" SVG so it recolors per theme — we mirror that here by
+// rendering each as a CSS mask filled with `bg-primary` (flips light/dark to
+// match the live cell `color`: #07060D light / #FFFFFF dark).
+// Cell widths: is-capped=88px, is-large=120px, is-xlarge=150px.
+// `vbW`/`vbH` are the live SVG viewBox dims, used to keep the aspect ratio.
 const LOGOS = [
-  { src: '/assets/hero/logos/stripe.svg',     alt: 'Stripe',     w: 88  },
-  { src: '/assets/hero/logos/revolut.svg',    alt: 'Revolut',    w: 120 },
-  { src: '/assets/hero/logos/polymarket.svg', alt: 'Polymarket', w: 150 },
-  { src: '/assets/hero/logos/courtyard.svg',  alt: 'Courtyard',  w: 150 },
-  { src: '/assets/hero/logos/google.svg',     alt: 'Google',     w: 120 },
-  { src: '/assets/hero/logos/reddit.svg',     alt: 'Reddit',     w: 88  },
-  { src: '/assets/hero/logos/nexo.svg',       alt: 'Nexo',       w: 150 },
-]
+  {
+    src: "/assets/hero/logos/stripe.svg",
+    alt: "Stripe",
+    w: 88,
+    vbW: 72,
+    vbH: 60,
+  },
+  {
+    src: "/assets/hero/logos/revolut.svg",
+    alt: "Revolut",
+    w: 120,
+    vbW: 88,
+    vbH: 60,
+  },
+  {
+    src: "/assets/hero/logos/polymarket.svg",
+    alt: "Polymarket",
+    w: 150,
+    vbW: 132,
+    vbH: 60,
+  },
+  {
+    src: "/assets/hero/logos/courtyard.svg",
+    alt: "Courtyard",
+    w: 150,
+    vbW: 132,
+    vbH: 60,
+  },
+  {
+    src: "/assets/hero/logos/google.svg",
+    alt: "Google",
+    w: 120,
+    vbW: 88,
+    vbH: 60,
+  },
+  {
+    src: "/assets/hero/logos/reddit.svg",
+    alt: "Reddit",
+    w: 88,
+    vbW: 76,
+    vbH: 60,
+  },
+  { src: "/assets/hero/logos/nexo.svg", alt: "Nexo", w: 150, vbW: 98, vbH: 60 },
+  {
+    src: "/assets/hero/logos/securitize.svg",
+    alt: "Securitize",
+    w: 150,
+    vbW: 120,
+    vbH: 60,
+  },
+];
 
 // Hero socials — exact SVGs from the live site (fill=currentColor so the
 // whole-cell hover can recolor them). All render at 24px inside a 120px cell.
@@ -103,7 +159,7 @@ function XIcon() {
         fill="currentColor"
       />
     </svg>
-  )
+  );
 }
 
 function TelegramIcon() {
@@ -114,7 +170,7 @@ function TelegramIcon() {
         fill="currentColor"
       />
     </svg>
-  )
+  );
 }
 
 function LinkedInIcon() {
@@ -125,169 +181,261 @@ function LinkedInIcon() {
         fill="currentColor"
       />
     </svg>
-  )
+  );
 }
 
 // Stacked in the rightmost grid column (col 12), rows 5–7 → tops 480/600/720.
 const SOCIALS = [
-  { label: 'Follow on X', href: 'https://x.com/0xPolygon', Icon: XIcon },
-  { label: 'Telegram', href: 'https://t.me/PolygonHQ', Icon: TelegramIcon },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/polygonlabs/', Icon: LinkedInIcon },
-]
+  { label: "Follow on X", href: "https://x.com/0xPolygon", Icon: XIcon },
+  { label: "Telegram", href: "https://t.me/PolygonHQ", Icon: TelegramIcon },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/polygonlabs/",
+    Icon: LinkedInIcon,
+  },
+];
 
 export function Hero() {
   return (
-    <section className="relative w-full h-[840px] overflow-hidden bg-background">
-      {/* Grid — solid stroke cells behind everything (matches Figma 120px grid) */}
+    <section
+      className="relative w-full overflow-hidden bg-background"
+      style={{ containerType: "inline-size" }}
+    >
+      {/* Fixed 1440×840 design stage, scaled to the section width — same pattern
+          as purpose/news/use-cases/footer. Below 1440 the whole hero (grid, scene,
+          text, columns) scales as one unit, staying aligned with the nav. */}
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            'linear-gradient(var(--color-stroke) 1px, transparent 1px), linear-gradient(90deg, var(--color-stroke) 1px, transparent 1px)',
-          backgroundSize: '120px 120px',
-        }}
-      />
-
-      {/* 3D scene — masked into its silhouette */}
-      <div
-        className="absolute left-[24px] top-[-94px] w-[1392px] h-[1044px] pointer-events-none"
-        style={{ ...SCENE_MASK, WebkitMaskSize: '1392px 740px', maskSize: '1392px 740px', WebkitMaskPosition: '0px 170px', maskPosition: '0px 170px' }}
+        className="relative w-full overflow-hidden"
+        style={{ aspectRatio: "1440 / 840" }}
       >
-        <HeroVideo />
-      </div>
+        <div
+          className="absolute left-0 top-0 origin-top-left"
+          style={{
+            width: 1440,
+            height: 840,
+            transform: "scale(calc(100cqw / 1440px))",
+          }}
+        >
+          {/* Grid — solid stroke cells behind everything (matches Figma 120px grid) */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(var(--color-stroke) 1px, transparent 1px), linear-gradient(90deg, var(--color-stroke) 1px, transparent 1px)",
+              backgroundSize: "120px 120px",
+            }}
+          />
 
-      {/* Overlay — darkens the left of the scene so the heading reads */}
-      <div
-        className="absolute left-[24px] top-[76px] w-[700px] h-[756px] opacity-40 pointer-events-none"
-        style={{
-          backgroundImage:
-            'linear-gradient(60.2deg, rgb(7,6,13) 17.5%, rgba(7,6,13,0) 79.3%)',
-          ...SCENE_MASK,
-          WebkitMaskSize: '1392px 740px',
-          maskSize: '1392px 740px',
-        }}
-      />
-
-      {/* Eyebrow */}
-      <Eyebrow
-        text="$2.4 Trillion Transfer Volume"
-        borderColor="grey-200"
-        textColor="primary"
-        className="absolute left-[60px] top-[113px]"
-      />
-
-      {/* Heading */}
-      <div className="absolute left-[60px] top-[168px] w-[560px] flex flex-col gap-[2px]">
-        <div className="font-heading font-[300] text-[96px] leading-[86px] tracking-[-1.92px] text-grey-100">
-          <p className="leading-[86px] mb-0">It&rsquo;s not</p>
-          <p className="leading-[86px]">our first</p>
-        </div>
-        <div className="flex items-end gap-[12px] w-full">
-          <div className="flex flex-col items-start justify-end pb-[14px]">
-            <Image src="/assets/hero/poly-rotated-16.svg" alt="" width={16} height={16} unoptimized />
+          {/* 3D scene — masked into its silhouette */}
+          <div
+            className="absolute mt-[5 left-[24px] top-[-94px] w-[1392px] h-[1044px] pointer-events-none"
+            style={{
+              ...SCENE_MASK,
+              WebkitMaskSize: "1392px 740px",
+              maskSize: "1392px 740px",
+              WebkitMaskPosition: "0px 170px",
+              maskPosition: "0px 170px",
+            }}
+          >
+            <HeroVideo />
           </div>
-          <div className="h-[86px] w-[152px] overflow-hidden">
-            <Image
-              src="/assets/hero-chains.png"
-              alt=""
-              width={152}
-              height={86}
-              className="object-cover w-full h-full"
-              unoptimized
+
+          {/* Overlay — darkens the left of the scene so the white heading reads.
+          The hero is theme-INDEPENDENT (white text on the colorful scene in BOTH
+          themes, per live) so this dark wash is fixed, not theme-aware. */}
+          <div
+            className="absolute left-[24px] top-[76px] w-[700px] h-[756px] opacity-40 pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(60.2deg, rgb(7,6,13) 17.5%, rgba(7,6,13,0) 79.3%)",
+              ...SCENE_MASK,
+              WebkitMaskSize: "1392px 740px",
+              maskSize: "1392px 740px",
+            }}
+          />
+
+          {/* Eyebrow — fixed white on the scene (same in both themes) */}
+          <Eyebrow
+            text="$2.4 Trillion Transfer Volume"
+            borderColor="white"
+            textColor="white"
+            className="absolute left-[60px] top-[113px]"
+          />
+
+          {/* Heading */}
+          <div className="absolute left-[60px] top-[168px] w-[560px] flex flex-col gap-[2px]">
+            <div className="text-desktop-h1 text-white">
+              <p className="mb-0">It&rsquo;s not</p>
+              <p>our first</p>
+            </div>
+            <div className="flex items-end gap-[12px] w-full">
+              <div className="flex flex-col items-start justify-end pb-[14px]">
+                <Image
+                  src="/assets/hero/poly-rotated-16.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                  unoptimized
+                />
+              </div>
+              <div className="h-[86px] w-[152px] overflow-hidden">
+                <Image
+                  src="/assets/hero-chains.png"
+                  alt=""
+                  width={152}
+                  height={86}
+                  className="object-cover w-full h-full"
+                  unoptimized
+                />
+              </div>
+              <div className="text-desktop-h1 text-white whitespace-nowrap">
+                trillion
+              </div>
+            </div>
+          </div>
+
+          {/* Body */}
+          <p className="absolute left-[60px] top-[464px] w-[421px] text-desktop-body-large">
+            <span className="text-white">
+              The go-to blockchain for global payments,{" "}
+            </span>
+            <span className="text-[rgba(255,255,255,0.7)]">
+              where trillions in assets move instantly, at scale.
+            </span>
+          </p>
+
+          {/* CTAs — live button-wrap.is-cappped: 12px gap between buttons */}
+          <div className="absolute left-[60px] top-[555px] flex items-center gap-[12px]">
+            <CtaButton
+              label="OPEN MONEY STACK"
+              bgClass="bg-purple hover:bg-purple-hover"
+            />
+            <CtaButton
+              label="BUILD ON POLYGON"
+              bgClass="bg-[#07060D] hover:bg-[#121118]"
+              tilt
             />
           </div>
-          <div className="font-heading font-[300] text-[96px] leading-[86px] tracking-[-1.92px] text-grey-100 whitespace-nowrap">
-            trillion
-          </div>
-        </div>
-      </div>
 
-      {/* Body */}
-      <p className="absolute left-[60px] top-[464px] w-[421px] font-body text-[18px] leading-[26px]">
-        <span className="text-white">The go-to blockchain for global payments, </span>
-        <span className="text-grey-200">where trillions in assets move instantly, at scale.</span>
-      </p>
+          {/* Right-edge column divider — one continuous stroke down the full hero
+          right edge (y0 → y840), so the line runs unbroken from the nav, through
+          the gap above the trusted-by panel, over the 3D scene, into the socials
+          column. The panel and socials draw their own border-r at this same x. */}
+          <div className="absolute right-0 top-0 h-[840px] w-px bg-stroke pointer-events-none" />
 
-      {/* CTAs — live button-wrap.is-cappped: 12px gap between buttons */}
-      <div className="absolute left-[60px] top-[555px] flex items-center gap-[12px]">
-        <CtaButton
-          label="OPEN MONEY STACK"
-          bgClass="bg-purple hover:bg-purple-hover"
-        />
-        <CtaButton
-          label="BUILD ON POLYGON"
-          bgClass="bg-inverted-primary hover:bg-inverted-primary-hover"
-          tilt
-        />
-      </div>
+          {/* Trusted by — fixed label cell + separate scrolling logos area.
+          Height is a flat 120px now: the stage transform handles the responsive
+          scaling, so the old min(120px,8.333vw) would double-shrink. */}
+          <div
+            className="absolute right-0 top-[120px] w-[480px] bg-background border-t border-r border-stroke"
+            style={{ height: 120 }}
+          >
+            {/* "TRUSTED BY" label cell — static, first 120px column */}
+            <div className="absolute left-0 top-0 w-[120px] h-full">
+              <span className="absolute left-[18px] top-[52px] text-center text-desktop-mono-small">
+                TRUSTED BY
+              </span>
+              {/* top-left tick */}
+              <Image
+                src="/assets/hero/poly-rotated-8.svg"
+                alt=""
+                width={8}
+                height={8}
+                unoptimized
+                className="absolute left-[10px] top-[8px] rotate-180"
+              />
+              {/* bottom-right tick */}
+              <Image
+                src="/assets/hero/poly-rotated-8.svg"
+                alt=""
+                width={8}
+                height={8}
+                unoptimized
+                className="absolute right-[6px] bottom-[8px]"
+              />
+            </div>
 
-      {/* Trusted by — fixed label cell + separate scrolling logos area */}
-      {/* height:min(120px,8.333vw) per live site CSS; border-right added on is-capped variant */}
-      <div className="absolute left-[66.67%] top-[120px] w-[480px] bg-background border-t border-r border-stroke" style={{ height: 'min(120px, 8.333vw)' }}>
-
-        {/* "TRUSTED BY" label cell — static, first 120px column */}
-        <div className="absolute left-0 top-0 w-[120px] h-full">
-          <span className="absolute left-[22px] top-[54px] text-desktop-mono text-grey-100 whitespace-nowrap">
-            TRUSTED BY
-          </span>
-          {/* top-left tick */}
-          <Image src="/assets/hero/poly-rotated-8.svg" alt="" width={8} height={8} unoptimized
-            className="absolute left-[10px] top-[8px] rotate-180" />
-          {/* bottom-right tick */}
-          <Image src="/assets/hero/poly-rotated-8.svg" alt="" width={8} height={8} unoptimized
-            className="absolute right-[6px] bottom-[8px]" />
-        </div>
-
-        {/* Logo scrolling area — starts after the label cell, never overlaps it */}
-        <div className="absolute left-[120px] top-0 right-0 h-full overflow-hidden">
-          <div className="absolute inset-y-0 left-0 flex items-center animate-[marquee_22s_linear_infinite]">
-            {[0, 1].map((set) => (
-              <div key={set} className="flex items-center gap-[24px] pr-[24px] h-full" aria-hidden={set === 1}>
-                {LOGOS.map((logo) => (
+            {/* Logo scrolling area — starts after the label cell, never overlaps it */}
+            <div className="absolute left-[120px] top-0 right-0 h-full overflow-hidden">
+              <div className="absolute inset-y-0 left-0 flex items-center animate-[marquee_22s_linear_infinite]">
+                {[0, 1].map((set) => (
                   <div
-                    key={logo.alt}
-                    className="h-full shrink-0 flex items-center justify-center text-primary"
-                    style={{ width: logo.w, marginLeft: 24 }}
+                    key={set}
+                    className="flex items-center gap-[24px] pr-[24px] h-full"
+                    aria-hidden={set === 1}
                   >
-                    <img src={logo.src} alt={logo.alt} style={{ width: logo.w, maxHeight: '60%' }} />
+                    {LOGOS.map((logo) => (
+                      <div
+                        key={logo.alt}
+                        className="h-full shrink-0 flex items-center justify-center"
+                        style={{ width: logo.w, marginLeft: 24 }}
+                      >
+                        {/* Live logo is a currentColor SVG; we mask it and fill with
+                        bg-primary so it flips #07060D (light) / #FFF (dark). */}
+                        <div
+                          role="img"
+                          aria-label={logo.alt}
+                          className="bg-primary"
+                          style={{
+                            width: logo.w,
+                            height: (logo.w * logo.vbH) / logo.vbW,
+                            maxHeight: "60%",
+                            WebkitMaskImage: `url(${logo.src})`,
+                            maskImage: `url(${logo.src})`,
+                            WebkitMaskRepeat: "no-repeat",
+                            maskRepeat: "no-repeat",
+                            WebkitMaskSize: "contain",
+                            maskSize: "contain",
+                            WebkitMaskPosition: "center",
+                            maskPosition: "center",
+                          }}
+                        />
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
-            ))}
+              {/* left fade — at the boundary between label cell and logos */}
+              <div
+                className="absolute left-0 top-0 h-full w-[80px] pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(to right, var(--color-background), transparent)",
+                }}
+              />
+              {/* right fade */}
+              <div
+                className="absolute right-0 top-0 h-full w-[96px] pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(to left, var(--color-background), transparent)",
+                }}
+              />
+            </div>
           </div>
-          {/* left fade — at the boundary between label cell and logos */}
-          <div
-            className="absolute left-0 top-0 h-full w-[80px] pointer-events-none"
-            style={{ background: 'linear-gradient(to right, var(--color-background), transparent)' }}
-          />
-          {/* right fade */}
-          <div
-            className="absolute right-0 top-0 h-full w-[96px] pointer-events-none"
-            style={{ background: 'linear-gradient(to left, var(--color-background), transparent)' }}
-          />
-        </div>
-      </div>
 
-      {/* Socials — rightmost grid column (col 12), three stacked 120px cells.
+          {/* Socials — rightmost grid column (col 12), three stacked 120px cells.
           Each cell is opaque (covers the 3D scene) with stroke border-b/border-r,
           matching live `.hero-social-wrap`. Hovering anywhere in the cell recolors
           the icon to purple (live `.hero-social-wrap:hover{color:purple}`). */}
-      <div className="absolute right-0 top-[480px] w-[120px] flex flex-col">
-        {SOCIALS.map(({ label, href, Icon }) => (
-          <a
-            key={label}
-            href={href}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={label}
-            className="flex h-[120px] w-[120px] items-center justify-center border-b border-r border-stroke bg-background text-primary transition-colors duration-200 hover:text-purple"
-          >
-            <span className="size-[24px]">
-              <Icon />
-            </span>
-          </a>
-        ))}
+          <div className="absolute right-0 top-[480px] w-[120px] flex flex-col">
+            {SOCIALS.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={label}
+                className="flex h-[120px] w-[120px] items-center justify-center border-b border-r border-stroke bg-background text-primary transition-colors duration-200 hover:text-purple"
+              >
+                <span className="size-[24px]">
+                  <Icon />
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
-  )
+  );
 }

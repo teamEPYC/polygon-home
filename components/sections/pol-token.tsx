@@ -18,9 +18,17 @@ const gridCells: { left: number; top: number }[] = [
 export function PolToken() {
   return (
     <section
-      className="relative w-full overflow-hidden bg-background"
-      style={{ aspectRatio: '1440 / 816' }}
+      className="relative w-full overflow-hidden bg-inverted-primary"
+      style={{ containerType: 'inline-size' }}
     >
+      {/* Fixed 1440×816 design stage, scaled to the section width (scale-to-fit).
+          The %-based positions resolve against the 1440 stage and the fixed-px
+          text now scales with it, instead of staying full size below 1440. */}
+      <div className="relative w-full overflow-hidden" style={{ aspectRatio: '1440 / 816' }}>
+        <div
+          className="absolute left-0 top-0 origin-top-left"
+          style={{ width: 1440, height: 816, transform: 'scale(calc(100cqw / 1440px))' }}
+        >
       {/* Coin loop video — full bleed */}
       <CoinVideoPlayer />
 
@@ -66,7 +74,7 @@ export function PolToken() {
         className="absolute z-20"
         style={{ left: `${(734 / 1440) * 100}%`, top: `${(528 / 816) * 100}%` }}
       >
-        <h2 className="text-desktop-h2-indent text-grey-100">
+        <h2 className="text-desktop-h2-indent text-primary">
           Powered by
           <br />
           $POL.
@@ -78,7 +86,7 @@ export function PolToken() {
         className="absolute z-20"
         style={{ left: `${(686 / 1440) * 100}%`, top: `${(544 / 816) * 100}%` }}
       >
-        <Eyebrow text="TOKEN" borderColor="stroke" textColor="grey-100" />
+        <Eyebrow text="TOKEN" borderColor="grey-200" textColor="primary" />
       </div>
 
       {/* Body text (Figma: x=734 y=704 width=375) */}
@@ -98,6 +106,8 @@ export function PolToken() {
           A token with real utility.
         </span>
       </p>
+        </div>
+      </div>
     </section>
   )
 }

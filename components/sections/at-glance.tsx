@@ -30,7 +30,9 @@ const DIAMOND_H = 347;
 const DIAMOND_CX = 720;
 const DIAMOND_CY = 372;
 
-const PERSPECTIVE = "90vw";
+// 90vw at the 1440 design width = 1296px. Fixed px (not vw) so it lives in the
+// scale-to-fit stage's coordinate space and scales with the stage below 1440.
+const PERSPECTIVE = "1296px";
 
 const BASE_SPEED = -0.0002;
 const SPRING_DAMPING = 0.97;
@@ -167,17 +169,34 @@ function CylinderCarousel() {
 
   return (
     <>
-      {/* perspective container covers the whole section */}
-      <div
-        ref={containerRef}
+      {/* Entry animation — the whole structure (the "null" parent at the diamond
+          centre) scales 50% → 100% over 1s with ease-out when the section scrolls
+          into view. A single uniform scale keeps every card's size ratio and the
+          gaps between cards constant. transformOrigin matches the perspectiveOrigin
+          below so the diamond stays anchored while the cards scale in around it. */}
+      <motion.div
         style={{
           position: "absolute",
           inset: 0,
-          perspective: PERSPECTIVE,
-          perspectiveOrigin: `${DIAMOND_CX}px ${DIAMOND_CY}px`,
+          transformOrigin: `${DIAMOND_CX}px ${DIAMOND_CY}px`,
           pointerEvents: "none",
         }}
+        initial={{ scale: 0.5 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
       >
+        {/* perspective container covers the whole section */}
+        <div
+          ref={containerRef}
+          style={{
+            position: "absolute",
+            inset: 0,
+            perspective: PERSPECTIVE,
+            perspectiveOrigin: `${DIAMOND_CX}px ${DIAMOND_CY}px`,
+            pointerEvents: "none",
+          }}
+        >
         {/* rotating cylinder — origin at diamond centre */}
         <div
           style={{
@@ -229,6 +248,9 @@ function CylinderCarousel() {
                   backfaceVisibility: "visible",
                 }}
               >
+                {/* Card bg is a translucent overlay (rgba dark @0.8 + white border) that
+                    is theme-INDEPENDENT on live — verified the card fill is pixel-identical
+                    in light and dark (it shows the diamond/scene through). Single asset. */}
                 <img
                   src={card.bg}
                   alt=""
@@ -253,7 +275,7 @@ function CylinderCarousel() {
                   }}
                 >
                   <p
-                    className="font-heading font-[300] text-primary"
+                    className="font-heading font-[300] text-white"
                     style={{
                       fontSize: "30px",
                       letterSpacing: "-0.3px",
@@ -263,7 +285,7 @@ function CylinderCarousel() {
                     {card.value}
                   </p>
                   <p
-                    className="text-desktop-mono text-primary uppercase whitespace-pre-line"
+                    className="text-desktop-mono text-white uppercase whitespace-pre-line"
                     style={{ fontFeatureSettings: '"dlig" 1' }}
                   >
                     {card.label}
@@ -273,7 +295,8 @@ function CylinderCarousel() {
             );
           })}
         </div>
-      </div>
+        </div>
+      </motion.div>
 
       {/* Transparent drag-capture overlay */}
       <motion.div
@@ -292,8 +315,16 @@ export function AtGlance() {
   return (
     <section
       className="relative w-full overflow-hidden bg-[#3449c1]"
-      style={{ aspectRatio: "1440 / 940" }}
+      style={{ containerType: "inline-size" }}
     >
+      {/* Fixed 1440×940 design stage, scaled to the section width (scale-to-fit).
+          The 3D carousel, its entry animation, and the gem/hexagon all live in
+          the 1440 coordinate space and scale as one unit. */}
+      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "1440 / 940" }}>
+        <div
+          className="absolute left-0 top-0 origin-top-left"
+          style={{ width: 1440, height: 940, transform: "scale(calc(100cqw / 1440px))" }}
+        >
       {/* Atmospheric radial gradient background */}
       <div className="absolute inset-0 pointer-events-none">
         <Image
@@ -321,15 +352,20 @@ export function AtGlance() {
 
       {/* Heading — live CSS: u-h2-new: font-size:min(4rem,4.444vw)=64px, line-height:1.06, letter-spacing:-0.02em */}
       <h2
-        className="absolute left-[60px] top-[60px] w-[600px] font-heading font-[300] text-[64px] leading-[1.06] tracking-[-0.02em] text-grey-100 pointer-events-none"
+        className="absolute left-[60px] top-[60px] w-[600px] text-desktop-h2 text-white pointer-events-none"
         style={{ textIndent: "120px" }}
       >
         We&rsquo;ve been
         <br />
         around the block
       </h2>
+      {/* STATS eyebrow — fixed white text + white border on the blue band (both themes, per live) */}
       <div className="absolute left-[60px] top-[76px] pointer-events-none">
-        <Eyebrow text="STATS" borderColor="grey-100" textColor="grey-100" />
+        <Eyebrow
+          text="STATS"
+          borderColor="white-full"
+          textColor="white"
+        />
       </div>
 
       {/* 3D cylinder carousel + diamond */}
@@ -363,6 +399,8 @@ export function AtGlance() {
           className="object-contain"
           unoptimized
         />
+      </div>
+        </div>
       </div>
     </section>
   );
