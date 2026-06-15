@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import { NAV_LINKS, NAV_H, ArrowIcon } from "./nav-shared";
 
 /**
  * Mobile nav (≤991px) — matches live polygon.technology Webflow nav.
@@ -22,14 +22,6 @@ import Image from "next/image";
  *  - Overlay sits at top:100% (below the bar), full width.
  */
 
-const NAV_LINKS = [
-  { label: "Products" },
-  { label: "Use Cases" },
-  { label: "Company" },
-  { label: "Use Polygon" },
-  { label: "Developers Docs" },
-];
-
 // Solid right-pointing caret — exact path from live `.nav-tablets-svg`.
 function CaretIcon() {
   return (
@@ -39,23 +31,11 @@ function CaretIcon() {
       viewBox="0 0 5 8"
       fill="none"
       className="shrink-0 text-grey-200"
-      aria-hidden
+      aria-hidden={true}
     >
       <path
         d="M4.1147 3.2273C4.32362 3.42461 4.32362 3.757 4.1147 3.95431L0.842903 7.04435C0.524036 7.3455 -0.000408692 7.11944 -0.000408692 6.68084L-0.000408639 0.500776C-0.000408639 0.0621771 0.524036 -0.163883 0.842903 0.137269L4.1147 3.2273Z"
         fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-// Solid right-pointing triangle — exact path from live `oms-button-icon`.
-function ArrowIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
-      <path
-        d="M7.86511 5.38649C8.07403 5.5838 8.07403 5.9162 7.86511 6.11351L4.59331 9.20354C4.27444 9.50469 3.75 9.27863 3.75 8.84003L3.75 2.65997C3.75 2.22137 4.27444 1.99531 4.59331 2.29646L7.86511 5.38649Z"
-        fill="white"
       />
     </svg>
   );
@@ -74,20 +54,32 @@ export function NavMobileMenu() {
     };
   }, [open]);
 
+  // Dismiss on Escape while open (matches live behavior).
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
   return (
     // Right-side cluster of the mobile bar: purple CTA + hamburger.
     // Visibility (≤991px) is controlled by the parent wrapper in nav.tsx.
     <div className="flex h-full items-stretch gap-0">
       {/* BOOK A CALL — purple, angled cut + arrow (live `hide-desktop-only`) */}
       <a
-        href="https://info.polygon.technology/get-early-access"
+        href="https://info.polygon.technology/get-early-access?utm_source=Website&utm_medium=Polygon_website_cta&utm_campaign=homepage_AB&utm_content=Contact_B"
         target="_blank"
         rel="noreferrer"
         className="flex items-center gap-[10px] bg-purple px-[16px] text-desktop-mono-medium text-white transition-colors hover:bg-purple-hover"
         style={{ clipPath: "url(#navClipLeft)" }}
       >
         BOOK A CALL
-        <ArrowIcon />
+        <ArrowIcon color="white" />
       </a>
 
       {/* Hamburger button — .menu-button (48px) + .menu-button-wrap */}
@@ -125,8 +117,9 @@ export function NavMobileMenu() {
       {/* Overlay menu panel — sits below the bar (top:100%), full width */}
       <div
         id="mobile-nav-overlay"
-        className="fixed inset-x-0 top-[55px] bottom-0 overflow-hidden"
+        className="fixed inset-x-0 bottom-0 overflow-hidden"
         style={{
+          top: NAV_H,
           pointerEvents: open ? "auto" : "none",
         }}
       >
@@ -142,7 +135,7 @@ export function NavMobileMenu() {
               key={link.label}
               href="#"
               onClick={() => setOpen(false)}
-              className="flex items-center justify-between gap-[8px] border-t border-grey-400 py-[16px] font-mono text-[24px] leading-[1.2] uppercase text-primary"
+              className="flex items-center justify-between gap-[8px] border-t border-grey-400 py-[16px] text-mobile-nav-link text-primary"
             >
               <span className="flex items-center gap-[8px]">{link.label}</span>
               <CaretIcon />

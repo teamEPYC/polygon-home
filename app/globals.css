@@ -293,6 +293,13 @@
   text-transform: uppercase;
   font-feature-settings: 'dlig' on;
 }
+@utility text-mobile-nav-link {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
 
 /* ─── Animations ──────────────────────────────────────────────────────────── */
 @keyframes marquee {

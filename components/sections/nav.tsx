@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { NavMobileMenu } from "./nav-mobile-menu";
+import { NAV_LINKS, NAV_H, ArrowIcon } from "./nav-shared";
 
 /**
  * Top navigation — values extracted verbatim from the live site (puppeteer
@@ -11,34 +12,6 @@ import { NavMobileMenu } from "./nav-mobile-menu";
  *   book   col 11→    (x1200–1367, content width)
  * Items are pinned to grid columns, so positions don't drift with font width.
  */
-
-const NAV_LINKS = [
-  { label: "Products", hasNew: true },
-  { label: "Use Cases" },
-  { label: "Company" },
-  { label: "Use Polygon" },
-  { label: "Developers Docs" },
-];
-
-const NAV_H = 55;
-
-// Solid right-pointing triangle — exact path from the live site's `oms-button-icon`.
-function ArrowIcon({ color = "currentColor" }: { color?: string }) {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      className="shrink-0"
-    >
-      <path
-        d="M7.86511 5.38649C8.07403 5.5838 8.07403 5.9162 7.86511 6.11351L4.59331 9.20354C4.27444 9.50469 3.75 9.27863 3.75 8.84003L3.75 2.65997C3.75 2.22137 4.27444 1.99531 4.59331 2.29646L7.86511 5.38649Z"
-        fill={color}
-      />
-    </svg>
-  );
-}
 
 export function Nav() {
   return (
@@ -192,7 +165,9 @@ export function Nav() {
 
         {/* BOOK A CALL — starts col 11, content width, purple, angled cut + arrow */}
         <a
-          href="#"
+          href="https://info.polygon.technology/get-early-access?utm_source=Website&utm_medium=Polygon_website_cta&utm_campaign=homepage_AB&utm_content=Contact_B"
+          target="_blank"
+          rel="noreferrer"
           className="flex items-center  gap-[28px] bg-purple px-[16px] text-desktop-mono-medium text-white transition-colors hover:bg-purple-hover"
           style={{
             gridColumn: "11 / 13",
