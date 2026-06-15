@@ -3,6 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { OMSStaircase } from "./oms-staircase";
 import { OmsVideoPlayer } from "@/components/ui/oms-video-player";
 import { ScrambleText } from "@/components/ui/scramble-text";
+import { MobileStage } from "@/components/ui/stage";
+import { Eyebrow } from "@/components/ui/eyebrow";
+
+// Live mobile OMS section height at the 375 canvas (measured: 3435.29px @374w).
+const OMS_MOBILE_H = 3436;
 
 const CUT = 14;
 const clipPath = `polygon(0 0, calc(100% - ${CUT}px) 0, 100% ${CUT}px, 100% 100%, 0 100%)`;
@@ -274,8 +279,8 @@ export function OpenMoneyStack() {
       style={{ containerType: "inline-size" }}
     >
       {/* Fixed 1440×2521 design stage, scaled to the section width (scale-to-fit,
-          same as hero/purpose/news/use-cases/footer). */}
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: "1440 / 2521" }}>
+          same as hero/purpose/news/use-cases/footer). Desktop-only (≥768px). */}
+      <div className="relative hidden w-full overflow-hidden md:block" style={{ aspectRatio: "1440 / 2521" }}>
         <div
           className="absolute left-0 top-0 origin-top-left"
           style={{ width: 1440, height: 2521, transform: "scale(calc(100cqw / 1440px))" }}
@@ -474,6 +479,410 @@ export function OpenMoneyStack() {
       </svg>
         </div>
       </div>
+
+      {/* ─── MOBILE (≤767px) ─────────────────────────────────────────────────
+          Live mobile composition is fundamentally different from desktop:
+          single-column stacked cards, the desktop centred lottie is hidden
+          and replaced by a per-row mobile loop video. Section height ≈3436. */}
+      <MobileStage className="md:hidden" height={OMS_MOBILE_H}>
+        {/* Background gradient — same full-size radial as live `.blue-bg-circle
+            .is-oms` on mobile (verified identical to desktop). */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 50% 40%, #273ead, #2941b7 39%, #07092c 75%)",
+          }}
+        />
+        {/* Faint global grid */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
+            backgroundSize: "93.5px 93.5px",
+          }}
+        />
+
+        {/* Eyebrow — OPEN MONEY STACK, centered near top */}
+        <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 110 }}>
+          <Eyebrow text="OPEN MONEY STACK" borderColor="stroke" textColor="primary" hasDot />
+        </div>
+
+        {/* Heading — live u-h2-new mobile: 32px / lh 33.92px (1.06) / -0.64px,
+            centered, width 342. */}
+        <p
+          className="absolute left-1/2 -translate-x-1/2 text-white text-center"
+          style={{
+            top: 191,
+            width: 342,
+            fontFamily: "var(--font-heading)",
+            fontWeight: 300,
+            fontSize: 32,
+            lineHeight: "33.92px",
+            letterSpacing: "-0.64px",
+          }}
+        >
+          One open stack for money movement
+        </p>
+
+        {/* Body — 16px / 22.4px (1.4), white, centered, width 342 */}
+        <p
+          className="absolute left-1/2 -translate-x-1/2 text-white text-center"
+          style={{
+            top: 271,
+            width: 342,
+            fontFamily: "var(--font-body)",
+            fontWeight: 400,
+            fontSize: 16,
+            lineHeight: "22.4px",
+          }}
+        >
+          A single place to instantly access the onchain economy, with worldwide
+          distribution.
+        </p>
+
+        {/* GET EARLY ACCESS button — black cut-corner, white mono+arrow, centered */}
+        <a
+          href="#"
+          className="scramble-host group absolute inline-flex items-center justify-between h-[46px] pl-[16px] pr-[18px] text-white [[data-theme=dark]_&]:bg-[#07060D]"
+          style={{
+            top: 329,
+            left: "50%",
+            transform: "translateX(-50%)",
+            // Cut corner on the BOTTOM-RIGHT (live `.btn-new.is-black` mobile)
+            clipPath: `polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%)`,
+            gap: 14,
+          }}
+        >
+          <span className="text-desktop-mono-medium">
+            <ScrambleText>GET EARLY ACCESS</ScrambleText>
+          </span>
+          <svg width="8" height="11" viewBox="0 0 8 11" fill="none" className="shrink-0">
+            <path d="M1.5 1.5L6 5.5L1.5 9.5" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
+
+        {/* LIVE product cards — single column, stacked. l=17, w=342. */}
+        {MOBILE_PRODUCTS.map((p, i) => (
+          <MobileProductCard key={i} top={MOBILE_CARD_TOPS[i]} {...p} />
+        ))}
+
+        {/* COMING SOON cards */}
+        <MobileComingSoonCard
+          top={2700}
+          title="Stablecoin Orchestration"
+          description="Enterprise payments infrastructure for stablecoins and tokenized deposits"
+          icon="/assets/ico-pay.png"
+        />
+        <MobileComingSoonCard
+          top={2992}
+          title="KYC Hub"
+          description="Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest."
+          icon="/assets/ico-kit.png"
+        />
+
+        {/* Inverted-primary staircase band at the bottom (live `is-bottom`,
+            t≈3211, h≈224). Diagonal cut on the trailing corner. */}
+        <svg
+          className="absolute left-0 w-full"
+          style={{ top: 3211, height: 224 }}
+          viewBox="0 0 375 224"
+          preserveAspectRatio="none"
+          fill="none"
+          aria-hidden
+        >
+          <g fill="var(--color-inverted-primary)" stroke="var(--color-stroke)">
+            <path d="M281.25 0H375V224H281.25V0Z" />
+            <path d="M187.5 0H281.25V224H187.5V0Z" />
+            <path d="M93.75 0H187.5V224H93.75V0Z" />
+            <path d="M0 0H93.75V224H0V0Z" />
+          </g>
+        </svg>
+      </MobileStage>
     </section>
+  );
+}
+
+/* ─── Mobile sub-components ─────────────────────────────────────────────── */
+
+type MobileProduct = {
+  badge: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  wireIcon: string;
+  dotColor: string;
+  exploreText: string;
+  poweredByLogo?: string;
+  mobileVideo: string;
+};
+
+const MOBILE_PRODUCTS: MobileProduct[] = [
+  {
+    badge: "LIVE",
+    title: "Wallet Infrastructure",
+    subtitle: "one-click wallet creation to give your users an onchain account",
+    description:
+      "The Polygon Chain is fast, low cost, and battle-tested. Live for five years, with 99.99% uptime and millions of users, this is the best place to build onchain.",
+    wireIcon: "/assets/ico-wire-chains.png",
+    dotColor: "#00FF08",
+    exploreText: "Explore Sequence",
+    poweredByLogo: "/assets/logo-sequence.png",
+    mobileVideo: "/assets/oms-mobile-chains.webm",
+  },
+  {
+    badge: "LIVE",
+    title: "Crosschain Interop",
+    subtitle: "one-click crypto transactions with any chain",
+    description:
+      "All-in-one integration, enabling users to transact with any wallet, any token, on any chain, bringing deep unified liquidity.",
+    wireIcon: "/assets/ico-wire-trails.png",
+    dotColor: "#E271D7",
+    exploreText: "Explore Trails",
+    poweredByLogo: "/assets/logo-trails.svg",
+    mobileVideo: "/assets/oms-mobile-trails.webm",
+  },
+  {
+    badge: "LIVE",
+    title: "On/Off- and\nCash Ramps",
+    subtitle: "Physical cash and digital fiat on- and off-ramps",
+    description:
+      "Grow your revenue by offering on- and off-ramps, pay with crypto, earn yield, and more. All with enterprise-grade security.",
+    wireIcon: "/assets/ico-wire-wallet.png",
+    dotColor: "#FF7421",
+    exploreText: "Explore Coinme",
+    poweredByLogo: "/assets/logo-coinme.png",
+    mobileVideo: "/assets/oms-mobile-wallet.webm",
+  },
+  {
+    badge: "LIVE",
+    title: "Blockchain Rails",
+    subtitle: "The fastest settlement layer to move money globally",
+    description: "Use crypto to offer faster, cheaper cross-border transfers.",
+    wireIcon: "/assets/ico-wire-bpn.png",
+    dotColor: "#00BBFF",
+    exploreText: "Explore Polygon Chain",
+    mobileVideo: "/assets/oms-mobile-bpn.webm",
+  },
+];
+
+// Card start tops (badge row) measured live: 440, 1035, 1596, 2200.
+const MOBILE_CARD_TOPS = [440, 1035, 1596, 2200];
+
+function MobileBadge({ text }: { text: string }) {
+  return (
+    <div className="relative inline-flex items-center px-[12px] py-[6px] border border-[#707bb7] self-start">
+      <span className="absolute top-0 left-0 size-[6px] pointer-events-none text-[#707bb7]">
+        <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
+          <path d="M0 0H6L0 6V0Z" fill="currentColor" />
+        </svg>
+      </span>
+      <span className="text-desktop-mono-medium text-[rgba(255,255,255,0.7)] whitespace-nowrap pt-[1px]">
+        {text}
+      </span>
+      <span className="absolute bottom-0 right-0 size-[6px] pointer-events-none text-[#707bb7]">
+        <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
+          <path d="M6 6H0L6 0V6Z" fill="currentColor" />
+        </svg>
+      </span>
+    </div>
+  );
+}
+
+function MobileProductCard({
+  top,
+  badge,
+  title,
+  subtitle,
+  description,
+  wireIcon,
+  dotColor,
+  exploreText,
+  poweredByLogo,
+  mobileVideo,
+}: MobileProduct & { top: number }) {
+  return (
+    <div
+      className="group absolute flex flex-col"
+      style={{ top, left: 17, width: 342, gap: 16 }}
+    >
+      {/* Badge */}
+      <MobileBadge text={badge} />
+
+      {/* Heading — 28px / 28px (1.0) */}
+      <h3
+        className="text-white whitespace-pre-line"
+        style={{
+          fontFamily: "var(--font-heading)",
+          fontWeight: 300,
+          fontSize: 28,
+          lineHeight: "28px",
+          letterSpacing: "-0.28px",
+        }}
+      >
+        {title}
+      </h3>
+
+      {/* Subtitle — mono-medium uppercase, op70 */}
+      <p className="text-desktop-mono-medium uppercase text-[rgba(255,255,255,0.7)]">
+        {subtitle}
+      </p>
+
+      {/* Description — 16px / 22.4 (1.4), op70 */}
+      <p
+        className="text-[rgba(255,255,255,0.7)]"
+        style={{
+          fontFamily: "var(--font-body)",
+          fontWeight: 400,
+          fontSize: 16,
+          lineHeight: "22.4px",
+        }}
+      >
+        {description}
+      </p>
+
+      {/* POWERED BY + logo */}
+      {poweredByLogo && (
+        <div className="flex items-center gap-[12px]">
+          <span className="text-desktop-mono-small uppercase text-[rgba(255,255,255,0.7)]">
+            powered by
+          </span>
+          <Image
+            src={poweredByLogo}
+            alt=""
+            width={120}
+            height={20}
+            className="h-[20px] w-auto object-contain"
+            unoptimized
+          />
+        </div>
+      )}
+
+      {/* Mobile loop video — 340×199, 1px stroke border */}
+      <div
+        className="relative w-full overflow-hidden border border-[#707bb7]"
+        style={{ height: 200 }}
+      >
+        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          src={mobileVideo}
+          className="h-full w-full object-cover"
+        />
+      </div>
+
+      {/* Explore button — full-width 2-cell row. Live mobile: left cell = wire
+          icon (no dot); right cell = colored dot + explore text + the colored
+          arrow box shown by DEFAULT (no hover state on mobile). */}
+      <div className="grid grid-cols-[1fr_2fr] border-t border-[#707bb7]" style={{ minHeight: 68 }}>
+        {/* Left cell — wire icon */}
+        <div className="relative border-l border-b border-[#707bb7] flex items-center justify-center">
+          <Image
+            src={wireIcon}
+            alt=""
+            width={151}
+            height={98}
+            className="object-contain max-w-[64px]"
+            unoptimized
+          />
+        </div>
+        {/* Right cell — cut-corner outline + dot/text/arrow */}
+        <div className="relative flex items-center justify-between px-[14px]">
+          <svg
+            className="absolute pointer-events-none"
+            style={{ inset: "-1px 0 0 0", zIndex: -1, color: "#707bb7", width: "100%", height: "100%" }}
+            viewBox="0 0 226 68"
+            preserveAspectRatio="none"
+            fill="none"
+          >
+            <path
+              d="M224 0.5C224.828 0.5 225.5 1.17157 225.5 2V51.4067C225.5 52.3431 225.124 53.2413 224.458 53.8989L211.576 66.61C210.921 67.2561 210.038 67.6187 209.118 67.6187H0.5V0.5H224Z"
+              stroke="currentColor"
+            />
+          </svg>
+          <div className="flex items-center gap-[10px]">
+            <DotHex color={dotColor} />
+            <span className="text-desktop-mono-small uppercase text-white">
+              {exploreText}
+            </span>
+          </div>
+          {/* Colored arrow box — shown by default on mobile */}
+          <div className="relative shrink-0" style={{ width: 44, height: 36 }}>
+            <svg width="44" height="36" viewBox="0 0 44 36" fill="none" className="absolute inset-0">
+              <path d={ARROW_BOX} fill={dotColor} />
+              <path d={ARROW_TRI} fill="#07060D" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileComingSoonCard({
+  top,
+  title,
+  description,
+  icon,
+}: {
+  top: number;
+  title: string;
+  description: string;
+  icon: string;
+}) {
+  return (
+    <div className="absolute flex flex-col" style={{ top, left: 17, width: 342, gap: 16 }}>
+      {/* COMING SOON badge */}
+      <div className="relative inline-flex items-center px-[12px] py-[6px] border-t border-[var(--semi-transparent-blue)] self-start">
+        <span className="absolute top-0 left-0 size-[6px] pointer-events-none text-[var(--semi-transparent-blue)]">
+          <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
+            <path d="M0 0H6L0 6V0Z" fill="currentColor" />
+          </svg>
+        </span>
+        <span className="text-desktop-mono-medium text-[rgba(255,255,255,0.7)] whitespace-nowrap pt-[1px]">
+          coming soon
+        </span>
+        <span className="absolute bottom-0 right-0 size-[6px] pointer-events-none text-[var(--semi-transparent-blue)]">
+          <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
+            <path d="M6 6H0L6 0V6Z" fill="currentColor" />
+          </svg>
+        </span>
+      </div>
+
+      {/* Icon box — 164×112 cut-corner border */}
+      <div className="relative" style={{ width: 164, height: 112 }}>
+        <Image
+          src="/assets/product-card-container.svg"
+          alt=""
+          fill
+          className="object-fill"
+          unoptimized
+        />
+        <Image src={icon} alt="" fill className="object-contain p-[20px]" unoptimized />
+      </div>
+
+      {/* Heading — 28px */}
+      <h3
+        className="text-white"
+        style={{
+          fontFamily: "var(--font-heading)",
+          fontWeight: 300,
+          fontSize: 28,
+          lineHeight: "28px",
+          letterSpacing: "-0.28px",
+        }}
+      >
+        {title}
+      </h3>
+
+      {/* Subtitle — mono-medium uppercase op70 */}
+      <p className="text-desktop-mono-medium uppercase text-[rgba(255,255,255,0.7)]">
+        {description}
+      </p>
+    </div>
   );
 }
