@@ -871,7 +871,7 @@ function MobileGetStarted() {
             {CTA_BUTTONS.map((btn) => (
               <div
                 key={btn.label}
-                className="relative flex items-center justify-center"
+                className="relative flex items-center px-[20px]"
                 style={{ aspectRatio: "343 / 96" }}
               >
                 <svg
@@ -896,7 +896,7 @@ function MobileGetStarted() {
                 >
                   <path d="M5 0L10 5L5 10L0 5L5 0Z" fill="#F3F2F6" />
                 </svg>
-                <CtaCornerButton label={btn.label} href={btn.href} />
+                <MobileTrailButton label={btn.label} href={btn.href} />
               </div>
             ))}
           </div>
@@ -938,6 +938,64 @@ function CtaCornerButton({ label, href }: { label: string; href: string }) {
         <ScrambleText>{label}</ScrambleText>
       </span>
       <CtaArrow />
+    </a>
+  );
+}
+
+/* ── MOBILE-ONLY get-started button ──
+ * Matches live `.btn-new.is-black.is-trails` at ≤479px: a full-width inner
+ * button (label LEFT, chevron RIGHT via justify-between), transparent fill, a
+ * cut-corner white outline (live `.black-button-bg.is-trails` SVG, bottom-right
+ * diagonal = trailsButtonClip), 13px mono label, padding ≈13.6px / 12px.
+ * Used ONLY inside the mobile GetStarted cards — never on desktop.
+ */
+// Right-pointing chevron — verbatim live `.oms-button-icon` path (12×12).
+function MobileTrailChevron() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      className="shrink-0"
+      aria-hidden
+    >
+      <path
+        d="M7.86511 5.38649C8.07403 5.5838 8.07403 5.9162 7.86511 6.11351L4.59331 9.20354C4.27444 9.50469 3.75 9.27863 3.75 8.84003L3.75 2.65997C3.75 2.22137 4.27444 1.99531 4.59331 2.29646L7.86511 5.38649Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function MobileTrailButton({ label, href }: { label: string; href: string }) {
+  return (
+    <a
+      href={href}
+      className="scramble-host relative flex w-full items-center justify-between whitespace-nowrap px-[12px] py-[13.6px] text-white transition-opacity hover:opacity-90"
+    >
+      {/* Cut-corner outline — verbatim live `.black-button-bg.is-trails` path
+          (viewBox 305×53, bottom-right diagonal cut), stroked in currentColor. */}
+      <svg
+        className="absolute inset-0 h-full w-full select-none"
+        viewBox="0 0 305 53"
+        fill="none"
+        preserveAspectRatio="none"
+        aria-hidden
+      >
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M299.905 0C302.39 0.000263866 304.405 2.01488 304.405 4.5V32.5898C304.405 34.8702 303.489 37.0552 301.862 38.6533L289.03 51.2598C288.189 52.0862 287.056 52.5496 285.877 52.5498H4C1.79086 52.5498 0 50.7589 0 48.5498V4C0 1.79086 1.79086 1.45964e-08 4 0H299.905ZM4 1C2.34315 1 1 2.34315 1 4V48.5498C1 50.2067 2.34315 51.5498 4 51.5498H285.877C286.794 51.5496 287.675 51.1895 288.329 50.5469L301.162 37.9404C302.597 36.5303 303.405 34.6019 303.405 32.5898V4.5C303.405 2.56717 301.838 1.00026 299.905 1H4Z"
+          fill="currentColor"
+        />
+      </svg>
+      <span className="relative text-desktop-mono-small">
+        <ScrambleText>{label}</ScrambleText>
+      </span>
+      <span className="relative">
+        <MobileTrailChevron />
+      </span>
     </a>
   );
 }
