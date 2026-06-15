@@ -142,7 +142,7 @@ export function NavMobileMenu() {
               key={link.label}
               href="#"
               onClick={() => setOpen(false)}
-              className="flex items-center justify-between gap-[8px] border-t border-grey-400 py-[16px] text-mobile-h4 uppercase text-primary"
+              className="flex items-center justify-between gap-[8px] border-t border-grey-400 py-[16px] font-mono text-[24px] leading-[1.2] uppercase text-primary"
             >
               <span className="flex items-center gap-[8px]">{link.label}</span>
               <CaretIcon />
