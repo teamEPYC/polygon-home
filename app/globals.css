@@ -5,10 +5,12 @@
   --primary: #07060D;
   --inverted-primary: #F2F1F5;
   --inverted-primary-hover: #D0CED6;
-  --background: #FFFFFF;
+  /* Live page base is #F2F1F5 (NOT pure white) — verified by sampling the live
+     body bg in light mode. The style-guide's #FFFFFF did not match live. */
+  --background: #F2F1F5;
   --foreground: #07060D;
   --grey-100: #2D2B36;
-  --grey-200: #888A91;
+  --grey-200: #686D73;
   --grey-300: #A2A3A5;
   --grey-400: #BAB9BB;
   --grey-500: #D7D6D9;
@@ -60,6 +62,10 @@
   --font-heading: var(--font-heading);
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
+
+  /* Custom breakpoint: navbar swaps to hamburger below 992px.
+     Sections use the stock `md` (768px) breakpoint, not this one. */
+  --breakpoint-nav: 992px;
 
   /* Semantic */
   --color-primary: var(--primary);
