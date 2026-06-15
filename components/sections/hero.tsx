@@ -235,7 +235,7 @@ export function Hero() {
 
           {/* 3D scene — masked into its silhouette */}
           <div
-            className="absolute mt-[5 left-[24px] top-[-94px] w-[1392px] h-[1044px] pointer-events-none"
+            className="absolute left-[24px] top-[-94px] w-[1392px] h-[1044px] pointer-events-none"
             style={{
               ...SCENE_MASK,
               WebkitMaskSize: "1392px 740px",
@@ -464,30 +464,13 @@ export function Hero() {
           }}
         />
 
-        {/* Live mobileHeroClip (363×600 objectBoundingBox path) — beveled
-            top-left corner. Scaled to the scene card box via clipPathUnits. */}
-        <svg width="0" height="0" className="absolute">
-          <defs>
-            <clipPath
-              id="mobileHeroClip"
-              clipPathUnits="objectBoundingBox"
-              transform="scale(0.0027548209, 0.0016666667)"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M363 0.995135V599.995H0V29.2031C9.66733e-08 28.0973 0.457819 27.0404 1.26465 26.2842L28.1543 1.08107C28.8987 0.383409 29.8821 -0.00303945 30.9023 1.80045e-05L363 0.995135Z"
-              />
-            </clipPath>
-          </defs>
-        </svg>
-
-        {/* 3D scene card — inset, clipped to the live mobile silhouette */}
+        {/* 3D scene card — inset, clipped to the live mobile silhouette.
+            The #mobileHeroClip def lives in the shared <defs> in app/layout.tsx. */}
         <div
           className="absolute overflow-hidden"
           style={{
             left: 16,
-            top: 227,
+            top: 227, // top: live mobile measurement
             width: 343,
             height: 500,
             clipPath: "url(#mobileHeroClip)",
@@ -565,6 +548,7 @@ export function Hero() {
                   <div
                     key={logo.alt}
                     className="flex h-full shrink-0 items-center justify-center"
+                    // mobile marquee: logos at 85% of desktop cell width (extracted from live @375)
                     style={{ width: logo.w * 0.85, marginLeft: 28 }}
                   >
                     <div
@@ -572,9 +556,10 @@ export function Hero() {
                       aria-label={logo.alt}
                       className="bg-primary"
                       style={{
+                        // mobile marquee: logos at 85% of desktop cell width (extracted from live @375)
                         width: logo.w * 0.85,
                         height: (logo.w * 0.85 * logo.vbH) / logo.vbW,
-                        maxHeight: 28,
+                        maxHeight: 28, // live mobile logos cap at 28px tall
                         WebkitMaskImage: `url(${logo.src})`,
                         maskImage: `url(${logo.src})`,
                         WebkitMaskRepeat: "no-repeat",

@@ -53,6 +53,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <clipPath id="glanceCards" clipPathUnits="objectBoundingBox" transform="scale(0.0045045045, 0.0048543689)">
               <path fillRule="evenodd" clipRule="evenodd" d="M218.004 0C220.213 0.000174788 222.004 1.79108 222.004 4V179H222V183.398C222 184.463 221.575 185.484 220.82 186.234L202.118 204.837C201.369 205.582 200.355 206.001 199.298 206.001H4C1.79107 206.001 9.989e-05 204.21 0 202.001V178.001H0.00390625V22.6025C0.00395409 21.538 0.428859 20.5173 1.18359 19.7666L19.8857 1.16406C20.6352 0.418759 21.6491 3.8124e-05 22.7061 0H218.004Z" />
             </clipPath>
+            {/* Live mobileHeroClip (363×600 objectBoundingBox path) — beveled
+                top-left corner for the mobile hero scene card. Scaled to the
+                scene card box via clipPathUnits. Referenced from hero.tsx. */}
+            <clipPath
+              id="mobileHeroClip"
+              clipPathUnits="objectBoundingBox"
+              transform="scale(0.0027548209, 0.0016666667)"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M363 0.995135V599.995H0V29.2031C9.66733e-08 28.0973 0.457819 27.0404 1.26465 26.2842L28.1543 1.08107C28.8987 0.383409 29.8821 -0.00303945 30.9023 1.80045e-05L363 0.995135Z"
+              />
+            </clipPath>
           </defs>
         </svg>
         <ThemeProvider>{children}</ThemeProvider>
