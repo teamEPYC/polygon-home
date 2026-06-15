@@ -4,6 +4,12 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { ScrambleText } from "@/components/ui/scramble-text";
+import { MobileStage } from "@/components/ui/stage";
+
+// Exact mobile section height extracted from live (375 canvas): the hero spans
+// from the page top (nav floats over the top grid) down to where the next
+// "We've been around the block" STATS section begins at css ~900.
+const HERO_MOBILE_H = 900;
 
 const HERO_VIDEO = "/assets/hero-loop.mp4";
 
@@ -203,9 +209,10 @@ export function Hero() {
     >
       {/* Fixed 1440×840 design stage, scaled to the section width — same pattern
           as purpose/news/use-cases/footer. Below 1440 the whole hero (grid, scene,
-          text, columns) scales as one unit, staying aligned with the nav. */}
+          text, columns) scales as one unit, staying aligned with the nav.
+          Hidden below the md (768px) breakpoint, where the mobile stage takes over. */}
       <div
-        className="relative w-full overflow-hidden"
+        className="relative hidden w-full overflow-hidden md:block"
         style={{ aspectRatio: "1440 / 840" }}
       >
         <div
@@ -436,6 +443,155 @@ export function Hero() {
           </div>
         </div>
       </div>
+
+      {/* ───────────────────────── MOBILE (≤767px) ─────────────────────────
+          375-canvas stage. The nav floats over the top grid (same as desktop),
+          so the hero begins at the page top. Structure (all px on the 375
+          canvas, extracted from live polygon.technology @375):
+            • full-bleed grid background (matches live u-bg-grid mobile)
+            • inset 3D scene card (clip-path: live mobileHeroClip, 363×600 →
+              beveled top-left corner) holding eyebrow + heading + body + CTAs
+            • full-width trusted-by marquee (live .hero-marquee-wrap.is-grid:
+              width:100%; height:120px) below the scene */}
+      <MobileStage className="md:hidden" height={HERO_MOBILE_H}>
+        {/* Grid background — 75px cells (375 / 5 cols), matches live mobile grid */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(var(--color-stroke) 1px, transparent 1px), linear-gradient(90deg, var(--color-stroke) 1px, transparent 1px)",
+            backgroundSize: "75px 90px",
+          }}
+        />
+
+        {/* Live mobileHeroClip (363×600 objectBoundingBox path) — beveled
+            top-left corner. Scaled to the scene card box via clipPathUnits. */}
+        <svg width="0" height="0" className="absolute">
+          <defs>
+            <clipPath
+              id="mobileHeroClip"
+              clipPathUnits="objectBoundingBox"
+              transform="scale(0.0027548209, 0.0016666667)"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M363 0.995135V599.995H0V29.2031C9.66733e-08 28.0973 0.457819 27.0404 1.26465 26.2842L28.1543 1.08107C28.8987 0.383409 29.8821 -0.00303945 30.9023 1.80045e-05L363 0.995135Z"
+              />
+            </clipPath>
+          </defs>
+        </svg>
+
+        {/* 3D scene card — inset, clipped to the live mobile silhouette */}
+        <div
+          className="absolute overflow-hidden"
+          style={{
+            left: 16,
+            top: 227,
+            width: 343,
+            height: 500,
+            clipPath: "url(#mobileHeroClip)",
+          }}
+        >
+          <HeroVideo />
+          {/* Dark wash so the white heading + body read over the bright scene
+              (hero is theme-independent → fixed, not theme-aware). Live's mobile
+              scene reads noticeably darker than the raw video, especially over
+              the heading/body block. */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(180deg, rgba(7,6,13,0.72) 0%, rgba(7,6,13,0.5) 45%, rgba(7,6,13,0.25) 75%, rgba(7,6,13,0.1) 100%)",
+            }}
+          />
+        </div>
+
+        {/* Eyebrow — fixed white on the scene */}
+        <Eyebrow
+          text="$2.4 Trillion Transfer Volume"
+          borderColor="white"
+          textColor="white"
+          className="absolute left-[58px] top-[291px] !h-[28px] !px-[10px] !py-[6px]"
+        />
+
+        {/* Heading — three lines. Live mobile uses `.u-h1-new` at 3rem (48px),
+            line-height 0.9, tracking -0.02em (NOT the 56px text-mobile-h1 token —
+            this hero scales its own h1 down to 48px on mobile). */}
+        <div className="absolute left-[58px] top-[340px] font-heading font-light text-white text-[48px] leading-[0.9] tracking-[-0.96px]">
+          <p>It&rsquo;s not</p>
+          <p>our first</p>
+          <p>trillion</p>
+        </div>
+
+        {/* Body */}
+        <p className="absolute left-[58px] top-[490px] w-[296px] text-mobile-body">
+          <span className="text-white">
+            The go-to blockchain for global payments,{" "}
+          </span>
+          <span className="text-[rgba(255,255,255,0.7)]">
+            where trillions in assets move instantly, at scale.
+          </span>
+        </p>
+
+        {/* CTAs — stacked vertically on mobile, 12px gap. Live buttons are
+            ~284px wide (left 55 → right 339). */}
+        <div className="absolute left-[55px] top-[612px] flex w-[284px] flex-col items-stretch gap-[12px]">
+          <CtaButton
+            label="OPEN MONEY STACK"
+            bgClass="bg-purple hover:bg-purple-hover"
+          />
+          <CtaButton
+            label="BUILD ON POLYGON"
+            bgClass="bg-[#07060D] hover:bg-[#121118]"
+            tilt
+          />
+        </div>
+
+        {/* Trusted-by marquee — full-width, 120px tall, top/bottom stroke.
+            No "TRUSTED BY" label cell on mobile (live drops it). */}
+        <div
+          className="absolute left-0 right-0 overflow-hidden border-y border-stroke bg-background"
+          style={{ top: 740, height: 120 }}
+        >
+          <div className="absolute inset-y-0 left-0 flex items-center animate-[marquee_22s_linear_infinite]">
+            {[0, 1].map((set) => (
+              <div
+                key={set}
+                className="flex h-full items-center"
+                aria-hidden={set === 1}
+              >
+                {LOGOS.map((logo) => (
+                  <div
+                    key={logo.alt}
+                    className="flex h-full shrink-0 items-center justify-center"
+                    style={{ width: logo.w * 0.85, marginLeft: 28 }}
+                  >
+                    <div
+                      role="img"
+                      aria-label={logo.alt}
+                      className="bg-primary"
+                      style={{
+                        width: logo.w * 0.85,
+                        height: (logo.w * 0.85 * logo.vbH) / logo.vbW,
+                        maxHeight: 28,
+                        WebkitMaskImage: `url(${logo.src})`,
+                        maskImage: `url(${logo.src})`,
+                        WebkitMaskRepeat: "no-repeat",
+                        maskRepeat: "no-repeat",
+                        WebkitMaskSize: "contain",
+                        maskSize: "contain",
+                        WebkitMaskPosition: "center",
+                        maskPosition: "center",
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </MobileStage>
     </section>
   );
 }
