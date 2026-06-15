@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import Image from 'next/image'
 import { ThemeSwitcher } from '@/components/ui/theme-switcher'
 import { ScrambleText } from '@/components/ui/scramble-text'
+import { MobileStage } from '@/components/ui/stage'
 
 /* ─── Link columns (Figma node 1727:42993 "items") ──────────────────────────
  * Each column is absolutely positioned in the 1440×840 design space. A column
@@ -158,10 +159,17 @@ const PAD = 60
 // sit just inside the link-block border.
 const CONTENT_LEFT = 37
 
+// ── Mobile (375 canvas) ──
+// Live footer-section height @375 = 1314px (extracted via CDP getBoundingClientRect).
+const MOBILE_H = 1314
+// Top row (logo + theme toggle) = 75px (one mobile grid cell tall).
+const MOBILE_TOP_H = 75
+
 export function Footer() {
   return (
     <footer className="w-full bg-inverted-primary" style={{ containerType: 'inline-size' }}>
-      <div className="relative w-full" style={{ aspectRatio: '1440 / 840' }}>
+      {/* ── Desktop (≥768px): existing 1440×840 stage, untouched ── */}
+      <div className="relative hidden w-full md:block" style={{ aspectRatio: '1440 / 840' }}>
         {/* Fixed 1440×840 design stage, scaled to the footer width */}
         <div
           className="absolute left-0 top-0 origin-top-left"
@@ -289,6 +297,119 @@ export function Footer() {
           </div>
         </div>
       </div>
+
+      {/* ── Mobile (≤767px): 375 canvas ──
+       * Live (polygon.technology @375): footer-section height 1314px.
+       *  - Top row (75px): logo cell (2 grid cols, border-right at x150) + theme
+       *    toggle area (3 cols). 5-col bg grid (75px cells) draws the lines.
+       *  - footer-mobile-grid: 2 cols (162.99px), col-gap 16 / row-gap 52,
+       *    padding 52/16/20, border-top + border-bottom 1px stroke. The 4 link
+       *    containers flow row-major → col1=[Solutions, DevCommunity],
+       *    col2=[UseCases, Company]. Each container: flex-col gap 52px; each
+       *    group: flex-col gap 20px. Heading: mono 12px / 0.12px / uppercase /
+       *    white. Link: body 12px / 1.2 / grey-200.
+       *  - Copyright: absolute, bottom 40px / left 30px, mono 12px grey-200.
+       */}
+      <MobileStage className="md:hidden" height={MOBILE_H}>
+        {/* Background grid — 5 columns of 75px cells (matches live mobile
+            bg-grid: each cell has right + bottom 1px stroke). Solid surfaces
+            above (top row + link grid) mask it; it only shows in the lower
+            empty region above the copyright, as on live. */}
+        <div className="absolute inset-0 z-0" aria-hidden>
+          {Array.from({ length: Math.ceil(MOBILE_H / 75) }).map((_, row) => (
+            <div key={row} className="flex" style={{ height: 75 }}>
+              {Array.from({ length: 5 }).map((__, col) => (
+                <div
+                  key={col}
+                  className="border-b border-stroke"
+                  style={{
+                    width: 75,
+                    height: 75,
+                    borderRight: col < 4 ? '1px solid var(--color-stroke)' : undefined,
+                  }}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Top row — logo + theme toggle, over a 5-col grid (75px cells) */}
+        <div className="absolute left-0 top-0 z-[2]" style={{ height: MOBILE_TOP_H, width: 375 }}>
+          {/* Mask over cells, hiding the interior vertical grid lines (x75/225/300)
+              that run through the logo / toggle — keep only the divider at x150. */}
+          <div
+            className="absolute bg-inverted-primary"
+            style={{ left: 1, top: 0, width: 148, height: MOBILE_TOP_H - 1 }}
+            aria-hidden
+          />
+          <div
+            className="absolute bg-inverted-primary"
+            style={{ left: 151, top: 0, width: 223, height: MOBILE_TOP_H - 1 }}
+            aria-hidden
+          />
+          {/* Divider between logo cell (cols 1–2) and toggle area (cols 3–5) */}
+          <div
+            className="absolute border-l border-stroke"
+            style={{ left: 150, top: 0, height: MOBILE_TOP_H }}
+            aria-hidden
+          />
+          {/* Logo — left aligned, padding-left 16, vertically centered in 75px */}
+          <div className="absolute z-[2]" style={{ left: 16, top: (MOBILE_TOP_H - 28) / 2 }}>
+            <Image src="/assets/polygon-logo.svg" alt="Polygon" width={120} height={28} />
+          </div>
+          {/* Theme switcher — centered in the toggle area (x150–375) */}
+          <div
+            className="absolute z-[2] flex items-center justify-center"
+            style={{ left: 150, top: 0, width: 225, height: MOBILE_TOP_H }}
+          >
+            <ThemeSwitcher />
+          </div>
+        </div>
+
+        {/* Link grid */}
+        <div
+          className="absolute left-0 z-[1] grid border-y border-stroke bg-inverted-primary"
+          style={{
+            top: MOBILE_TOP_H,
+            width: 375,
+            gridTemplateColumns: '1fr 1fr',
+            columnGap: 16,
+            rowGap: 52,
+            padding: '52px 16px 20px',
+          }}
+        >
+          {COLUMNS.map((col) => (
+            <div key={col.left} className="flex flex-col gap-[52px]">
+              {col.groups.map((group) => (
+                <div key={group.title} className="flex flex-col gap-[20px]">
+                  {/* Heading — live: mono 12px / 0.12px (0.01em) / uppercase / white */}
+                  <p className="font-mono text-[12px] font-[400] uppercase leading-[1.2] tracking-[0.12px] text-primary">
+                    {group.title}
+                  </p>
+                  {group.links.map((link) => (
+                    <a
+                      key={link}
+                      href="#"
+                      /* Link — live: body 12px / 1.2 / 400 / grey-200 */
+                      className="scramble-host w-fit font-body text-[12px] font-[400] leading-[1.2] tracking-normal text-grey-200 transition-colors hover:text-grey-100"
+                    >
+                      <ScrambleText>{link}</ScrambleText>
+                    </a>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Copyright — absolute bottom 40 / left 30 */}
+        <p
+          className="absolute z-[2] font-mono text-[12px] font-[400] leading-[1.2] tracking-[0.12px] text-grey-200"
+          style={{ left: 30, bottom: 40, width: 300 }}
+        >
+          © 2025 Polygon Labs UI (Cayman) Ltd. All rights reserved
+        </p>
+      </MobileStage>
     </footer>
   )
 }
