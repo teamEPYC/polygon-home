@@ -6,9 +6,11 @@ import { ScrambleText } from "@/components/ui/scramble-text";
 import { MobileStage } from "@/components/ui/stage";
 import { Eyebrow } from "@/components/ui/eyebrow";
 
-// Live mobile OMS section height at the 500 canvas (`.sec.is-blue.is-lottie`
-// getBoundingClientRect: y1508, height 3311).
-const OMS_MOBILE_H = 3311;
+// Live mobile OMS section height @500 was 3311, but with 48px gaps between our
+// (slightly taller) cards the stack grows: 4 product + 2 coming-soon cards (end
+// ~3340) → blue grid → black bottom row at y3500 → grid + spacer rows
+// (3600-3800); section ends at 3800.
+const OMS_MOBILE_H = 3800;
 
 const CUT = 14;
 const clipPath = `polygon(0 0, calc(100% - ${CUT}px) 0, 100% ${CUT}px, 100% 100%, 0 100%)`;
@@ -257,9 +259,7 @@ function SecondaryCard({ title, description, icon }: SecondaryCardProps) {
         <div className="flex flex-col gap-[12px]">
           <Badge text="coming soon" variant="blue" />
           <div className="mt-[8px]">
-            <span className="text-desktop-h4 text-white">
-              {title}
-            </span>
+            <span className="text-desktop-h4 text-white">{title}</span>
           </div>
           <p
             className="text-desktop-mono-medium text-[rgba(255,255,255,0.7)] uppercase max-w-[320px]"
@@ -281,203 +281,213 @@ export function OpenMoneyStack() {
     >
       {/* Fixed 1440×2521 design stage, scaled to the section width (scale-to-fit,
           same as hero/purpose/news/use-cases/footer). Desktop-only (≥768px). */}
-      <div className="relative hidden w-full overflow-hidden md:block" style={{ aspectRatio: "1440 / 2521" }}>
+      <div
+        className="relative hidden w-full overflow-hidden md:block"
+        style={{ aspectRatio: "1440 / 2521" }}
+      >
         <div
           className="absolute left-0 top-0 origin-top-left"
-          style={{ width: 1440, height: 2521, transform: "scale(calc(100cqw / 1440px))" }}
+          style={{
+            width: 1440,
+            height: 2521,
+            transform: "scale(calc(100cqw / 1440px))",
+          }}
         >
-      {/* Background gradient — live `.blue-bg-circle.is-oms.is-home-new`:
+          {/* Background gradient — live `.blue-bg-circle.is-oms.is-home-new`:
           full-size CSS radial (width/height 100%, centered, top-aligned), NOT an
           image. circle at 50% 40%, stops #273ead → #2941b7 39% → #07092c 75%. */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 50% 40%, #273ead, #2941b7 39%, #07092c 75%)",
-        }}
-      />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 50% 40%, #273ead, #2941b7 39%, #07092c 75%)",
+            }}
+          />
 
-      {/* Faint global grid */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-          backgroundSize: "120px 120px",
-        }}
-      />
+          {/* Faint global grid */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
+              backgroundSize: "120px 120px",
+            }}
+          />
 
-      {/* Inverted staircase — animates in on scroll */}
-      {/* OMSStaircase already renders the OPEN MONEY STACK eyebrow (with dot). */}
-      <OMSStaircase />
+          {/* Inverted staircase — animates in on scroll */}
+          {/* OMSStaircase already renders the OPEN MONEY STACK eyebrow (with dot). */}
+          <OMSStaircase />
 
-      {/* Heading — live u-h2-new = desktop-h2 token: 64px / 1.06 line-height /
+          {/* Heading — live u-h2-new = desktop-h2 token: 64px / 1.06 line-height /
           -1.28px (-0.02em) tracking. Width forces the live 2-line break
           ("One open stack for" / "money movement"). */}
-      <p
-        className="absolute left-1/2 -translate-x-1/2 text-desktop-h2 text-white text-center w-[652px]"
-        style={{ top: 416 }}
-      >
-        One open stack for money movement
-      </p>
+          <p
+            className="absolute left-1/2 -translate-x-1/2 text-desktop-h2 text-white text-center w-[652px]"
+            style={{ top: 416 }}
+          >
+            One open stack for money movement
+          </p>
 
-      {/* Body text — 18px/1.4 (body-large). Width = 400px to reproduce the live
+          {/* Body text — 18px/1.4 (body-large). Width = 400px to reproduce the live
           2-line wrap (line1 ends "…onchain", measured 374px). */}
-      <p
-        className="absolute left-1/2 -translate-x-1/2 text-desktop-body-large text-white text-center w-[400px]"
-        style={{ top: 580 }}
-      >
-        A single place to instantly access the onchain economy, with worldwide
-        distribution.
-      </p>
+          <p
+            className="absolute left-1/2 -translate-x-1/2 text-desktop-body-large text-white text-center w-[400px]"
+            style={{ top: 580 }}
+          >
+            A single place to instantly access the onchain economy, with
+            worldwide distribution.
+          </p>
 
-      {/* GET EARLY ACCESS button.
+          {/* GET EARLY ACCESS button.
           Live: DARK = solid #07060D cut-corner fill, white text+arrow.
                 LIGHT = transparent cut-corner with a light outline, white text+arrow.
           Both states keep WHITE text/arrow (fixed) on the blue band. */}
-      <a
-        href="#"
-        className="scramble-host group absolute inline-flex items-center justify-between w-[245px] h-[52px] pl-[16px] pr-[20px] text-white hover:opacity-90 transition-opacity [[data-theme=dark]_&]:bg-[#07060D]"
-        style={{
-          top: 662,
-          left: "50%",
-          transform: "translateX(-50%)",
-          clipPath,
-        }}
-      >
-        {/* Light-mode outline — only rendered (visible) on the light band.
+          <a
+            href="#"
+            className="scramble-host group absolute inline-flex items-center justify-between w-[245px] h-[52px] pl-[16px] pr-[20px] text-white hover:opacity-90 transition-opacity [[data-theme=dark]_&]:bg-[#07060D]"
+            style={{
+              top: 662,
+              left: "50%",
+              transform: "translateX(-50%)",
+              clipPath,
+            }}
+          >
+            {/* Light-mode outline — only rendered (visible) on the light band.
             viewBox matches the 245px fixed width (14px top-right cut). */}
-        <svg
-          className="pointer-events-none absolute inset-0 hidden [[data-theme=light]_&]:block"
-          width="100%"
-          height="100%"
-          viewBox="0 0 245 52"
-          preserveAspectRatio="none"
-          fill="none"
-          aria-hidden
-        >
-          <path
-            d="M0.5 0.5H229.79C230.444 0.5 231.07 0.764 231.526 1.232L243.736 13.793C244.176 14.246 244.422 14.853 244.422 15.485V51.5H0.5V0.5Z"
-            stroke="rgba(255,255,255,0.7)"
-          />
-        </svg>
-        <span className="text-desktop-mono-medium">
-          <ScrambleText>GET EARLY ACCESS</ScrambleText>
-        </span>
-        <ArrowIcon />
-      </a>
+            <svg
+              className="pointer-events-none absolute inset-0 hidden [[data-theme=light]_&]:block"
+              width="100%"
+              height="100%"
+              viewBox="0 0 245 52"
+              preserveAspectRatio="none"
+              fill="none"
+              aria-hidden
+            >
+              <path
+                d="M0.5 0.5H229.79C230.444 0.5 231.07 0.764 231.526 1.232L243.736 13.793C244.176 14.246 244.422 14.853 244.422 15.485V51.5H0.5V0.5Z"
+                stroke="rgba(255,255,255,0.7)"
+              />
+            </svg>
+            <span className="text-desktop-mono-medium">
+              <ScrambleText>GET EARLY ACCESS</ScrambleText>
+            </span>
+            <ArrowIcon />
+          </a>
 
-      {/* oms-what-wrap — relative wrapper holding BOTH the video and the product
+          {/* oms-what-wrap — relative wrapper holding BOTH the video and the product
           rows, mirroring the live structure so the video positions itself:
             • lottie-abs : absolute, inset-0, top-aligned, centered, 28% width
             • oms-lottie-wrap : product rows, margin-top 64px, gap 64px
           Wrapper top = row1 border (790) − 64px row margin = 726. */}
-      <div
-        className="absolute left-1/2 -translate-x-1/2 w-[1320px]"
-        style={{ top: VIDEO_TOP }}
-      >
-        {/* lottie-abs — video container: top-aligned, horizontally centered, 28%.
+          <div
+            className="absolute left-1/2 -translate-x-1/2 w-[1320px]"
+            style={{ top: VIDEO_TOP }}
+          >
+            {/* lottie-abs — video container: top-aligned, horizontally centered, 28%.
             Nudged 20px up from the structural top per design tweak. */}
-        <div className="absolute inset-0 flex justify-center items-start pointer-events-none z-10">
-          <div style={{ width: VIDEO_WIDTH, marginTop: -20 }}>
-            <OmsVideoPlayer />
+            <div className="absolute inset-0 flex justify-center items-start pointer-events-none z-10">
+              <div style={{ width: VIDEO_WIDTH, marginTop: -20 }}>
+                <OmsVideoPlayer />
+              </div>
+            </div>
+
+            {/* oms-lottie-wrap — product rows */}
+            <div className="flex flex-col gap-[64px]" style={{ marginTop: 64 }}>
+              <ProductSection
+                badge="LIVE"
+                title="Wallet Infrastructure"
+                subtitle="one-click wallet creation to give your users an onchain account"
+                description="The Polygon Chain is fast, low cost, and battle-tested. Live for five years, with 99.99% uptime and millions of users, this is the best place to build onchain."
+                wireIcon="/assets/ico-wire-chains.png"
+                dotColor="#00FF08"
+                exploreText="Explore Sequence"
+                poweredByLogo="/assets/logo-sequence.png"
+              />
+              <ProductSection
+                badge="LIVE"
+                title="Crosschain Interop"
+                subtitle="one-click crypto transactions with any chain"
+                description="All-in-one integration, enabling users to transact with any wallet, any token, on any chain, bringing deep unified liquidity."
+                wireIcon="/assets/ico-wire-trails.png"
+                dotColor="#E271D7"
+                exploreText="Explore Trails"
+                poweredByLogo="/assets/logo-trails.svg"
+              />
+              <ProductSection
+                badge="LIVE"
+                title={"On/Off- and\nCash Ramps"}
+                subtitle="Physical cash and digital fiat on- and off-ramps"
+                description="Grow your revenue by offering on- and off-ramps, pay with crypto, earn yield, and more. All with enterprise-grade security."
+                wireIcon="/assets/ico-wire-wallet.png"
+                dotColor="#FF7421"
+                exploreText="Explore Coinme"
+                poweredByLogo="/assets/logo-coinme.png"
+              />
+              <ProductSection
+                badge="LIVE"
+                title="Blockchain Rails"
+                subtitle="The fastest settlement layer to move money globally"
+                description="Use crypto to offer faster, cheaper cross-border transfers."
+                wireIcon="/assets/ico-wire-bpn.png"
+                dotColor="#00BBFF"
+                exploreText="Explore Polygon Chain"
+              />
+            </div>
           </div>
-        </div>
 
-        {/* oms-lottie-wrap — product rows */}
-        <div className="flex flex-col gap-[64px]" style={{ marginTop: 64 }}>
-          <ProductSection
-            badge="LIVE"
-            title="Wallet Infrastructure"
-            subtitle="one-click wallet creation to give your users an onchain account"
-            description="The Polygon Chain is fast, low cost, and battle-tested. Live for five years, with 99.99% uptime and millions of users, this is the best place to build onchain."
-            wireIcon="/assets/ico-wire-chains.png"
-            dotColor="#00FF08"
-            exploreText="Explore Sequence"
-            poweredByLogo="/assets/logo-sequence.png"
-          />
-          <ProductSection
-            badge="LIVE"
-            title="Crosschain Interop"
-            subtitle="one-click crypto transactions with any chain"
-            description="All-in-one integration, enabling users to transact with any wallet, any token, on any chain, bringing deep unified liquidity."
-            wireIcon="/assets/ico-wire-trails.png"
-            dotColor="#E271D7"
-            exploreText="Explore Trails"
-            poweredByLogo="/assets/logo-trails.svg"
-          />
-          <ProductSection
-            badge="LIVE"
-            title={"On/Off- and\nCash Ramps"}
-            subtitle="Physical cash and digital fiat on- and off-ramps"
-            description="Grow your revenue by offering on- and off-ramps, pay with crypto, earn yield, and more. All with enterprise-grade security."
-            wireIcon="/assets/ico-wire-wallet.png"
-            dotColor="#FF7421"
-            exploreText="Explore Coinme"
-            poweredByLogo="/assets/logo-coinme.png"
-          />
-          <ProductSection
-            badge="LIVE"
-            title="Blockchain Rails"
-            subtitle="The fastest settlement layer to move money globally"
-            description="Use crypto to offer faster, cheaper cross-border transfers."
-            wireIcon="/assets/ico-wire-bpn.png"
-            dotColor="#00BBFF"
-            exploreText="Explore Polygon Chain"
-          />
-        </div>
-      </div>
+          {/* Secondary cards */}
+          <div
+            className="absolute flex items-center justify-between w-[1320px]"
+            style={{ top: 2068, left: 60 }}
+          >
+            <SecondaryCard
+              title="Stablecoin Orchestration"
+              description="Enterprise payments infrastructure for stablecoins and tokenized deposits"
+              icon="/assets/ico-kit.png"
+            />
+            <SecondaryCard
+              title="KYC Hub"
+              description="Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest."
+              icon="/assets/ico-pay.png"
+            />
+          </div>
 
-      {/* Secondary cards */}
-      <div
-        className="absolute flex items-center justify-between w-[1320px]"
-        style={{ top: 2068, left: 60 }}
-      >
-        <SecondaryCard
-          title="Stablecoin Orchestration"
-          description="Enterprise payments infrastructure for stablecoins and tokenized deposits"
-          icon="/assets/ico-kit.png"
-        />
-        <SecondaryCard
-          title="KYC Hub"
-          description="Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest."
-          icon="/assets/ico-pay.png"
-        />
-      </div>
-
-      {/* Last grid row — inverted-primary band with diagonal cut on top-left
+          {/* Last grid row — inverted-primary band with diagonal cut on top-left
           corner. Inline SVG so fill/stroke follow the theme (dark ↔ light). */}
-      <svg
-        className="absolute left-0 w-full h-[121px]"
-        style={{ top: 2400 }}
-        viewBox="0 0 1441.71 121.707"
-        preserveAspectRatio="none"
-        fill="none"
-        aria-hidden
-      >
-        <g fill="var(--color-inverted-primary)" stroke="var(--color-stroke)">
-          <path d="M1081.21 1.20711H1201.21V121.207H1081.21V1.20711Z" />
-          <path d="M1201.21 1.20711H1321.21V121.207H1201.21V1.20711Z" />
-          <path d="M1321.21 1.20711H1441.21V121.207H1321.21V1.20711Z" />
-          <path d="M961.207 1.20711H1081.21V121.207H961.207V1.20711Z" />
-          <path d="M841.207 1.20711H961.207V121.207H841.207V1.20711Z" />
-          <path d="M481.207 1.20711H601.207V121.207H481.207V1.20711Z" />
-          <path d="M601.207 1.20711H721.207V121.207H601.207V1.20711Z" />
-          <path d="M721.207 1.20711H841.207V121.207H721.207V1.20711Z" />
-          <path d="M361.207 1.20711H481.207V121.207H361.207V1.20711Z" />
-          <path d="M241.207 1.20711H361.207V121.207H241.207V1.20711Z" />
-          <path d="M121.207 1.20711H241.207V121.207H121.207V1.20711Z" />
-          <path d="M121.207 1.20711V121.207H1.20711L121.207 1.20711Z" />
-        </g>
-        <rect
-          x="1.20711"
-          y="1.20711"
-          width="120"
-          height="120"
-          fill="none"
-          stroke="var(--grid-stroke)"
-        />
-      </svg>
+          <svg
+            className="absolute left-0 w-full h-[121px]"
+            style={{ top: 2400 }}
+            viewBox="0 0 1441.71 121.707"
+            preserveAspectRatio="none"
+            fill="none"
+            aria-hidden
+          >
+            <g
+              fill="var(--color-inverted-primary)"
+              stroke="var(--color-stroke)"
+            >
+              <path d="M1081.21 1.20711H1201.21V121.207H1081.21V1.20711Z" />
+              <path d="M1201.21 1.20711H1321.21V121.207H1201.21V1.20711Z" />
+              <path d="M1321.21 1.20711H1441.21V121.207H1321.21V1.20711Z" />
+              <path d="M961.207 1.20711H1081.21V121.207H961.207V1.20711Z" />
+              <path d="M841.207 1.20711H961.207V121.207H841.207V1.20711Z" />
+              <path d="M481.207 1.20711H601.207V121.207H481.207V1.20711Z" />
+              <path d="M601.207 1.20711H721.207V121.207H601.207V1.20711Z" />
+              <path d="M721.207 1.20711H841.207V121.207H721.207V1.20711Z" />
+              <path d="M361.207 1.20711H481.207V121.207H361.207V1.20711Z" />
+              <path d="M241.207 1.20711H361.207V121.207H241.207V1.20711Z" />
+              <path d="M121.207 1.20711H241.207V121.207H121.207V1.20711Z" />
+              <path d="M121.207 1.20711V121.207H1.20711L121.207 1.20711Z" />
+            </g>
+            <rect
+              x="1.20711"
+              y="1.20711"
+              width="120"
+              height="120"
+              fill="none"
+              stroke="var(--grid-stroke)"
+            />
+          </svg>
         </div>
       </div>
 
@@ -505,12 +515,36 @@ export function OpenMoneyStack() {
           }}
         />
 
-        {/* TODO(oms-mobile-500): the 3D staircase Lottie box (live `.is-lottie`)
-            sits between the eyebrow (y57) and heading (y300); not yet ported. */}
+        {/* Top black staircase platform — live `bg-grid-item bg-black` cells form
+            a pedestal under the OPEN MONEY STACK eyebrow: row 1 = 3 cells
+            (x100→400, y0), row 2 = 1 centered cell (x200→300, y100). */}
+        <div
+          className="absolute left-0 flex"
+          style={{ top: 0, left: 100, height: 100 }}
+          aria-hidden
+        >
+          {[0, 1, 2].map((c) => (
+            <div
+              key={c}
+              className="bg-[#07060D] border-r border-b border-white/10"
+              style={{ width: 100, height: 100 }}
+            />
+          ))}
+        </div>
+        <div
+          className="absolute bg-[#07060D] border-r border-b border-white/10"
+          style={{ top: 100, left: 200, width: 100, height: 100 }}
+          aria-hidden
+        />
 
         {/* Eyebrow — OPEN MONEY STACK, centered. Live @500: y57. */}
         <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 57 }}>
-          <Eyebrow text="OPEN MONEY STACK" borderColor="stroke" textColor="primary" hasDot />
+          <Eyebrow
+            text="OPEN MONEY STACK"
+            borderColor="stroke"
+            textColor="primary"
+            hasDot
+          />
         </div>
 
         {/* Heading — live u-h2-new mobile: 32px / lh 33.92px (1.06) / -0.64px,
@@ -563,8 +597,20 @@ export function OpenMoneyStack() {
           <span className="text-desktop-mono-medium">
             <ScrambleText>GET EARLY ACCESS</ScrambleText>
           </span>
-          <svg width="8" height="11" viewBox="0 0 8 11" fill="none" className="shrink-0">
-            <path d="M1.5 1.5L6 5.5L1.5 9.5" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+          <svg
+            width="8"
+            height="11"
+            viewBox="0 0 8 11"
+            fill="none"
+            className="shrink-0"
+          >
+            <path
+              d="M1.5 1.5L6 5.5L1.5 9.5"
+              stroke="#FFFFFF"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </a>
 
@@ -575,35 +621,58 @@ export function OpenMoneyStack() {
 
         {/* COMING SOON cards */}
         <MobileComingSoonCard
-          top={2700}
+          top={2852}
           title="Stablecoin Orchestration"
           description="Enterprise payments infrastructure for stablecoins and tokenized deposits"
           icon="/assets/ico-pay.png"
         />
         <MobileComingSoonCard
-          top={2992}
+          top={3120}
           title="KYC Hub"
           description="Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest."
           icon="/assets/ico-kit.png"
         />
 
-        {/* Inverted-primary staircase band at the bottom (live `is-bottom`,
-            t≈3211, h≈224). Diagonal cut on the trailing corner. */}
-        <svg
-          className="absolute left-0 w-full"
-          style={{ top: 3211, height: 224 }}
-          viewBox="0 0 375 224"
-          preserveAspectRatio="none"
-          fill="none"
+        {/* Bottom black row — live `u-bg-grid-wrap.is-bottom` last row: 5 black
+            (#07060D) grid cells with white stroke lines, the leftmost clipped to a
+            triangle (#triangleClip) for the diagonal edge. Grid-aligned at y3500. */}
+        <div
+          className="absolute left-0 flex"
+          style={{ top: 3500, width: 500, height: 100 }}
           aria-hidden
         >
-          <g fill="var(--color-inverted-primary)" stroke="var(--color-stroke)">
-            <path d="M281.25 0H375V224H281.25V0Z" />
-            <path d="M187.5 0H281.25V224H187.5V0Z" />
-            <path d="M93.75 0H187.5V224H93.75V0Z" />
-            <path d="M0 0H93.75V224H0V0Z" />
-          </g>
-        </svg>
+          {[0, 1, 2, 3, 4].map((c) => (
+            <div
+              key={c}
+              className="bg-[#07060D] border-r border-b border-white/10"
+              style={{
+                width: 100,
+                height: 100,
+                clipPath: c === 0 ? "url(#triangleClip)" : undefined,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Grid rows + spacer after the triangle — live continues the dark grid
+            below the black row (`is-bottom` tail) then a grid spacer row
+            (`u-bg-grid-wrap.is-spacer`, ~100px) before the next section. */}
+        {[3600, 3700].map((rowTop) => (
+          <div
+            key={rowTop}
+            className="absolute left-0 flex"
+            style={{ top: rowTop, width: 500, height: 100 }}
+            aria-hidden
+          >
+            {[0, 1, 2, 3, 4].map((c) => (
+              <div
+                key={c}
+                className="bg-[#07060D] border-r border-b border-white/10"
+                style={{ width: 100, height: 100 }}
+              />
+            ))}
+          </div>
+        ))}
       </MobileStage>
     </section>
   );
@@ -672,13 +741,13 @@ const MOBILE_PRODUCTS: MobileProduct[] = [
   },
 ];
 
-// Card start tops (badge row) measured live @500: row titles at y594/1163/~1696/
-// 2279 → badge tops ≈ title−36.
-const MOBILE_CARD_TOPS = [558, 1127, 1660, 2243];
+// Card start tops. First card at the live line position (y549); each subsequent
+// card = prev top + prev rendered height (560/526/554) + a 48px gap between cards.
+const MOBILE_CARD_TOPS = [549, 1157, 1731, 2333];
 
 function MobileBadge({ text }: { text: string }) {
   return (
-    <div className="relative inline-flex items-center px-[12px] py-[6px] border border-[#707bb7] self-start">
+    <div className="relative inline-flex items-center px-[12px] py-[6px] border-r border-b border-l border-[#707bb7] self-start">
       <span className="absolute top-0 left-0 size-[6px] pointer-events-none text-[#707bb7]">
         <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
           <path d="M0 0H6L0 6V0Z" fill="currentColor" />
@@ -710,10 +779,11 @@ function MobileProductCard({
 }: MobileProduct & { top: number }) {
   return (
     <div
-      className="group absolute flex flex-col"
+      className="group absolute flex flex-col border-t border-[#707bb7]"
       style={{ top, left: 21, width: 459, gap: 16 }}
     >
-      {/* Badge */}
+      {/* Badge — hangs from the card's top border line (live `oms-lottie-card`
+          border-top extends full width; the badge sits at its left end). */}
       <MobileBadge text={badge} />
 
       {/* Heading — 28px / 28px (1.0) */}
@@ -730,19 +800,28 @@ function MobileProductCard({
         {title}
       </h3>
 
-      {/* Subtitle — mono-medium uppercase, op70 */}
-      <p className="text-desktop-mono-medium uppercase text-[rgba(255,255,255,0.7)]">
+      {/* Subtitle — live: 13px mono / lh 14.3 / +0.13px, uppercase, op70 */}
+      <p
+        className="uppercase text-[rgba(255,255,255,0.7)]"
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontWeight: 400,
+          fontSize: 13,
+          lineHeight: "14.3px",
+          letterSpacing: "0.13px",
+        }}
+      >
         {subtitle}
       </p>
 
-      {/* Description — 16px / 22.4 (1.4), op70 */}
+      {/* Description — live: 14px / lh 19.6 (1.4), op70 */}
       <p
         className="text-[rgba(255,255,255,0.7)]"
         style={{
           fontFamily: "var(--font-body)",
           fontWeight: 400,
-          fontSize: 16,
-          lineHeight: "22.4px",
+          fontSize: 14,
+          lineHeight: "19.6px",
         }}
       >
         {description}
@@ -765,66 +844,98 @@ function MobileProductCard({
         </div>
       )}
 
-      {/* Mobile loop video — live `oms-mobile-video-embed`: 459×200, border on
+      {/* Video + explore bar — flush (no flex gap); live joins them so the video's
+          bottom edge IS the explore bar's top border. */}
+      <div className="flex  flex-col">
+        {/* Mobile loop video — live `oms-mobile-video-embed`: 459×200, border on
           top/left/right only (no bottom — it joins the explore bar below).
           object-CONTAIN so the full 620×620 square video shows (not cropped). */}
-      <div
-        className="relative w-full overflow-hidden border-t border-l border-r border-[#707bb7]"
-        style={{ height: 200 }}
-      >
-        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          src={mobileVideo}
-          className="h-full w-full object-contain"
-        />
-      </div>
+        <div
+          className="relative w-full overflow-hidden border-t border-l border-r border-[#707bb7]"
+          style={{ height: 200 }}
+        >
+          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            src={mobileVideo}
+            className="h-full w-full object-contain"
+          />
+        </div>
 
-      {/* Explore bar — live `oms-button-wrap`: w459 h61, TWO EQUAL halves (230 each),
+        {/* Explore bar — live `oms-button-wrap`: w459 h61, TWO EQUAL halves (230 each),
           not a 1fr/2fr grid. Left half = wire icon; right half = colored dot +
           explore text + the colored arrow box. The bar outline is a cut-corner
           rectangle (bevel at the bottom-right), drawn full-size so every border
           line is visible. */}
-      <div className="relative flex" style={{ height: 61 }}>
-        {/* Full-bar cut-corner outline — top/left/right/bottom with a 14px bevel
+        <div className="relative flex" style={{ height: 116 }}>
+          {/* Full-bar cut-corner outline — top/left/right/bottom with a 14px bevel
             at the bottom-right corner (preserveAspectRatio none → fills exactly). */}
-        <svg
-          className="absolute inset-0 pointer-events-none"
-          style={{ color: "#707bb7", width: "100%", height: "100%" }}
-          viewBox="0 0 459 61"
-          preserveAspectRatio="none"
-          fill="none"
-        >
-          <path d="M0.5 0.5 H458.5 V46 L444 60.5 H0.5 Z" stroke="currentColor" />
-        </svg>
-        {/* Left half (230) — wire icon, centered */}
-        <div className="relative flex items-center justify-center" style={{ width: 230 }}>
-          <Image
-            src={wireIcon}
-            alt=""
-            width={151}
-            height={98}
-            className="object-contain max-w-[64px]"
-            unoptimized
+          <svg
+            className="absolute inset-0 pointer-events-none"
+            style={{ color: "#707bb7", width: "100%", height: "100%" }}
+            viewBox="0 0 459 61"
+            preserveAspectRatio="none"
+            fill="none"
+          >
+            <path
+              d="M0.5 0.5 H458.5 V46 L444 60.5 H0.5 Z"
+              stroke="currentColor"
+            />
+          </svg>
+          {/* Vertical divider between the two halves (live `oms-button-left` right edge) */}
+          <div
+            className="absolute top-0 bottom-0 w-px bg-[#707bb7] pointer-events-none"
+            style={{ left: 230 }}
           />
-        </div>
-        {/* Right half (229) — dot + explore text + colored arrow box */}
-        <div className="relative flex flex-1 items-center justify-between px-[14px]">
-          <div className="flex items-center gap-[10px]">
-            <DotHex color={dotColor} />
-            <span className="text-desktop-mono-small uppercase text-white">
-              {exploreText}
-            </span>
+          {/* Left half (230) — wire icon, 180px wide & fully visible (live lets it
+            overflow the 60px bar height; overflow-visible keeps it uncropped).
+            Shifted down so it overflows BELOW the bar like live, not up into the
+            video above. */}
+          <div
+            className="relative flex items-center justify-center"
+            style={{ width: 230 }}
+          >
+            <Image
+              src={wireIcon}
+              alt=""
+              width={180}
+              height={20}
+              className="object-contain "
+              style={{
+                width: 180,
+                height: "auto",
+                // transform: "translateY(28px)",
+              }}
+              unoptimized
+            />
           </div>
-          {/* Colored arrow box — shown by default on mobile */}
-          <div className="relative shrink-0" style={{ width: 44, height: 36 }}>
-            <svg width="44" height="36" viewBox="0 0 44 36" fill="none" className="absolute inset-0">
-              <path d={ARROW_BOX} fill={dotColor} />
-              <path d={ARROW_TRI} fill="#07060D" />
-            </svg>
+          {/* Right half (229) — dot + explore text + colored arrow box */}
+          <div className="relative flex flex-1 items-center justify-between px-[14px]">
+            <div className="flex items-center gap-[10px]">
+              <DotHex color={dotColor} />
+              <span className="text-desktop-mono-small uppercase text-white">
+                {exploreText}
+              </span>
+            </div>
+            {/* Colored arrow box — shown by default on mobile */}
+            <div
+              className="relative shrink-0"
+              style={{ width: 44, height: 36 }}
+            >
+              <svg
+                width="44"
+                height="36"
+                viewBox="0 0 44 36"
+                fill="none"
+                className="absolute inset-0"
+              >
+                <path d={ARROW_BOX} fill={dotColor} />
+                <path d={ARROW_TRI} fill="#07060D" />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -844,9 +955,12 @@ function MobileComingSoonCard({
   icon: string;
 }) {
   return (
-    <div className="absolute flex flex-col" style={{ top, left: 17, width: 342, gap: 16 }}>
-      {/* COMING SOON badge */}
-      <div className="relative inline-flex items-center px-[12px] py-[6px] border-t border-[var(--semi-transparent-blue)] self-start">
+    <div
+      className="absolute flex flex-col border-t border-[var(--semi-transparent-blue)]"
+      style={{ top, left: 21, width: 459, gap: 16 }}
+    >
+      {/* COMING SOON badge — hangs from the card's top-border line (no top border) */}
+      <div className="relative inline-flex items-center px-[12px] py-[6px] border-r border-b border-l border-[var(--semi-transparent-blue)] self-start">
         <span className="absolute top-0 left-0 size-[6px] pointer-events-none text-[var(--semi-transparent-blue)]">
           <svg width="6" height="6" viewBox="0 0 6 6" fill="none">
             <path d="M0 0H6L0 6V0Z" fill="currentColor" />
@@ -862,8 +976,8 @@ function MobileComingSoonCard({
         </span>
       </div>
 
-      {/* Icon box — 164×112 cut-corner border */}
-      <div className="relative" style={{ width: 164, height: 112 }}>
+      {/* Icon box — cut-corner border container with the 3D icon */}
+      <div className="relative" style={{ width: 110, height: 84 }}>
         <Image
           src="/assets/product-card-container.svg"
           alt=""
@@ -871,25 +985,40 @@ function MobileComingSoonCard({
           className="object-fill"
           unoptimized
         />
-        <Image src={icon} alt="" fill className="object-contain p-[20px]" unoptimized />
+        <Image
+          src={icon}
+          alt=""
+          fill
+          className="object-contain p-[16px]"
+          unoptimized
+        />
       </div>
 
-      {/* Heading — 28px */}
+      {/* Title — live `u-h4-new`: 24px / lh 30 / -0.24px */}
       <h3
         className="text-white"
         style={{
           fontFamily: "var(--font-heading)",
           fontWeight: 300,
-          fontSize: 28,
-          lineHeight: "28px",
-          letterSpacing: "-0.28px",
+          fontSize: 24,
+          lineHeight: "30px",
+          letterSpacing: "-0.24px",
         }}
       >
         {title}
       </h3>
 
-      {/* Subtitle — mono-medium uppercase op70 */}
-      <p className="text-desktop-mono-medium uppercase text-[rgba(255,255,255,0.7)]">
+      {/* Subtitle — live: 13px mono / lh 14.3 / uppercase op70 */}
+      <p
+        className="uppercase text-[rgba(255,255,255,0.7)]"
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontWeight: 400,
+          fontSize: 13,
+          lineHeight: "14.3px",
+          letterSpacing: "0.13px",
+        }}
+      >
         {description}
       </p>
     </div>

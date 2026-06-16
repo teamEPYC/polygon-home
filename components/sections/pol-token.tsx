@@ -16,11 +16,11 @@ const gridCells: { left: number; top: number }[] = [
   })),
 ]
 
-// Mobile (≤767px) — extracted live @375 canvas (see MOBILE block below).
-const MOBILE_H = 614 // live .section.is-card-coin height @375
+// Mobile (≤767px) — extracted live @500 canvas (see MOBILE block below).
+const MOBILE_H = 588 // live .section.is-card-coin height @500
 const M_VIDEO_H = 320 // live .h-coin-video-container height
-const M_GAP = 32 // live column gap (2rem) between video and heading-wrap
-const M_LEFT = 16 // live --site--margin (≈1rem) @375
+const M_GAP = 42 // gap between video (320) and heading (live heading at y362)
+const M_LEFT = 18 // live --site--margin @500
 
 export function PolToken() {
   return (
@@ -131,7 +131,7 @@ export function PolToken() {
               (118×46, purple btn-new, 13px label + play-triangle arrow).
           ──────────────────────────────────────────────────────────────────── */}
       <div className="md:hidden" style={{ containerType: 'inline-size' }}>
-        <MobileStage height={MOBILE_H}>
+        <MobileStage width={500} height={MOBILE_H}>
           {/* Coin video — full bleed, 320px tall, clipped to the top-left
               corner cut. Live's #cornerClip (M120 0…V120L120 0) is an
               objectBoundingBox path that didn't apply here, so we use an
@@ -154,7 +154,7 @@ export function PolToken() {
               "Powered" is indented past the eyebrow, "by $POL" is full-left. */}
           <div
             className="absolute z-20"
-            style={{ left: M_LEFT, top: M_VIDEO_H + M_GAP, width: 375 - M_LEFT }}
+            style={{ left: M_LEFT, top: M_VIDEO_H + M_GAP, width: 500 - M_LEFT }}
           >
             {/* Heading block (eyebrow overlaid in line-1 indent). Live h70. */}
             <div className="relative" style={{ height: 70 }}>
@@ -210,7 +210,7 @@ export function PolToken() {
               className="text-primary"
               style={{
                 marginTop: 26,
-                width: 326,
+                width: 444,
                 fontFamily: 'var(--font-body)',
                 fontWeight: 400,
                 fontSize: 16,

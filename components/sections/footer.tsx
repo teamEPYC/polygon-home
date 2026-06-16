@@ -1,15 +1,15 @@
-import type { ReactNode } from 'react'
-import Image from 'next/image'
-import { ThemeSwitcher } from '@/components/ui/theme-switcher'
-import { ScrambleText } from '@/components/ui/scramble-text'
-import { MobileStage } from '@/components/ui/stage'
+import type { ReactNode } from "react";
+import Image from "next/image";
+import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { ScrambleText } from "@/components/ui/scramble-text";
+import { MobileStage } from "@/components/ui/stage";
 
 /* ─── Link columns (Figma node 1727:42993 "items") ──────────────────────────
  * Each column is absolutely positioned in the 1440×840 design space. A column
  * may hold one or two title-groups; groups are separated by 64px, links by 18px.
  */
-type Group = { title: string; links: string[] }
-type Column = { left: number; groups: Group[] }
+type Group = { title: string; links: string[] };
+type Column = { left: number; groups: Group[] };
 
 // Columns + links extracted from the live footer (polygon.technology), 4 columns
 // at 240px spacing. Titles render uppercase via text-desktop-mono-medium.
@@ -18,20 +18,20 @@ const COLUMNS: Column[] = [
     left: 0,
     groups: [
       {
-        title: 'Solutions by Polygon',
+        title: "Solutions by Polygon",
         links: [
-          'Polygon Chain',
-          'Crosschain Interop',
-          'Wallet Infrastructure',
-          'On-/Off- Ramps',
-          'Polygon CDK',
-          'Polygon Agglayer',
-          'Polygon Vaultbridge',
+          "Polygon Chain",
+          "Crosschain Interop",
+          "Wallet Infrastructure",
+          "On-/Off- Ramps",
+          "Polygon CDK",
+          "Polygon Agglayer",
+          "Polygon Vaultbridge",
         ],
       },
       {
-        title: 'Incubations',
-        links: ['Miden', 'Billions', 'Zisk', 'Katana'],
+        title: "Incubations",
+        links: ["Miden", "Billions", "Zisk", "Katana"],
       },
     ],
   },
@@ -39,16 +39,22 @@ const COLUMNS: Column[] = [
     left: 240,
     groups: [
       {
-        title: 'Use Cases',
-        links: ['Payments', 'RWAs', 'Stablecoins'],
+        title: "Use Cases",
+        links: ["Payments", "RWAs", "Stablecoins"],
       },
       {
-        title: 'Resources',
-        links: ['Blog', 'Payments Knowledge Base', 'POL Whitepaper', 'Plonky 3', 'ZK Research'],
+        title: "Resources",
+        links: [
+          "Blog",
+          "Payments Knowledge Base",
+          "POL Whitepaper",
+          "Plonky 3",
+          "ZK Research",
+        ],
       },
       {
-        title: 'Legal',
-        links: ['Legal Terms Home', 'Terms of Use', 'Privacy Policy'],
+        title: "Legal",
+        links: ["Legal Terms Home", "Terms of Use", "Privacy Policy"],
       },
     ],
   },
@@ -56,8 +62,17 @@ const COLUMNS: Column[] = [
     left: 480,
     groups: [
       {
-        title: 'Dev Community',
-        links: ['Docs', 'Events', 'Support', 'Forum', 'Governance', 'Github', 'Security', 'Faucet'],
+        title: "Dev Community",
+        links: [
+          "Docs",
+          "Events",
+          "Support",
+          "Forum",
+          "Governance",
+          "Github",
+          "Security",
+          "Faucet",
+        ],
       },
     ],
   },
@@ -65,21 +80,27 @@ const COLUMNS: Column[] = [
     left: 720,
     groups: [
       {
-        title: 'Company',
-        links: ['About Polygon', 'Careers', 'Contact', 'Brand Guidelines', 'POL Token'],
+        title: "Company",
+        links: [
+          "About Polygon",
+          "Careers",
+          "Contact",
+          "Brand Guidelines",
+          "POL Token",
+        ],
       },
       {
-        title: 'Use Polygon',
-        links: ['Airdrops', 'Ecosystem', 'Polygon Scan', 'Staking', 'Portal'],
+        title: "Use Polygon",
+        links: ["Airdrops", "Ecosystem", "Polygon Scan", "Staking", "Portal"],
       },
     ],
   },
-]
+];
 
 const SOCIALS: { label: string; href: string; icon: ReactNode }[] = [
   {
-    label: 'X (Twitter)',
-    href: 'https://twitter.com/0xPolygon',
+    label: "X (Twitter)",
+    href: "https://twitter.com/0xPolygon",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
@@ -90,8 +111,8 @@ const SOCIALS: { label: string; href: string; icon: ReactNode }[] = [
     ),
   },
   {
-    label: 'Discord',
-    href: 'https://discord.gg/polygon',
+    label: "Discord",
+    href: "https://discord.gg/polygon",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
@@ -102,8 +123,8 @@ const SOCIALS: { label: string; href: string; icon: ReactNode }[] = [
     ),
   },
   {
-    label: 'Telegram',
-    href: 'https://t.me/polygonofficial',
+    label: "Telegram",
+    href: "https://t.me/polygonofficial",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
@@ -114,8 +135,8 @@ const SOCIALS: { label: string; href: string; icon: ReactNode }[] = [
     ),
   },
   {
-    label: 'Reddit',
-    href: 'https://reddit.com/r/0xPolygon',
+    label: "Reddit",
+    href: "https://reddit.com/r/0xPolygon",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
@@ -126,8 +147,8 @@ const SOCIALS: { label: string; href: string; icon: ReactNode }[] = [
     ),
   },
   {
-    label: 'GitHub',
-    href: 'https://github.com/0xPolygon',
+    label: "GitHub",
+    href: "https://github.com/0xPolygon",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
@@ -140,40 +161,64 @@ const SOCIALS: { label: string; href: string; icon: ReactNode }[] = [
     ),
   },
   {
-    label: 'Instagram',
-    href: 'https://instagram.com/0xpolygon',
+    label: "Instagram",
+    href: "https://instagram.com/0xpolygon",
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" strokeWidth="1.6" />
-        <circle cx="12" cy="12" r="3.8" stroke="currentColor" strokeWidth="1.6" />
+        <rect
+          x="3.5"
+          y="3.5"
+          width="17"
+          height="17"
+          rx="5"
+          stroke="currentColor"
+          strokeWidth="1.6"
+        />
+        <circle
+          cx="12"
+          cy="12"
+          r="3.8"
+          stroke="currentColor"
+          strokeWidth="1.6"
+        />
         <circle cx="16.7" cy="7.3" r="1.1" fill="currentColor" />
       </svg>
     ),
   },
-]
+];
 
 // Content sits inside the 60px page margins; the grid spans the full canvas.
-const PAD = 60
+const PAD = 60;
 // Left margin for the link columns / logo / copyright. Live insets them 37px from
 // the footer edge (columns at 37/277/517/756), tighter than the 60px PAD, so they
 // sit just inside the link-block border.
-const CONTENT_LEFT = 37
+const CONTENT_LEFT = 37;
 
-// ── Mobile (375 canvas) ──
-// Live footer-section height @375 = 1314px (extracted via CDP getBoundingClientRect).
-const MOBILE_H = 1314
-// Top row (logo + theme toggle) = 75px (one mobile grid cell tall).
-const MOBILE_TOP_H = 75
+// ── Mobile (500 canvas) ──
+// Live footer-section height @500 ≈ 1300px.
+const MOBILE_H = 1300;
+// Top row (logo + theme toggle) = 100px (one 500 grid cell tall).
+const MOBILE_TOP_H = 100;
 
 export function Footer() {
   return (
-    <footer className="w-full bg-inverted-primary" style={{ containerType: 'inline-size' }}>
+    <footer
+      className="w-full bg-inverted-primary"
+      style={{ containerType: "inline-size" }}
+    >
       {/* ── Desktop (≥768px): existing 1440×840 stage, untouched ── */}
-      <div className="relative hidden w-full md:block" style={{ aspectRatio: '1440 / 840' }}>
+      <div
+        className="relative hidden w-full md:block"
+        style={{ aspectRatio: "1440 / 840" }}
+      >
         {/* Fixed 1440×840 design stage, scaled to the footer width */}
         <div
           className="absolute left-0 top-0 origin-top-left"
-          style={{ width: 1440, height: 840, transform: 'scale(calc(100cqw / 1440px))' }}
+          style={{
+            width: 1440,
+            height: 840,
+            transform: "scale(calc(100cqw / 1440px))",
+          }}
         >
           {/* Background grid — uniform 12×7 grid of 120px cells. The link block
               spans cols 0–7, rows 1–5 (x0–960, y120–720): those cells get NO
@@ -188,7 +233,12 @@ export function Footer() {
                   <div
                     key={`${col}-${row}`}
                     className={`absolute bg-inverted-primary ${isLinkCell ? "" : "border border-stroke"}`}
-                    style={{ left: col * 120, top: row * 120, width: 120, height: 120 }}
+                    style={{
+                      left: col * 120,
+                      top: row * 120,
+                      width: 120,
+                      height: 120,
+                    }}
                   />
                 );
               }),
@@ -223,7 +273,12 @@ export function Footer() {
             {/* Logo — centered in its grid cell (x 0–240, on the x120 line),
                 vertically centred in the 120px top row. */}
             <div className="absolute" style={{ left: 60, top: 46 }}>
-              <Image src="/assets/polygon-logo.svg" alt="Polygon" width={120} height={28} />
+              <Image
+                src="/assets/polygon-logo.svg"
+                alt="Polygon"
+                width={120}
+                height={28}
+              />
             </div>
             {/* Mask over the theme-switcher cell, hiding the vertical grid line
                 (x=360) that runs through the switcher — same treatment as the logo. */}
@@ -245,7 +300,10 @@ export function Footer() {
               aria-hidden
             />
             {/* Socials — right-aligned to the content edge (x=1380) */}
-            <div className="absolute flex gap-[44px]" style={{ left: PAD + 956, top: 48 }}>
+            <div
+              className="absolute flex gap-[44px]"
+              style={{ left: PAD + 956, top: 48 }}
+            >
               {SOCIALS.map((s) => (
                 <a
                   key={s.label}
@@ -272,7 +330,9 @@ export function Footer() {
                 {col.groups.map((group) => (
                   <div key={group.title} className="flex flex-col gap-[18px]">
                     {/* Column title — live: mono 14px / 0.14px / uppercase / white */}
-                    <p className="text-desktop-mono-medium text-primary">{group.title}</p>
+                    <p className="text-desktop-mono-medium text-primary">
+                      {group.title}
+                    </p>
                     {group.links.map((link) => (
                       <a
                         key={link}
@@ -290,8 +350,14 @@ export function Footer() {
           </div>
 
           {/* Copyright */}
-          <div className="absolute left-0 z-[2] flex h-[120px] w-full items-center" style={{ top: 720 }}>
-            <p className="text-desktop-mono-small text-grey-200" style={{ marginLeft: CONTENT_LEFT }}>
+          <div
+            className="absolute left-0 z-[2] flex h-[120px] w-full items-center"
+            style={{ top: 720 }}
+          >
+            <p
+              className="text-desktop-mono-small text-grey-200"
+              style={{ marginLeft: CONTENT_LEFT }}
+            >
               © 2025 Polygon Labs UI (Cayman) Ltd. All rights reserved
             </p>
           </div>
@@ -310,22 +376,23 @@ export function Footer() {
        *    white. Link: body 12px / 1.2 / grey-200.
        *  - Copyright: absolute, bottom 40px / left 30px, mono 12px grey-200.
        */}
-      <MobileStage className="md:hidden" height={MOBILE_H}>
-        {/* Background grid — 5 columns of 75px cells (matches live mobile
-            bg-grid: each cell has right + bottom 1px stroke). Solid surfaces
-            above (top row + link grid) mask it; it only shows in the lower
+      <MobileStage className="md:hidden" width={500} height={MOBILE_H}>
+        {/* Background grid — 5 columns of 100px cells (live mobile bg-grid: each
+            cell has right + bottom 1px stroke). Solid surfaces above (top row +
+            link grid) mask it; it shows in the row above the logo + the lower
             empty region above the copyright, as on live. */}
         <div className="absolute inset-0 z-0" aria-hidden>
-          {Array.from({ length: Math.ceil(MOBILE_H / 75) }).map((_, row) => (
-            <div key={row} className="flex" style={{ height: 75 }}>
+          {Array.from({ length: Math.ceil(MOBILE_H / 100) }).map((_, row) => (
+            <div key={row} className="flex" style={{ height: 100 }}>
               {Array.from({ length: 5 }).map((__, col) => (
                 <div
                   key={col}
                   className="border-b border-stroke"
                   style={{
-                    width: 75,
-                    height: 75,
-                    borderRight: col < 4 ? '1px solid var(--color-stroke)' : undefined,
+                    width: 100,
+                    height: 100,
+                    borderRight:
+                      col < 4 ? "1px solid var(--color-stroke)" : undefined,
                   }}
                 />
               ))}
@@ -333,34 +400,53 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Top row — logo + theme toggle, over a 5-col grid (75px cells) */}
-        <div className="absolute left-0 top-0 z-[2]" style={{ height: MOBILE_TOP_H, width: 375 }}>
-          {/* Mask over cells, hiding the interior vertical grid lines (x75/225/300)
-              that run through the logo / toggle — keep only the divider at x150. */}
+        {/* Top row — logo + theme toggle at the footer's very top (live: toggle at
+            y22). The diagonal band lives at the bottom of the get-started section
+            directly above, so there's no extra grid row here. A horizontal stroke
+            line runs along its top edge. Over a 5-col grid (100px cells). */}
+        <div
+          className="absolute left-0 z-[2]"
+          style={{ top: 0, height: MOBILE_TOP_H, width: 500 }}
+        >
+          {/* Top horizontal line (full width) */}
+          <div
+            className="absolute left-0 top-0 w-full border-t border-stroke"
+            aria-hidden
+          />
+          {/* Mask over cells, hiding the interior vertical grid lines that run
+              through the logo / toggle — keep only the divider at x200. */}
           <div
             className="absolute bg-inverted-primary"
-            style={{ left: 1, top: 0, width: 148, height: MOBILE_TOP_H - 1 }}
+            style={{ left: 1, top: 1, width: 198, height: MOBILE_TOP_H - 2 }}
             aria-hidden
           />
           <div
             className="absolute bg-inverted-primary"
-            style={{ left: 151, top: 0, width: 223, height: MOBILE_TOP_H - 1 }}
+            style={{ left: 201, top: 1, width: 298, height: MOBILE_TOP_H - 2 }}
             aria-hidden
           />
           {/* Divider between logo cell (cols 1–2) and toggle area (cols 3–5) */}
           <div
             className="absolute border-l border-stroke"
-            style={{ left: 150, top: 0, height: MOBILE_TOP_H }}
+            style={{ left: 200, top: 0, height: MOBILE_TOP_H }}
             aria-hidden
           />
-          {/* Logo — left aligned, padding-left 16, vertically centered in 75px */}
-          <div className="absolute z-[2]" style={{ left: 16, top: (MOBILE_TOP_H - 28) / 2 }}>
-            <Image src="/assets/polygon-logo.svg" alt="Polygon" width={120} height={28} />
+          {/* Logo — left aligned, padding-left 16, vertically centered */}
+          <div
+            className="absolute z-[2]"
+            style={{ left: 16, top: (MOBILE_TOP_H - 28) / 2 }}
+          >
+            <Image
+              src="/assets/polygon-logo.svg"
+              alt="Polygon"
+              width={120}
+              height={28}
+            />
           </div>
-          {/* Theme switcher — centered in the toggle area (x150–375) */}
+          {/* Theme switcher — centered in the toggle area (x200–500) */}
           <div
             className="absolute z-[2] flex items-center justify-center"
-            style={{ left: 150, top: 0, width: 225, height: MOBILE_TOP_H }}
+            style={{ left: 200, top: 0, width: 300, height: MOBILE_TOP_H }}
           >
             <ThemeSwitcher />
           </div>
@@ -371,11 +457,11 @@ export function Footer() {
           className="absolute left-0 z-[1] grid border-y border-stroke bg-inverted-primary"
           style={{
             top: MOBILE_TOP_H,
-            width: 375,
-            gridTemplateColumns: '1fr 1fr',
+            width: 500,
+            gridTemplateColumns: "1fr 1fr",
             columnGap: 16,
             rowGap: 52,
-            padding: '52px 16px 20px',
+            padding: "52px 22px 20px",
           }}
         >
           {COLUMNS.map((col) => (
@@ -411,5 +497,5 @@ export function Footer() {
         </p>
       </MobileStage>
     </footer>
-  )
+  );
 }
