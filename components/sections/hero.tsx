@@ -6,10 +6,10 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { MobileStage } from "@/components/ui/stage";
 
-// Exact mobile section height extracted from live (375 canvas): the hero spans
+// Exact mobile section height extracted from live (500 canvas): the hero spans
 // from the page top (nav floats over the top grid) down to where the next
-// "We've been around the block" STATS section begins at css ~900.
-const HERO_MOBILE_H = 900;
+// "We've been around the block" glance section begins at css 808.
+const HERO_MOBILE_H = 808;
 
 const HERO_VIDEO = "/assets/hero-loop.mp4";
 
@@ -73,16 +73,23 @@ function CtaButton({
   bgClass,
   tilt,
   textClass = "text-white",
+  compact,
 }: {
   label: string;
   bgClass: string;
   tilt?: boolean;
   textClass?: string;
+  /** Mobile sizing — live `.btn-new` @375: 15px/12px padding, 13px mono,
+   *  space-between (full width of its 175px parent). */
+  compact?: boolean;
 }) {
+  const sizing = compact
+    ? "w-full py-[15px] px-[12px] text-mobile-mono"
+    : "gap-[60px] py-[18px] px-[16px] text-desktop-mono-medium";
   return (
     <a
       href="#"
-      className={`scramble-host flex items-center justify-between gap-[60px] py-[18px] px-[16px] text-desktop-mono-medium leading-[1.2] transition-colors ${textClass} ${bgClass}`}
+      className={`scramble-host flex items-center justify-between leading-[1.2] transition-colors ${sizing} ${textClass} ${bgClass}`}
       style={{ clipPath: "url(#buttonClip)" }}
     >
       <span>
@@ -445,70 +452,100 @@ export function Hero() {
       </div>
 
       {/* ───────────────────────── MOBILE (≤767px) ─────────────────────────
-          375-canvas stage. The nav floats over the top grid (same as desktop),
-          so the hero begins at the page top. Structure (all px on the 375
-          canvas, extracted from live polygon.technology @375):
-            • full-bleed grid background (matches live u-bg-grid mobile)
-            • inset 3D scene card (clip-path: live mobileHeroClip, 363×600 →
-              beveled top-left corner) holding eyebrow + heading + body + CTAs
-            • full-width trusted-by marquee (live .hero-marquee-wrap.is-grid:
-              width:100%; height:120px) below the scene */}
-      <MobileStage className="md:hidden" height={HERO_MOBILE_H}>
-        {/* Grid background — 75px cells (375 / 5 cols), matches live mobile grid */}
+          500-canvas stage (the project mobile width guide). The nav floats over
+          the top grid, so the hero begins at the page top. Layout extracted
+          per-element from live polygon.technology @500 (all px on the 500 canvas):
+            • full-bleed grid: 5 cols × 100px, 101px rows (live `.u-bg-grid`)
+            • beveled scene card (live `.h_hero_content_wrap`, clip #mobileHeroClip):
+              x17 y81 w479 h792, holding the bg video + dark wash + content
+            • content: eyebrow y124 · heading y182 (48/0.9, line-3 = chains+trillion)
+              · body y356 (16px body-large) · two side-by-side 213px buttons y438
+            • mobile logo marquee (live `.marquee-mobile-wrap`): top stroke at
+              y585, logos at 50px svg height (~15px glyph), ~13px gap */}
+      <MobileStage className="md:hidden" width={500} height={HERO_MOBILE_H}>
+        {/* Grid background — 5 cols × 100px wide, 101px rows (live u-bg-grid @500).
+            Bottom layer; the opaque scene card covers it where they overlap. */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage:
               "linear-gradient(var(--color-stroke) 1px, transparent 1px), linear-gradient(90deg, var(--color-stroke) 1px, transparent 1px)",
-            backgroundSize: "75px 90px",
+            backgroundSize: "100px 101px",
+            // live's grid lines sit at x=1,101,… and y=…,706,807 (section starts at
+            // x1); nudge the pattern +1/−1 so our lines land exactly on live's.
+            backgroundPosition: "1px -1px",
           }}
         />
 
-        {/* 3D scene card — inset, clipped to the live mobile silhouette.
-            The #mobileHeroClip def lives in the shared <defs> in app/layout.tsx. */}
+        {/* Beveled 3D scene card — live `.h_hero_content_wrap` clipped to the
+            #mobileHeroClip silhouette (beveled top-left). The clip box keeps the
+            full 479×792 aspect so the bevel matches live, but the VIDEO is clipped
+            to the top 504px (down to the logo strip at y585): below that, live
+            shows grid, not scene, so we let the grid show through there. */}
         <div
           className="absolute overflow-hidden"
           style={{
-            left: 16,
-            top: 227, // top: live mobile measurement
-            width: 343,
-            height: 500,
+            left: 17,
+            top: 81,
+            width: 479,
+            height: 792,
             clipPath: "url(#mobileHeroClip)",
           }}
         >
-          <HeroVideo />
-          {/* Dark wash so the white heading + body read over the bright scene
-              (hero is theme-independent → fixed, not theme-aware). Live's mobile
-              scene reads noticeably darker than the raw video, especially over
-              the heading/body block. */}
+          {/* Video clipped to the top 504px (card-relative) — same visible scene
+              extent as live (its scene reads to ~y585, then the solid logo band). */}
           <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage:
-                "linear-gradient(180deg, rgba(7,6,13,0.72) 0%, rgba(7,6,13,0.5) 45%, rgba(7,6,13,0.25) 75%, rgba(7,6,13,0.1) 100%)",
-            }}
-          />
+            className="absolute left-0 top-0 w-full overflow-hidden"
+            style={{ height: 504 }}
+          >
+            <div className="w-full" style={{ height: 792 }}>
+              <HeroVideo />
+            </div>
+            {/* Subtle top overlay — EXACTLY live's `.top-hero-overlay`: a 303°
+                diagonal wash, rgba(7,6,13,0.35) → transparent by 30%, top 475px. */}
+            <div
+              className="absolute left-0 right-0 top-0 pointer-events-none"
+              style={{
+                height: 475,
+                backgroundImage:
+                  "linear-gradient(303deg, rgba(7,6,13,0.35), rgba(7,6,13,0) 30%)",
+              }}
+            />
+          </div>
         </div>
 
-        {/* Eyebrow — fixed white on the scene */}
+        {/* Eyebrow — live: x55 y124, 12px mono, grey-200 border, white label */}
         <Eyebrow
           text="$2.4 Trillion Transfer Volume"
-          borderColor="white"
+          borderColor="grey-200"
           textColor="white"
-          className="absolute left-[58px] top-[291px] !h-[28px] !px-[10px] !py-[6px]"
+          textSize="text-mobile-mono-small"
+          className="absolute left-[55px] top-[124px] !h-[30px] !px-[8px] !py-[6px]"
         />
 
-        {/* Heading — three lines. Live mobile uses `.u-h1-new` at 3rem (48px),
-            line-height 0.9, tracking -0.02em (NOT the 56px text-mobile-h1 token —
-            this hero scales its own h1 down to 48px on mobile). */}
-        <div className="absolute left-[58px] top-[340px] font-heading font-light text-white text-[48px] leading-[0.9] tracking-[-0.96px]">
+        {/* Heading — live `.u-h1-new`: 48px, line-height 0.9, tracking -0.96px.
+            Line 1/2 plain; line 3 is the chains graphic + "trillion" (live indents
+            "trillion" to x177, the chains occupying x55→~165). */}
+        <div className="absolute left-[55px] top-[182px] font-heading font-light text-white text-[48px] leading-[0.9] tracking-[-0.96px]">
           <p>It&rsquo;s not</p>
           <p>our first</p>
-          <p>trillion</p>
+          <div className="flex items-center gap-[12px]">
+            <span className="inline-block h-[50px] w-[110px] overflow-hidden">
+              <Image
+                src="/assets/hero-chains.png"
+                alt=""
+                width={110}
+                height={50}
+                className="h-full w-full object-cover"
+                unoptimized
+              />
+            </span>
+            <span className="whitespace-nowrap">trillion</span>
+          </div>
         </div>
 
-        {/* Body */}
-        <p className="absolute left-[58px] top-[490px] w-[296px] text-mobile-body">
+        {/* Body — live: x61 y356 w414, 16px body-large, line-height 1.4 */}
+        <p className="absolute left-[61px] top-[356px] w-[414px] text-mobile-body-large">
           <span className="text-white">
             The go-to blockchain for global payments,{" "}
           </span>
@@ -517,64 +554,85 @@ export function Hero() {
           </span>
         </p>
 
-        {/* CTAs — stacked vertically on mobile, 12px gap. Live buttons are
-            ~284px wide (left 55 → right 339). */}
-        <div className="absolute left-[55px] top-[612px] flex w-[284px] flex-col items-stretch gap-[12px]">
-          <CtaButton
-            label="OPEN MONEY STACK"
-            bgClass="bg-purple hover:bg-purple-hover"
-          />
-          <CtaButton
-            label="BUILD ON POLYGON"
-            bgClass="bg-[#07060D] hover:bg-[#121118]"
-            tilt
-          />
+        {/* CTAs — live: side by side, y438, each 213px wide, 12px gap. */}
+        <div className="absolute left-[55px] top-[438px] flex flex-row items-center gap-[12px]">
+          <div className="w-[213px]">
+            <CtaButton
+              label="OPEN MONEY STACK"
+              bgClass="bg-purple hover:bg-purple-hover"
+              compact
+            />
+          </div>
+          <div className="w-[213px]">
+            <CtaButton
+              label="BUILD ON POLYGON"
+              bgClass="bg-[#07060D] hover:bg-[#121118]"
+              tilt
+              compact
+            />
+          </div>
         </div>
 
-        {/* Trusted-by marquee — full-width, 120px tall, top/bottom stroke.
-            No "TRUSTED BY" label cell on mobile (live drops it). */}
+        {/* Mobile logo marquee — live `.hero-marquee-wrap.is-grid`: a SOLID #07060D
+            band 120px tall (y585→705) behind the logos so they sit on dark. BELOW
+            this band the grid shows (live has grid lines at y706 & y807), so the
+            band is only 120px — not the full region. Top stroke at y585, single row
+            of logos at 50px svg height (~15px glyph), ~13px gaps, logos at y622. */}
         <div
-          className="absolute left-0 right-0 overflow-hidden border-y border-stroke bg-background"
-          style={{ top: 740, height: 120 }}
+          className="absolute left-0 right-0 overflow-hidden border-t border-stroke bg-[#07060D]"
+          style={{ top: 585, height: 120 }}
         >
-          <div className="absolute inset-y-0 left-0 flex items-center animate-[marquee_22s_linear_infinite]">
+          {/* Row sits 37px below the top stroke (live logos at y622) */}
+          <div
+            className="absolute left-0 flex items-center animate-[marquee_22s_linear_infinite]"
+            style={{ top: 37, height: 50 }}
+          >
             {[0, 1].map((set) => (
               <div
                 key={set}
-                className="flex h-full items-center"
+                className="flex h-full items-center gap-[13px] pr-[13px]"
                 aria-hidden={set === 1}
               >
                 {LOGOS.map((logo) => (
                   <div
                     key={logo.alt}
-                    className="flex h-full shrink-0 items-center justify-center"
-                    // mobile marquee: logos at 85% of desktop cell width (extracted from live @375)
-                    style={{ width: logo.w * 0.85, marginLeft: 28 }}
-                  >
-                    <div
-                      role="img"
-                      aria-label={logo.alt}
-                      className="bg-primary"
-                      style={{
-                        // mobile marquee: logos at 85% of desktop cell width (extracted from live @375)
-                        width: logo.w * 0.85,
-                        height: (logo.w * 0.85 * logo.vbH) / logo.vbW,
-                        maxHeight: 28, // live mobile logos cap at 28px tall
-                        WebkitMaskImage: `url(${logo.src})`,
-                        maskImage: `url(${logo.src})`,
-                        WebkitMaskRepeat: "no-repeat",
-                        maskRepeat: "no-repeat",
-                        WebkitMaskSize: "contain",
-                        maskSize: "contain",
-                        WebkitMaskPosition: "center",
-                        maskPosition: "center",
-                      }}
-                    />
-                  </div>
+                    role="img"
+                    aria-label={logo.alt}
+                    className="h-full shrink-0 bg-primary"
+                    style={{
+                      // live: each logo svg renders at 50px tall, width by aspect
+                      width: (50 * logo.vbW) / logo.vbH,
+                      WebkitMaskImage: `url(${logo.src})`,
+                      maskImage: `url(${logo.src})`,
+                      WebkitMaskRepeat: "no-repeat",
+                      maskRepeat: "no-repeat",
+                      WebkitMaskSize: "contain",
+                      maskSize: "contain",
+                      WebkitMaskPosition: "center",
+                      maskPosition: "center",
+                    }}
+                  />
                 ))}
               </div>
             ))}
           </div>
+          {/* Edge fades — live `.marquee-grad` (left) + `.marquee-grad.is-right`:
+              dark #07060D → transparent, masking logos (and any scene) at the
+              vertical edges of the strip. */}
+          <div
+            className="absolute inset-y-0 left-0 w-[50px] pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(90deg, #07060D 54%, rgba(7,6,13,0))",
+            }}
+          />
+          <div
+            className="absolute inset-y-0 right-0 w-[50px] pointer-events-none"
+            style={{
+              backgroundImage:
+                "linear-gradient(270deg, #07060D 28%, rgba(7,6,13,0))",
+            }}
+          />
         </div>
       </MobileStage>
     </section>

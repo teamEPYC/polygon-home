@@ -6,7 +6,9 @@ const GRID_STYLE = {
 
 export function Spacer() {
   return (
-    <div className="relative h-[120px] w-full bg-background" style={GRID_STYLE} aria-hidden>
+    // Desktop-only 120px grid spacer. On mobile (≤767px) sections abut directly
+    // — live has no grid spacer between them — so hide it below md.
+    <div className="relative hidden h-[120px] w-full bg-background md:block" style={GRID_STYLE} aria-hidden>
       {/* Right-edge vertical line — the 120px background grid paints lines at
           0…1320 but never reaches x=1440, so add it explicitly to match the
           adjacent sections' right border. */}

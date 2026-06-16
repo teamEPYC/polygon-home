@@ -4,6 +4,9 @@ type EyebrowProps = {
   borderColor?: 'stroke' | 'primary' | 'grey-100' | 'grey-200' | 'semi-transparent-blue' | 'white' | 'white-full'
   textColor?: 'primary' | 'grey-100' | 'white-70' | 'white'
   hasDot?: boolean
+  /** Override the label type scale. Defaults to desktop mono-medium (14px);
+   *  pass e.g. `text-mobile-mono-small` for the 12px mobile eyebrow. */
+  textSize?: string
 }
 
 export function Eyebrow({
@@ -12,6 +15,7 @@ export function Eyebrow({
   borderColor = 'primary',
   textColor = 'primary',
   hasDot = false,
+  textSize = 'text-desktop-mono-medium',
 }: EyebrowProps) {
   const borderClass = {
     stroke: 'border-stroke',
@@ -39,7 +43,7 @@ export function Eyebrow({
           <circle cx="5" cy="4" r="3" fill="currentColor" className={textClass} />
         </svg>
       )}
-      <span className={`text-desktop-mono-medium ${textClass} whitespace-nowrap pt-[2px]`}>
+      <span className={`${textSize} ${textClass} whitespace-nowrap pt-[2px]`}>
         {text}
       </span>
       {/* Top-left corner tick (filled triangle) */}

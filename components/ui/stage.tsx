@@ -48,14 +48,19 @@ export function DesktopStage({
   );
 }
 
-/** Mobile 375 stage. */
+/**
+ * Mobile stage. The mobile design canvas is 500px wide (the project's mobile
+ * width guide). Sections migrated to the 500 canvas pass `width={500}`; the
+ * default stays 375 for sections not yet migrated.
+ */
 export function MobileStage({
+  width = 375,
   height,
   className,
   children,
-}: Omit<StageProps, "width">) {
+}: Omit<StageProps, "width"> & { width?: number }) {
   return (
-    <Stage width={375} height={height} className={className}>
+    <Stage width={width} height={height} className={className}>
       {children}
     </Stage>
   );

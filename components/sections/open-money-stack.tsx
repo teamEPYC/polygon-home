@@ -6,8 +6,9 @@ import { ScrambleText } from "@/components/ui/scramble-text";
 import { MobileStage } from "@/components/ui/stage";
 import { Eyebrow } from "@/components/ui/eyebrow";
 
-// Live mobile OMS section height at the 375 canvas (measured: 3435.29px @374w).
-const OMS_MOBILE_H = 3436;
+// Live mobile OMS section height at the 500 canvas (`.sec.is-blue.is-lottie`
+// getBoundingClientRect: y1508, height 3311).
+const OMS_MOBILE_H = 3311;
 
 const CUT = 14;
 const clipPath = `polygon(0 0, calc(100% - ${CUT}px) 0, 100% ${CUT}px, 100% 100%, 0 100%)`;
@@ -484,7 +485,7 @@ export function OpenMoneyStack() {
           Live mobile composition is fundamentally different from desktop:
           single-column stacked cards, the desktop centred lottie is hidden
           and replaced by a per-row mobile loop video. Section height ≈3436. */}
-      <MobileStage className="md:hidden" height={OMS_MOBILE_H}>
+      <MobileStage className="md:hidden" width={500} height={OMS_MOBILE_H}>
         {/* Background gradient — same full-size radial as live `.blue-bg-circle
             .is-oms` on mobile (verified identical to desktop). */}
         <div
@@ -494,28 +495,31 @@ export function OpenMoneyStack() {
               "radial-gradient(circle at 50% 40%, #273ead, #2941b7 39%, #07092c 75%)",
           }}
         />
-        {/* Faint global grid */}
+        {/* Faint global grid — 100px cells (500/5 cols), live u-bg-grid */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage:
               "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-            backgroundSize: "93.5px 93.5px",
+            backgroundSize: "100px 100px",
           }}
         />
 
-        {/* Eyebrow — OPEN MONEY STACK, centered near top */}
-        <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 110 }}>
+        {/* TODO(oms-mobile-500): the 3D staircase Lottie box (live `.is-lottie`)
+            sits between the eyebrow (y57) and heading (y300); not yet ported. */}
+
+        {/* Eyebrow — OPEN MONEY STACK, centered. Live @500: y57. */}
+        <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 57 }}>
           <Eyebrow text="OPEN MONEY STACK" borderColor="stroke" textColor="primary" hasDot />
         </div>
 
         {/* Heading — live u-h2-new mobile: 32px / lh 33.92px (1.06) / -0.64px,
-            centered, width 342. */}
+            centered, x44 w413. Live @500: y300. */}
         <p
           className="absolute left-1/2 -translate-x-1/2 text-white text-center"
           style={{
-            top: 191,
-            width: 342,
+            top: 300,
+            width: 413,
             fontFamily: "var(--font-heading)",
             fontWeight: 300,
             fontSize: 32,
@@ -526,12 +530,12 @@ export function OpenMoneyStack() {
           One open stack for money movement
         </p>
 
-        {/* Body — 16px / 22.4px (1.4), white, centered, width 342 */}
+        {/* Body — 16px / 22.4px (1.4), white, centered, x44 w413. Live @500: y381. */}
         <p
           className="absolute left-1/2 -translate-x-1/2 text-white text-center"
           style={{
-            top: 271,
-            width: 342,
+            top: 381,
+            width: 413,
             fontFamily: "var(--font-body)",
             fontWeight: 400,
             fontSize: 16,
@@ -542,12 +546,13 @@ export function OpenMoneyStack() {
           distribution.
         </p>
 
-        {/* GET EARLY ACCESS button — black cut-corner, white mono+arrow, centered */}
+        {/* GET EARLY ACCESS button — black cut-corner, white mono+arrow, centered.
+            Live @500: y439, w213 h46. */}
         <a
           href="#"
           className="scramble-host group absolute inline-flex items-center justify-between h-[46px] pl-[16px] pr-[18px] text-white [[data-theme=dark]_&]:bg-[#07060D]"
           style={{
-            top: 329,
+            top: 439,
             left: "50%",
             transform: "translateX(-50%)",
             // Cut corner on the BOTTOM-RIGHT (live `.btn-new.is-black` mobile)
@@ -667,8 +672,9 @@ const MOBILE_PRODUCTS: MobileProduct[] = [
   },
 ];
 
-// Card start tops (badge row) measured live: 440, 1035, 1596, 2200.
-const MOBILE_CARD_TOPS = [440, 1035, 1596, 2200];
+// Card start tops (badge row) measured live @500: row titles at y594/1163/~1696/
+// 2279 → badge tops ≈ title−36.
+const MOBILE_CARD_TOPS = [558, 1127, 1660, 2243];
 
 function MobileBadge({ text }: { text: string }) {
   return (
@@ -705,7 +711,7 @@ function MobileProductCard({
   return (
     <div
       className="group absolute flex flex-col"
-      style={{ top, left: 17, width: 342, gap: 16 }}
+      style={{ top, left: 21, width: 459, gap: 16 }}
     >
       {/* Badge */}
       <MobileBadge text={badge} />
@@ -759,9 +765,11 @@ function MobileProductCard({
         </div>
       )}
 
-      {/* Mobile loop video — 340×199, 1px stroke border */}
+      {/* Mobile loop video — live `oms-mobile-video-embed`: 459×200, border on
+          top/left/right only (no bottom — it joins the explore bar below).
+          object-CONTAIN so the full 620×620 square video shows (not cropped). */}
       <div
-        className="relative w-full overflow-hidden border border-[#707bb7]"
+        className="relative w-full overflow-hidden border-t border-l border-r border-[#707bb7]"
         style={{ height: 200 }}
       >
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
@@ -771,16 +779,29 @@ function MobileProductCard({
           loop
           playsInline
           src={mobileVideo}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-contain"
         />
       </div>
 
-      {/* Explore button — full-width 2-cell row. Live mobile: left cell = wire
-          icon (no dot); right cell = colored dot + explore text + the colored
-          arrow box shown by DEFAULT (no hover state on mobile). */}
-      <div className="grid grid-cols-[1fr_2fr] border-t border-[#707bb7]" style={{ minHeight: 68 }}>
-        {/* Left cell — wire icon */}
-        <div className="relative border-l border-b border-[#707bb7] flex items-center justify-center">
+      {/* Explore bar — live `oms-button-wrap`: w459 h61, TWO EQUAL halves (230 each),
+          not a 1fr/2fr grid. Left half = wire icon; right half = colored dot +
+          explore text + the colored arrow box. The bar outline is a cut-corner
+          rectangle (bevel at the bottom-right), drawn full-size so every border
+          line is visible. */}
+      <div className="relative flex" style={{ height: 61 }}>
+        {/* Full-bar cut-corner outline — top/left/right/bottom with a 14px bevel
+            at the bottom-right corner (preserveAspectRatio none → fills exactly). */}
+        <svg
+          className="absolute inset-0 pointer-events-none"
+          style={{ color: "#707bb7", width: "100%", height: "100%" }}
+          viewBox="0 0 459 61"
+          preserveAspectRatio="none"
+          fill="none"
+        >
+          <path d="M0.5 0.5 H458.5 V46 L444 60.5 H0.5 Z" stroke="currentColor" />
+        </svg>
+        {/* Left half (230) — wire icon, centered */}
+        <div className="relative flex items-center justify-center" style={{ width: 230 }}>
           <Image
             src={wireIcon}
             alt=""
@@ -790,20 +811,8 @@ function MobileProductCard({
             unoptimized
           />
         </div>
-        {/* Right cell — cut-corner outline + dot/text/arrow */}
-        <div className="relative flex items-center justify-between px-[14px]">
-          <svg
-            className="absolute pointer-events-none"
-            style={{ inset: "-1px 0 0 0", zIndex: -1, color: "#707bb7", width: "100%", height: "100%" }}
-            viewBox="0 0 226 68"
-            preserveAspectRatio="none"
-            fill="none"
-          >
-            <path
-              d="M224 0.5C224.828 0.5 225.5 1.17157 225.5 2V51.4067C225.5 52.3431 225.124 53.2413 224.458 53.8989L211.576 66.61C210.921 67.2561 210.038 67.6187 209.118 67.6187H0.5V0.5H224Z"
-              stroke="currentColor"
-            />
-          </svg>
+        {/* Right half (229) — dot + explore text + colored arrow box */}
+        <div className="relative flex flex-1 items-center justify-between px-[14px]">
           <div className="flex items-center gap-[10px]">
             <DotHex color={dotColor} />
             <span className="text-desktop-mono-small uppercase text-white">
