@@ -8,7 +8,7 @@ import { ScrambleText } from '@/components/ui/scramble-text'
  * Polygon in the news — single-video carousel (Figma node 1727:42564).
  *
  * Built on the fixed 1440×840 design-stage pattern (containerType inline-size +
- * a 1440×840 absolute stage scaled by transform: scale(100cqw / 1440)), so all
+ * a 1440×840 absolute stage scaled by transform: scale(100cqw / 1440px)), so all
  * absolute px coordinates below are pixel-accurate against the Figma frame and
  * scale down responsively.
  *
@@ -71,7 +71,7 @@ export function NewsSlider() {
         {/* Fixed 1440×840 design stage, scaled to the section width */}
         <div
           className="absolute left-0 top-0 origin-top-left"
-          style={{ width: 1440, height: 840, transform: 'scale(calc(100cqw / 1440))' }}
+          style={{ width: 1440, height: 840, transform: 'scale(calc(100cqw / 1440px))' }}
         >
           {/* Faint grid (behind everything) */}
           <div className="absolute inset-0 z-[1]">

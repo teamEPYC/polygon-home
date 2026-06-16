@@ -58,7 +58,7 @@ export function ScrambleText({
       cancelAnimationFrame(raf)
       frame = 0
       // Staggered end frame per character → left-to-right reveal.
-      slots = text.split('').map((to, i) => ({ to, end: 6 + i * 3 }))
+      slots = text.split('').map((to, i) => ({ to, end: 4 + i * 2 }))
       raf = requestAnimationFrame(tick)
     }
 

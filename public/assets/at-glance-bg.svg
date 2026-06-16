@@ -1,14 +1,15 @@
-<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 2636.2 1580.2" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="shape1" filter="url(#filter0_f_0_74)">
-<path d="M2344.53 683.094C2307.5 1245.81 1884.74 1289.6 1317.57 1289.6C750.389 1289.6 290.6 1199.69 290.6 683.094C290.6 272.459 750.389 290.722 1317.57 290.722C1884.74 290.722 2371.46 273.921 2344.53 683.094Z" fill="url(#paint0_radial_0_74)"/>
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 1440 840" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="-1" y="-12" width="1442" height="2423" fill="#141B6B"/>
+<g filter="url(#filter0_f_621_12940)">
+<path d="M1746.93 313.494C1709.9 876.212 1287.14 920 719.966 920C152.789 920 -307 830.091 -307 313.494C-307 -97.1408 152.789 -78.8782 719.966 -78.8782C1287.14 -78.8782 1773.86 -95.6789 1746.93 313.494Z" fill="url(#paint0_radial_621_12940)"/>
 </g>
 <defs>
-<filter id="filter0_f_0_74" x="0" y="0" width="2636.2" height="1580.2" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter0_f_621_12940" x="-597.6" y="-369.6" width="2636.2" height="1580.2" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-<feGaussianBlur stdDeviation="145.3" result="effect1_foregroundBlur_0_74"/>
+<feGaussianBlur stdDeviation="145.3" result="effect1_foregroundBlur_621_12940"/>
 </filter>
-<radialGradient id="paint0_radial_0_74" cx="0" cy="0" r="1" gradientTransform="matrix(3.02103 841.212 -1596.37 0.97182 1317.57 324.848)" gradientUnits="userSpaceOnUse">
+<radialGradient id="paint0_radial_621_12940" cx="0" cy="0" r="1" gradientTransform="matrix(3.02103 841.212 -1596.37 0.97182 719.967 -44.7519)" gradientUnits="userSpaceOnUse">
 <stop stop-color="#273EAD"/>
 <stop offset="0.697628" stop-color="#2941B7"/>
 <stop offset="1" stop-color="#07092C"/>

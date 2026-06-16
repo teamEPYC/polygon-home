@@ -56,11 +56,19 @@ export function ThemeSwitcher({ className }: { className?: string }) {
             onClick={() => setTheme(key)}
             aria-label={label}
             aria-pressed={isActive}
-            className={`flex h-[36px] w-[44px] items-center justify-center rounded-[32px] transition-colors cursor-pointer ${
+            className={`flex h-[36px] w-[44px] items-center justify-center transition-colors cursor-pointer ${
               isActive
                 ? 'bg-grey-500 text-primary'
                 : 'text-grey-200 hover:text-grey-100'
             }`}
+            style={
+              isActive
+                ? {
+                    clipPath:
+                      'polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%)',
+                  }
+                : undefined
+            }
           >
             <Icon />
           </button>

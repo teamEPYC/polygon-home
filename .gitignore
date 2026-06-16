@@ -39,4 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-.figma-ref/
+.figma-ref/**
+!.figma-ref/
+!.figma-ref/mobile/
+!.figma-ref/mobile/.gitkeep
+tmp-grid-compare/
