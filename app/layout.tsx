@@ -24,9 +24,34 @@ const polySansMono = localFont({
   display: 'swap',
 })
 
+// Metadata mirrors live polygon.technology (title, description, favicon,
+// apple-touch icon, and OG/Twitter card image downloaded into public/assets/meta).
+const TITLE = 'Polygon | The Go-To Blockchain for Global Payments'
+const DESCRIPTION =
+  'Polygon is the chosen blockchain infrastructure for enterprises and institutions to move assets instantly at scale with low fees, enterprise tooling, and proven reliability.'
+
 export const metadata: Metadata = {
-  title: 'Polygon',
-  description: 'Polygon Technology',
+  metadataBase: new URL('https://polygon.technology'),
+  title: TITLE,
+  description: DESCRIPTION,
+  icons: {
+    icon: '/assets/meta/favicon.png',
+    shortcut: '/assets/meta/favicon.png',
+    apple: '/assets/meta/apple-touch-icon.png',
+  },
+  openGraph: {
+    type: 'website',
+    title: TITLE,
+    description: DESCRIPTION,
+    url: 'https://polygon.technology',
+    images: [{ url: '/assets/meta/og-image.jpg', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/assets/meta/og-image.jpg'],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
