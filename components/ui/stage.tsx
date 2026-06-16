@@ -18,16 +18,18 @@ type StageProps = {
 function Stage({ width, height, className, children }: StageProps) {
   return (
     <div
-      className={`relative w-full overflow-hidden ${className ?? ""}`}
+      className={`relative  w-full overflow-hidden ${className ?? ""}`}
       style={{ aspectRatio: `${width} / ${height}` }}
     >
       <div
         className="absolute left-0 top-0 origin-top-left"
-        style={{
-          width,
-          height,
-          transform: `scale(calc(100cqw / ${width}px))`,
-        } as CSSProperties}
+        style={
+          {
+            width,
+            height,
+            transform: `scale(calc(100cqw / ${width}px))`,
+          } as CSSProperties
+        }
       >
         {children}
       </div>

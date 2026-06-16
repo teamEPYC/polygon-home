@@ -1,5 +1,8 @@
 import Image from "next/image";
-import { MobileStage } from "@/components/ui/stage";
+import { PurposeMobileSlider } from "./purpose-mobile-slider";
+
+// px on the 500 mobile canvas → cqw (1cqw = 1% of section width = 5px @500).
+const cq = (px: number) => `${px / 5}cqw`;
 
 /* ───────────────────────────────────────────────────────────────────────────
    Purpose / "benefits" section — Figma node 1727:42354 (1440×1320).
@@ -21,7 +24,7 @@ const CARD_W = 431;
 const CARD_H = 254;
 
 /* ─── Feature Card data — exact copy + positions from Figma ───────────────── */
-type CardData = {
+export type CardData = {
   label: string;
   number: string;
   description: string;
@@ -288,146 +291,6 @@ function Heading() {
   );
 }
 
-/* ───────────────────────────────────────────────────────────────────────────
-   MOBILE (≤767px) — Figma/live mobile uses a horizontal swiper of feature
-   cards, NOT the desktop grid. Extracted live @375 canvas:
-     • section height 650.6 @374w → 652 on the 375 canvas
-     • eyebrow at (16,0), heading at (16,9): 36px / 46.8px lh / -0.72px
-     • slider starts at y184; cards are 310×294 (aspect 253/240), gap 16, first
-       card left 16. Overflow-hidden stage shows card 1 + a peek of card 2,
-       matching live's initial state; the row scrolls horizontally (swipe).
-     • card internals: tick 8×8 @(0,0); label (mono 13, grey-200) @(46,32);
-       image 88×83 top-right (right-gap 32, top 32); number (mono-small,
-       grey-200) @(20,223); description (14px / 19.6 lh, primary) @(46,223) w259.
-     • cut-corner border: feature-card-bg-embed SVG (viewBox 253×240), grey-200.
-   ─────────────────────────────────────────────────────────────────────────── */
-const MOBILE_H = 652;
-const M_CARD_W = 310;
-const M_CARD_H = 294;
-const M_CARD_GAP = 16;
-const M_SLIDER_TOP = 184;
-const M_LEFT = 16;
-
-function MobileFeatureCard({
-  label,
-  number,
-  description,
-  mobileDescription,
-  image,
-  imageLight,
-}: CardData) {
-  return (
-    <div
-      className="relative shrink-0 overflow-hidden"
-      style={{ width: M_CARD_W, height: M_CARD_H }}
-    >
-      {/* Card surface — inverted-primary fill, cut-corner (top-left + bottom-right) */}
-      <div
-        className="absolute inset-0 bg-inverted-primary"
-        style={{
-          clipPath:
-            "polygon(12.45% 0%, 100% 0%, 100% 92.5%, 93.23% 99.79%, 0% 99.79%, 0% 12.5%, 12.45% 0%)",
-        }}
-      />
-
-      {/* Cut-corner border — feature-card-bg-embed, grey-200 (#A0A1A6) */}
-      <svg
-        className="absolute inset-0 h-full w-full text-grey-200"
-        viewBox="0 0 253 240"
-        preserveAspectRatio="none"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M31.5195 0.5H248.98C250.913 0.500227 252.48 2.06666 252.48 3.99902L252.5 221.989L252.495 222.174C252.447 223.094 252.036 223.961 251.35 224.583L235.885 238.594C235.241 239.177 234.403 239.5 233.535 239.5H4C2.067 239.5 0.5 237.933 0.5 236V76.5H0.521484V76L0.500977 30.2119C0.50056 29.2536 0.893116 28.3367 1.58691 27.6758L29.1055 1.46582C29.7156 0.88476 30.5137 0.544148 31.3516 0.503906L31.5195 0.5Z"
-          stroke="currentColor"
-        />
-      </svg>
-
-      {/* Corner diamond tick — top-left, 8×8 at (0,0) inside the 32px card padding.
-          Live places it at the very corner of the cut; offset to sit in the cut. */}
-      <svg
-        className="absolute text-primary"
-        style={{ top: 13, left: 14, width: 8, height: 8 }}
-        viewBox="0 0 10 10"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M8.79395 9.29395H0.501052C0.0555997 9.29395 -0.167485 8.75538 0.147498 8.44039L8.44039 0.147499C8.75537 -0.167484 9.29395 0.0555996 9.29395 0.501052V8.79395C9.29395 9.07009 9.07009 9.29395 8.79395 9.29395Z"
-          fill="currentColor"
-        />
-      </svg>
-
-      {/* Feature icon — 88×83 top-right (right-gap 32, top 32). Same dual-render
-          theme toggle as desktop. */}
-      <div
-        className="absolute"
-        style={{ top: 32, left: M_CARD_W - 32 - 88, width: 88, height: 83 }}
-      >
-        <Image
-          src={image}
-          alt={label}
-          width={88}
-          height={83}
-          className={`object-contain ${imageLight ? "purpose-img-dark" : ""}`}
-          unoptimized
-        />
-        {imageLight && (
-          <Image
-            src={imageLight}
-            alt={label}
-            width={88}
-            height={83}
-            className="purpose-img-light object-contain"
-            unoptimized
-          />
-        )}
-      </div>
-
-      {/* Label — mono 13px, grey-200, at (46,32) */}
-      <p
-        className="absolute text-grey-200 uppercase"
-        style={{
-          left: 46,
-          top: 32,
-          fontFamily: "var(--font-mono)",
-          fontWeight: 400,
-          fontSize: 13,
-          lineHeight: "13px",
-          letterSpacing: "0.13px",
-        }}
-      >
-        {label}
-      </p>
-
-      {/* Number — mono-small grey-200, at (20,223) */}
-      <p
-        className="absolute text-desktop-mono-small text-grey-200"
-        style={{ left: 20, top: 223 }}
-      >
-        {number}
-      </p>
-
-      {/* Description — 14px / 19.6 lh (1.4), primary, at (46,223) width 259 */}
-      <p
-        className="absolute text-primary"
-        style={{
-          left: 46,
-          top: 223,
-          width: 259,
-          fontFamily: "var(--font-body)",
-          fontWeight: 400,
-          fontSize: 14,
-          lineHeight: "19.6px",
-        }}
-      >
-        {mobileDescription ?? description}
-      </p>
-    </div>
-  );
-}
-
 /* ─── PurposeSection — scales the 1440px stage responsively ──────────────── */
 export function PurposeSection() {
   return (
@@ -469,62 +332,69 @@ export function PurposeSection() {
         </div>
       </div>
 
-      {/* MOBILE (≤767px) — 375 canvas: eyebrow + heading + horizontal swiper of
-          feature cards (overflow-hidden shows card 1 + a peek of card 2). */}
-      <div className="md:hidden" style={{ containerType: "inline-size" }}>
-        <MobileStage height={MOBILE_H}>
-          {/* Eyebrow — BENEFITS, grey-200 border + corner ticks (same as desktop) */}
-          <div className="absolute" style={{ left: M_LEFT, top: 0 }}>
-            <div className="relative inline-flex h-[32px] items-center justify-center gap-[10px] rounded-[2px] border border-grey-200 bg-inverted-primary px-[12px] py-[8px]">
-              <span className="pt-px text-desktop-mono-medium text-primary">
-                BENEFITS
-              </span>
-              <span
-                className="absolute left-0 top-0 size-[6px] border-l border-t border-grey-200"
-                aria-hidden="true"
-              />
-              <span
-                className="absolute bottom-0 right-0 size-[6px] border-b border-r border-grey-200"
-                aria-hidden="true"
-              />
-            </div>
-          </div>
-
-          {/* Heading — 36px / 46.8 lh / -0.72px, width 343. Sits below the
-              eyebrow: live wrap is a flex column, eyebrow (h30) + 9px gap. */}
-          <h2
-            className="absolute"
+      {/* MOBILE (≤767px) — 500 canvas, cqw-scaled so it tracks the viewport like
+          the other mobile stages, but the card row is a REAL horizontal scroll
+          container (native swipe) with a 6-dot pagination below (live swiper). */}
+      <div
+        className="relative md:hidden"
+        style={{ containerType: "inline-size", height: cq(718) }}
+      >
+        {/* Eyebrow — BENEFITS, grey-200 border + corner ticks */}
+        <div
+          className="absolute inline-flex items-center justify-center bg-inverted-primary"
+          style={{
+            left: cq(22),
+            top: cq(9),
+            height: cq(30),
+            paddingLeft: cq(12),
+            paddingRight: cq(12),
+            border: "1px solid var(--color-grey-200)",
+            borderRadius: cq(2),
+          }}
+        >
+          <span
+            className="text-primary uppercase"
             style={{
-              left: M_LEFT,
-              top: 39,
-              width: 343,
-              fontFamily: "var(--font-heading)",
-              fontWeight: 300,
-              fontSize: 36,
-              lineHeight: "46.8px",
-              letterSpacing: "-0.72px",
+              fontFamily: "var(--font-mono)",
+              fontSize: cq(13),
+              letterSpacing: cq(0.13),
+              paddingTop: cq(1),
             }}
           >
-            <span className="text-primary">Polygon is purpose-built</span>{" "}
-            <span className="text-grey-200">to scale money.</span>
-          </h2>
+            BENEFITS
+          </span>
+          <span
+            className="absolute left-0 top-0 border-l border-t border-grey-200"
+            style={{ width: cq(6), height: cq(6) }}
+            aria-hidden="true"
+          />
+          <span
+            className="absolute bottom-0 right-0 border-b border-r border-grey-200"
+            style={{ width: cq(6), height: cq(6) }}
+            aria-hidden="true"
+          />
+        </div>
 
-          {/* Card slider — horizontal scroll; overflow-hidden stage clips to the
-              first card + a peek of the next, matching live's initial state. */}
-          <div
-            className="absolute flex"
-            style={{
-              top: M_SLIDER_TOP,
-              left: M_LEFT,
-              gap: M_CARD_GAP,
-              width: CARDS.length * (M_CARD_W + M_CARD_GAP) - M_CARD_GAP,
-            }}
-          >
-            {CARDS.map((card) => (
-              <MobileFeatureCard key={card.label} {...card} />
-            ))}
-          </div>
-        </MobileStage>
+        {/* Heading — live `u-h2-new` @500: 32px / 33.92 lh / -0.64px */}
+        <h2
+          className="absolute"
+          style={{
+            left: cq(22),
+            top: cq(52),
+            width: cq(457),
+            fontFamily: "var(--font-heading)",
+            fontWeight: 300,
+            fontSize: cq(32),
+            lineHeight: cq(33.92),
+            letterSpacing: cq(-0.64),
+          }}
+        >
+          <span className="text-primary">Polygon is purpose-built</span>{" "}
+          <span className="text-grey-200">to scale money.</span>
+        </h2>
+
+        {/* Scrollable card slider + dot pagination */}
+        <PurposeMobileSlider cards={CARDS} />
       </div>
     </section>
   );

@@ -67,6 +67,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 d="M363 0.995135V599.995H0V29.2031C9.66733e-08 28.0973 0.457819 27.0404 1.26465 26.2842L28.1543 1.08107C28.8987 0.383409 29.8821 -0.00303945 30.9023 1.80045e-05L363 0.995135Z"
               />
             </clipPath>
+            {/* Live triangleClip — the OMS bottom-row corner cell (121×122 path):
+                a triangle cut so the black cell shows a diagonal edge. */}
+            <clipPath
+              id="triangleClip"
+              clipPathUnits="objectBoundingBox"
+              transform="scale(0.008264, 0.008197)"
+            >
+              <path d="M121 0V122H0L121 0Z" />
+            </clipPath>
           </defs>
         </svg>
         <ThemeProvider>{children}</ThemeProvider>

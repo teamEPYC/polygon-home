@@ -31,16 +31,17 @@ export function Nav() {
           hero stage, the 120px grid columns line up with the hero grid at every
           width, and STAKE POL / BOOK A CALL scale down instead of overflowing. */}
       <div
-        className="relative mx-auto w-full"
-        style={{ maxWidth: 1440, containerType: "inline-size", height: NAV_H }}
+        className="relative mx-auto h-[47px] w-full nav:h-[55px]"
+        style={{ maxWidth: 1440, containerType: "inline-size" }}
       >
         {/* Mobile bar (≤991px): full-size logo + purple CTA + hamburger.
-            Replaces the scaled 1440 desktop grid below, which is hidden ≤991px. */}
+            Replaces the scaled 1440 desktop grid below, which is hidden ≤991px.
+            Live nav is 47px tall; the brand area has a black (#07060D) bg. */}
         <div className="absolute inset-0 flex items-stretch justify-between nav:hidden">
           <a
             href="/"
             aria-label="Polygon home"
-            className="relative flex items-center pl-[16px]"
+            className="relative flex flex-1 items-center border-b border-r border-stroke bg-inverted-primary px-[16px]"
           >
             <Image
               src="/assets/polygon-logo.svg"

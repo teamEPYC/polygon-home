@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { NAV_LINKS, NAV_H, ArrowIcon } from "./nav-shared";
+import { NAV_LINKS, ArrowIcon } from "./nav-shared";
 
 /**
  * Mobile nav (≤991px) — matches live polygon.technology Webflow nav.
@@ -114,19 +114,22 @@ export function NavMobileMenu() {
         </div>
       </button>
 
-      {/* Overlay menu panel — sits below the bar (top:100%), full width */}
+      {/* Overlay menu panel — sits below the bar (top:NAV_H), full screen,
+          slides DOWN from the top and fills the viewport with solid black. */}
       <div
         id="mobile-nav-overlay"
         className="fixed inset-x-0 bottom-0 overflow-hidden"
         style={{
-          top: NAV_H,
+          // Mobile bar is 47px tall (live), not NAV_H (55, desktop) — start the
+          // overlay flush with the bar's bottom so there's no hero-showing gap.
+          top: 47,
           pointerEvents: open ? "auto" : "none",
         }}
       >
         <nav
-          className="absolute inset-x-0 top-0 bg-inverted-primary px-[20px] py-[56px] transition-transform duration-300 ease-in-out"
+          className="absolute inset-0 bg-inverted-primary px-[20px] py-[56px] transition-transform duration-300 ease-in-out"
           style={{
-            transform: open ? "translateX(0)" : "translateX(100%)",
+            transform: open ? "translateY(0)" : "translateY(-100%)",
           }}
           aria-hidden={!open}
         >

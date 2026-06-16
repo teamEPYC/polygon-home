@@ -125,9 +125,9 @@ const USE_CASES: UseCase[] = [
  *   • h2 36px/1.06 (-0.02em); body 14px/1.2 grey/white.
  * Default (non-hover) state only — per task, no hover/gesture work here.
  */
-// Live mobile section height @375 ≈ 981; the wrap sits at top 76 (h 827),
-// leaving ~78 bottom — the stage uses the full section box.
-const M_UC_H = 981;
+// Mobile section height @500. The wrap (eyebrow + 4 cards) sits at top 111 and
+// runs to ~1285; the stage must be tall enough to not clip the 4th (DeFI) card.
+const M_UC_H = 1296;
 const MOBILE_USE_CASES = [
   { number: "01", label: "Payments", href: "/payments", desc: USE_CASES[0].desc },
   { number: "02", label: "Stablecoins", href: "/stablecoins", desc: USE_CASES[1].desc },
@@ -438,20 +438,20 @@ export function UseCasesCta() {
       >
         {/* ── MOBILE (≤767px): live `.h-uc-mobile-wrap` — eyebrow + 4 cards ── */}
         <div className="md:hidden" style={{ containerType: "inline-size" }}>
-          <MobileStage height={M_UC_H}>
+          <MobileStage width={500} height={M_UC_H}>
             {/* Faint full-bleed background grid (shows through the card gaps),
-                matching live's section bg grid. 5 cols × 75px. */}
+                matching live's section bg grid. 5 cols × 100px @500. */}
             <div className="absolute inset-0 z-0">
-              {Array.from({ length: Math.ceil(M_UC_H / 75) }).flatMap((_, row) =>
+              {Array.from({ length: Math.ceil(M_UC_H / 100) }).flatMap((_, row) =>
                 Array.from({ length: 5 }).map((__, col) => (
                   <div
                     key={`bg-${row}-${col}`}
                     className="absolute"
                     style={{
-                      left: col * 75,
-                      top: row * 75,
-                      width: 75,
-                      height: 75,
+                      left: col * 100,
+                      top: row * 100,
+                      width: 100,
+                      height: 100,
                       border: "1px solid var(--stroke)",
                     }}
                   />
@@ -460,7 +460,7 @@ export function UseCasesCta() {
             </div>
             <div
               className="absolute z-[1] flex flex-col"
-              style={{ left: 16, top: 76, width: 343, gap: 48 }}
+              style={{ left: 22, top: 111, width: 456, gap: 48 }}
             >
               {/* WHAT POLYGON CAN DO FOR YOU eyebrow — transparent, grey-200
                   border, triangle corner ticks, no dot (live is-stat). */}
@@ -789,10 +789,12 @@ function GetStartedCta() {
  *     190, wraps centered; 3 stacked full-width cut-corner cards (aspect
  *     343/96 → h≈87) @top 432, gap 12, each with diamond tick + centered btn.
  */
-const M_GS_H = 877;
-const M_GS_CELL = 75; // 375 / 5 cols
+const M_GS_H = 1000;
+const M_GS_CELL = 100; // 500 / 5 cols
 const M_GS_COLS = 5;
-const M_GS_ROWS = 9; // white grid rows above the bottom band
+// The black "shape" band now lives in the footer's top row, so the get-started
+// just ends with its grid rows.
+const M_GS_ROWS = 10;
 // Black funnel cells [col,row] near the top (live hide-desktop grid).
 const M_FUNNEL: [number, number][] = [
   [1, 0],
@@ -805,16 +807,16 @@ const isFunnel = (c: number, r: number) =>
 
 function MobileGetStarted() {
   return (
-    <div className="md:hidden" style={{ containerType: "inline-size" }}>
-      <MobileStage height={M_GS_H}>
-        {/* bg glow */}
-        <Image
-          src="/assets/getstarted/bg-gradient.svg"
-          alt=""
-          width={375}
-          height={M_GS_H}
-          unoptimized
-          className="absolute inset-0 z-[0] h-full w-full select-none object-cover"
+    <div className="md:hidden">
+      <MobileStage width={500} height={M_GS_H}>
+        {/* bg glow — blue radial (live `#background-gradient`: #141B6B base with a
+            brighter glow toward the top). Covers the full section. */}
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            background:
+              "radial-gradient(150% 90% at 50% 24%, #3a48b6 0%, #2731a2 45%, #1a2585 78%, #141b6b 100%)",
+          }}
         />
         {/* white-stroke grid + funnel */}
         <div className="absolute inset-0 z-[1]">
@@ -828,16 +830,18 @@ function MobileGetStarted() {
                   top: row * M_GS_CELL,
                   width: M_GS_CELL,
                   height: M_GS_CELL,
-                  border: "1px solid rgba(255,255,255,0.15)",
+                  border: "1px solid rgba(255,255,255,0.07)",
                   background: isFunnel(col, row) ? "#07060d" : "transparent",
                   borderTop: isFunnel(col, row)
-                    ? "1px solid rgba(255,255,255,0.15)"
-                    : "1px solid rgba(255,255,255,0.15)",
+                    ? "1px solid rgba(255,255,255,0.07)"
+                    : "1px solid rgba(255,255,255,0.07)",
                 }}
               />
             )),
           )}
-          {/* bottom black band (full row, first cell corner-clipped) */}
+          {/* Bottom black band — last row, on the section's real blue. The first
+              cell is diagonal-clipped (#triangleClip) so the cut reveals the
+              actual get-started blue (matches automatically, like OMS). */}
           {Array.from({ length: M_GS_COLS }).map((__, col) => (
             <div
               key={`band-${col}`}
@@ -848,10 +852,7 @@ function MobileGetStarted() {
                 width: M_GS_CELL,
                 height: M_GS_CELL,
                 borderTop: "1px solid var(--grid-stroke)",
-                clipPath:
-                  col === 0
-                    ? "polygon(20px 0, 100% 0, 100% 100%, 0 100%, 0 20px)"
-                    : undefined,
+                clipPath: col === 0 ? "url(#triangleClip)" : undefined,
               }}
             />
           ))}
@@ -859,15 +860,15 @@ function MobileGetStarted() {
 
         {/* centered content */}
         <div className="absolute z-[3] left-1/2 -translate-x-1/2 flex flex-col items-center">
-          <div style={{ height: 24 }} />
+          <div style={{ height: 48 }} />
           <Eyebrow text="LET'S BUILD" borderColor="grey-200" textColor="primary" hasDot />
           <h2
-            className="mt-[136px] text-center font-heading font-[300] text-white"
-            style={{ fontSize: 48, lineHeight: 0.9, letterSpacing: "-0.02em", width: 220 }}
+            className="mt-[224px] text-center font-heading font-[300] text-white"
+            style={{ fontSize: 48, lineHeight: 0.9, letterSpacing: "-0.02em", width: 303 }}
           >
             Get started with Polygon
           </h2>
-          <div className="mt-[78px] flex w-[311px] flex-col" style={{ gap: 12 }}>
+          <div className="mt-[78px] flex w-[457px] flex-col" style={{ gap: 12 }}>
             {CTA_BUTTONS.map((btn) => (
               <div
                 key={btn.label}
