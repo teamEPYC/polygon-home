@@ -30,8 +30,18 @@ const TITLE = 'Polygon | The Go-To Blockchain for Global Payments'
 const DESCRIPTION =
   'Polygon is the chosen blockchain infrastructure for enterprises and institutions to move assets instantly at scale with low fees, enterprise tooling, and proven reliability.'
 
+// Resolve relative OG/icon URLs against the origin that actually serves them.
+// On Vercel this is the deployment's production URL (the assets live in this
+// app's /public, not on the live Webflow polygon.technology site). Override
+// with NEXT_PUBLIC_SITE_URL once the app owns the real domain.
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : 'http://localhost:3000')
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://polygon.technology'),
+  metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
   icons: {
@@ -43,7 +53,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: TITLE,
     description: DESCRIPTION,
-    url: 'https://polygon.technology',
+    url: SITE_URL,
     images: [{ url: '/assets/meta/og-image.jpg', width: 1200, height: 630 }],
   },
   twitter: {
