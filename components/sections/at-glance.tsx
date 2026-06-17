@@ -196,7 +196,7 @@ function CylinderCarousel({ geom = DESKTOP_GEOM }: { geom?: CarouselGeom }) {
 
   const onPan = useCallback(
     (_e: PointerEvent, info: { delta: { x: number } }) => {
-      const dAngle = (info.delta.x / 650) * Math.PI * 2;
+      const dAngle = (info.delta.x / 4200) * Math.PI * 2;
       angleRef.current += dAngle;
       forceUpdate((n) => n + 1);
     },
@@ -207,8 +207,8 @@ function CylinderCarousel({ geom = DESKTOP_GEOM }: { geom?: CarouselGeom }) {
     (_e: PointerEvent, info: { velocity: { x: number } }) => {
       isDraggingRef.current = false;
       dragMomentumRef.current = Math.max(
-        -0.1,
-        Math.min(0.1, info.velocity.x / 10000),
+        -0.012,
+        Math.min(0.012, info.velocity.x / 80000),
       );
     },
     [],
@@ -350,8 +350,8 @@ function CylinderCarousel({ geom = DESKTOP_GEOM }: { geom?: CarouselGeom }) {
 
       {/* Transparent drag-capture overlay */}
       <motion.div
-        className="absolute inset-0 cursor-grab active:cursor-grabbing"
-        style={{ zIndex: 40 }}
+        className="absolute inset-0 cursor-grab select-none active:cursor-grabbing"
+        style={{ zIndex: 40, touchAction: "none" }}
         onPanStart={onPanStart as never}
         onPan={onPan as never}
         onPanEnd={onPanEnd as never}
@@ -364,7 +364,7 @@ function CylinderCarousel({ geom = DESKTOP_GEOM }: { geom?: CarouselGeom }) {
 export function AtGlance() {
   return (
     <section
-      className="relative w-full overflow-hidden bg-[#3449c1]"
+      className="relative w-full select-none overflow-hidden bg-[#3449c1]"
       style={{ containerType: "inline-size" }}
     >
       {/* Fixed 1440×940 design stage, scaled to the section width (scale-to-fit).
