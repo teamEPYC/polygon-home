@@ -53,6 +53,7 @@ export type OmsContent = {
   ctaHref?: string;
   products?: OmsProductItem[];
   comingSoon?: OmsComingSoonItem[];
+  mobileComingSoon?: OmsComingSoonItem[];
 };
 
 /* ─── Default content constants ──────────────────────────────────────── */
@@ -120,6 +121,23 @@ export const OMS_DEFAULT_COMING_SOON: OmsComingSoonItem[] = [
     description:
       "Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest.",
     icon: "/assets/ico-pay.png",
+  },
+];
+
+// Mobile preserves the original (pre-refactor) icon order, which was the
+// opposite of desktop: Stablecoin→ico-pay, KYC Hub→ico-kit.
+export const OMS_DEFAULT_MOBILE_COMING_SOON: OmsComingSoonItem[] = [
+  {
+    title: "Stablecoin Orchestration",
+    description:
+      "Enterprise payments infrastructure for stablecoins and tokenized deposits",
+    icon: "/assets/ico-pay.png",
+  },
+  {
+    title: "KYC Hub",
+    description:
+      "Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest.",
+    icon: "/assets/ico-kit.png",
   },
 ];
 
@@ -431,6 +449,7 @@ export function OpenMoneyStack({
   ctaHref = OMS_DEFAULT_CTA.href,
   products = OMS_DEFAULT_PRODUCTS,
   comingSoon = OMS_DEFAULT_COMING_SOON,
+  mobileComingSoon = OMS_DEFAULT_MOBILE_COMING_SOON,
 }: OmsContent = {}) {
   // Build mobile products by merging product props with mobile video defaults.
   // mobileVideo is sourced by index from OMS_DEFAULT_MOBILE_PRODUCTS.
@@ -743,15 +762,15 @@ export function OpenMoneyStack({
         {/* COMING SOON cards */}
         <MobileComingSoonCard
           top={2852}
-          title={comingSoon[0]?.title ?? ""}
-          description={comingSoon[0]?.description ?? ""}
-          icon={comingSoon[0]?.icon ?? ""}
+          title={mobileComingSoon[0]?.title ?? ""}
+          description={mobileComingSoon[0]?.description ?? ""}
+          icon={mobileComingSoon[0]?.icon ?? ""}
         />
         <MobileComingSoonCard
           top={3120}
-          title={comingSoon[1]?.title ?? ""}
-          description={comingSoon[1]?.description ?? ""}
-          icon={comingSoon[1]?.icon ?? ""}
+          title={mobileComingSoon[1]?.title ?? ""}
+          description={mobileComingSoon[1]?.description ?? ""}
+          icon={mobileComingSoon[1]?.icon ?? ""}
         />
 
         {/* Bottom black row — live `u-bg-grid-wrap.is-bottom` last row: 5 black
