@@ -8,9 +8,6 @@ import { ScrambleText } from "@/components/ui/scramble-text";
 import { MobileStage } from "@/components/ui/stage";
 import { Spacer } from "../ui/spacer";
 
-const CUT = 14;
-const clipPath = `polygon(0 0, calc(100% - ${CUT}px) 0, 100% ${CUT}px, 100% 100%, 0 100%)`;
-
 /* ── Line-art icons (stroke = currentColor, theme-aware via text token) ──
  * Each recreated from Figma nodes 1727:40825/40827/40830/40833, drawn on a
  * 72×72 viewBox to match the design's 72px icon size.
@@ -686,13 +683,31 @@ function GetStartedCta() {
               style={{ left: x, top: 1080, width: 120, height: 120 }}
             />
           ))}
+          {/* Corner cut on the transition band. Like every other themed asset
+              (SVG fills can't read tokens), the corner flips via CSS dual-render:
+              dark #07060D/#1B1B1D, light #F2F1F5/#E1E1E5 — matching the
+              bg-inverted-primary band cells beside it. */}
+          <style>{`
+            .gs-corner-light { display: none; }
+            [data-theme="light"] .gs-corner-dark { display: none; }
+            [data-theme="light"] .gs-corner-light { display: block; }
+          `}</style>
           <Image
             src="/assets/getstarted/row-corner.svg"
             alt=""
             width={120}
             height={120}
             unoptimized
-            className="absolute z-[2] pointer-events-none select-none"
+            className="gs-corner-dark absolute z-[2] pointer-events-none select-none"
+            style={{ left: 0, top: 1080, width: 120, height: 120 }}
+          />
+          <Image
+            src="/assets/getstarted/row-corner-light.svg"
+            alt=""
+            width={120}
+            height={120}
+            unoptimized
+            className="gs-corner-light absolute z-[2] pointer-events-none select-none"
             style={{ left: 0, top: 1080, width: 120, height: 120 }}
           />
         </div>
@@ -758,7 +773,8 @@ function GetStartedCta() {
                 stroke="rgba(243,242,246,0.55)"
               />
             </svg>
-            {/* Diamond tick at the top-left cut (live trail-poly.svg), 10px at (8,3). */}
+            {/* Corner poly mark at the top-left cut (live "trail poly.svg" — a
+                rounded right-triangle, right angle bottom-right), 10px at (8,3). */}
             <svg
               className="absolute"
               style={{ left: 8, top: 3, width: 10, height: 10 }}
@@ -766,10 +782,15 @@ function GetStartedCta() {
               fill="none"
               aria-hidden
             >
-              <path d="M5 0L10 5L5 10L0 5L5 0Z" fill="#F3F2F6" />
+              <path d="M8.79395 9.29395H0.501052C0.0555997 9.29395 -0.167485 8.75538 0.147498 8.44039L8.44039 0.147499C8.75537 -0.167484 9.29395 0.0555996 9.29395 0.501052V8.79395C9.29395 9.07009 9.07009 9.29395 8.79395 9.29395Z" fill="#F2F1F5" />
             </svg>
-            {/* Centered button */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            {/* Button — live geometry: 301×51 at (60,56) inside the 420×164 card
+                (left-aligned past the top-left cut, vertically centred). Same
+                trail button as mobile: full-width outline, label left, chevron right. */}
+            <div
+              className="absolute"
+              style={{ left: 60, top: 56, width: 301, height: 51 }}
+            >
               <CtaCornerButton label={btn.label} href={btn.href} />
             </div>
           </div>
@@ -787,7 +808,7 @@ function GetStartedCta() {
  *     band (75px) with the first cell corner-clipped.
  *   • LET'S BUILD eyebrow @top 24 (centered); heading 48px/0.9 (-0.02em) @top
  *     190, wraps centered; 3 stacked full-width cut-corner cards (aspect
- *     343/96 → h≈87) @top 432, gap 12, each with diamond tick + centered btn.
+ *     343/96 → h≈87) @top 432, gap 12, each with corner poly mark + centered btn.
  */
 const M_GS_H = 1000;
 const M_GS_CELL = 100; // 500 / 5 cols
@@ -895,7 +916,7 @@ function MobileGetStarted() {
                   fill="none"
                   aria-hidden
                 >
-                  <path d="M5 0L10 5L5 10L0 5L5 0Z" fill="#F3F2F6" />
+                  <path d="M8.79395 9.29395H0.501052C0.0555997 9.29395 -0.167485 8.75538 0.147498 8.44039L8.44039 0.147499C8.75537 -0.167484 9.29395 0.0555996 9.29395 0.501052V8.79395C9.29395 9.07009 9.07009 9.29395 8.79395 9.29395Z" fill="#F2F1F5" />
                 </svg>
                 <MobileTrailButton label={btn.label} href={btn.href} />
               </div>
@@ -907,38 +928,36 @@ function MobileGetStarted() {
   );
 }
 
-// Outlined cut-corner button with diagonal arrow (dark-theme outlined variant).
-function CtaArrow() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      className="shrink-0"
-    >
-      <path
-        d="M3 9L9 3M9 3H4M9 3V8"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
+// Desktop get-started button — identical to live (and to the mobile button):
+// full-width cut-corner outline (`.black-button-bg.is-trails`, 305×53 viewBox,
+// bottom-right diagonal), label LEFT + right chevron via justify-between.
 function CtaCornerButton({ label, href }: { label: string; href: string }) {
   return (
     <a
       href={href}
-      className="scramble-host inline-flex h-[44px] items-center gap-[10px] border border-white pl-[16px] pr-[24px] text-white transition-opacity hover:opacity-90"
-      style={{ clipPath }}
+      className="scramble-host relative flex h-full w-full items-center justify-between whitespace-nowrap px-[16px] text-white transition-opacity hover:opacity-90"
     >
-      <span className="text-desktop-mono-small">
+      {/* Cut-corner outline — verbatim live `.black-button-bg.is-trails` path. */}
+      <svg
+        className="absolute inset-0 h-full w-full select-none"
+        viewBox="0 0 305 53"
+        fill="none"
+        preserveAspectRatio="none"
+        aria-hidden
+      >
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M299.905 0C302.39 0.000263866 304.405 2.01488 304.405 4.5V32.5898C304.405 34.8702 303.489 37.0552 301.862 38.6533L289.03 51.2598C288.189 52.0862 287.056 52.5496 285.877 52.5498H4C1.79086 52.5498 0 50.7589 0 48.5498V4C0 1.79086 1.79086 1.45964e-08 4 0H299.905ZM4 1C2.34315 1 1 2.34315 1 4V48.5498C1 50.2067 2.34315 51.5498 4 51.5498H285.877C286.794 51.5496 287.675 51.1895 288.329 50.5469L301.162 37.9404C302.597 36.5303 303.405 34.6019 303.405 32.5898V4.5C303.405 2.56717 301.838 1.00026 299.905 1H4Z"
+          fill="currentColor"
+        />
+      </svg>
+      <span className="relative text-desktop-mono-small">
         <ScrambleText>{label}</ScrambleText>
       </span>
-      <CtaArrow />
+      <span className="relative">
+        <TrailChevron />
+      </span>
     </a>
   );
 }
@@ -951,7 +970,7 @@ function CtaCornerButton({ label, href }: { label: string; href: string }) {
  * Used ONLY inside the mobile GetStarted cards — never on desktop.
  */
 // Right-pointing chevron — verbatim live `.oms-button-icon` path (12×12).
-function MobileTrailChevron() {
+function TrailChevron() {
   return (
     <svg
       width="12"
@@ -995,7 +1014,7 @@ function MobileTrailButton({ label, href }: { label: string; href: string }) {
         <ScrambleText>{label}</ScrambleText>
       </span>
       <span className="relative">
-        <MobileTrailChevron />
+        <TrailChevron />
       </span>
     </a>
   );
