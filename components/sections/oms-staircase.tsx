@@ -16,7 +16,7 @@ const ROWS = [
 // Eyebrow appears after all 3 rows have landed
 const EYEBROW_DELAY = ROWS.length * 0.14  // 0.42s
 
-export function OMSStaircase() {
+export function OMSStaircase({ eyebrow = "OPEN MONEY STACK" }: { eyebrow?: string } = {}) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '0px 0px -80px 0px' })
 
@@ -60,7 +60,7 @@ export function OMSStaircase() {
           ease: 'easeOut',
         }}
       >
-        <Eyebrow text="OPEN MONEY STACK" borderColor="stroke" textColor="primary" hasDot />
+        <Eyebrow text={eyebrow} borderColor="stroke" textColor="primary" hasDot />
       </motion.div>
     </>
   )

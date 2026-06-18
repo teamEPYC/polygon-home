@@ -26,6 +26,156 @@ const clipPath = `polygon(0 0, calc(100% - ${CUT}px) 0, 100% ${CUT}px, 100% 100%
 const VIDEO_TOP = 730;
 const VIDEO_WIDTH = "28%";
 
+/* ─── Content types ───────────────────────────────────────────────────── */
+
+export type OmsProductItem = {
+  badge: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  wireIcon: string;
+  dotColor?: string;
+  exploreText: string;
+  poweredByLogo?: string;
+};
+
+export type OmsComingSoonItem = {
+  title: string;
+  description: string;
+  icon: string;
+};
+
+export type OmsContent = {
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  products?: OmsProductItem[];
+  comingSoon?: OmsComingSoonItem[];
+};
+
+/* ─── Default content constants ──────────────────────────────────────── */
+
+export const OMS_DEFAULT_EYEBROW = "OPEN MONEY STACK";
+export const OMS_DEFAULT_HEADING = "One open stack for money movement";
+export const OMS_DEFAULT_BODY =
+  "A single place to instantly access the onchain economy, with worldwide distribution.";
+export const OMS_DEFAULT_CTA = { label: "GET EARLY ACCESS", href: "#" };
+
+export const OMS_DEFAULT_PRODUCTS: OmsProductItem[] = [
+  {
+    badge: "LIVE",
+    title: "Wallet Infrastructure",
+    subtitle: "one-click wallet creation to give your users an onchain account",
+    description:
+      "The Polygon Chain is fast, low cost, and battle-tested. Live for five years, with 99.99% uptime and millions of users, this is the best place to build onchain.",
+    wireIcon: "/assets/ico-wire-chains.png",
+    dotColor: "#00FF08",
+    exploreText: "Explore Sequence",
+    poweredByLogo: "/assets/logo-sequence.png",
+  },
+  {
+    badge: "LIVE",
+    title: "Crosschain Interop",
+    subtitle: "one-click crypto transactions with any chain",
+    description:
+      "All-in-one integration, enabling users to transact with any wallet, any token, on any chain, bringing deep unified liquidity.",
+    wireIcon: "/assets/ico-wire-trails.png",
+    dotColor: "#E271D7",
+    exploreText: "Explore Trails",
+    poweredByLogo: "/assets/logo-trails.svg",
+  },
+  {
+    badge: "LIVE",
+    title: "On/Off- and\nCash Ramps",
+    subtitle: "Physical cash and digital fiat on- and off-ramps",
+    description:
+      "Grow your revenue by offering on- and off-ramps, pay with crypto, earn yield, and more. All with enterprise-grade security.",
+    wireIcon: "/assets/ico-wire-wallet.png",
+    dotColor: "#FF7421",
+    exploreText: "Explore Coinme",
+    poweredByLogo: "/assets/logo-coinme.png",
+  },
+  {
+    badge: "LIVE",
+    title: "Blockchain Rails",
+    subtitle: "The fastest settlement layer to move money globally",
+    description: "Use crypto to offer faster, cheaper cross-border transfers.",
+    wireIcon: "/assets/ico-wire-bpn.png",
+    dotColor: "#00BBFF",
+    exploreText: "Explore Polygon Chain",
+  },
+];
+
+export const OMS_DEFAULT_COMING_SOON: OmsComingSoonItem[] = [
+  {
+    title: "Stablecoin Orchestration",
+    description:
+      "Enterprise payments infrastructure for stablecoins and tokenized deposits",
+    icon: "/assets/ico-kit.png",
+  },
+  {
+    title: "KYC Hub",
+    description:
+      "Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest.",
+    icon: "/assets/ico-pay.png",
+  },
+];
+
+// Mobile products carry a per-item mobileVideo; kept as a separate default so
+// desktop `products` prop and mobile videos stay decoupled.
+export type OmsMobileProductItem = OmsProductItem & { mobileVideo: string };
+
+export const OMS_DEFAULT_MOBILE_PRODUCTS: OmsMobileProductItem[] = [
+  {
+    badge: "LIVE",
+    title: "Wallet Infrastructure",
+    subtitle: "one-click wallet creation to give your users an onchain account",
+    description:
+      "The Polygon Chain is fast, low cost, and battle-tested. Live for five years, with 99.99% uptime and millions of users, this is the best place to build onchain.",
+    wireIcon: "/assets/ico-wire-chains.png",
+    dotColor: "#00FF08",
+    exploreText: "Explore Sequence",
+    poweredByLogo: "/assets/logo-sequence.png",
+    mobileVideo: "/assets/oms-mobile-chains.webm",
+  },
+  {
+    badge: "LIVE",
+    title: "Crosschain Interop",
+    subtitle: "one-click crypto transactions with any chain",
+    description:
+      "All-in-one integration, enabling users to transact with any wallet, any token, on any chain, bringing deep unified liquidity.",
+    wireIcon: "/assets/ico-wire-trails.png",
+    dotColor: "#E271D7",
+    exploreText: "Explore Trails",
+    poweredByLogo: "/assets/logo-trails.svg",
+    mobileVideo: "/assets/oms-mobile-trails.webm",
+  },
+  {
+    badge: "LIVE",
+    title: "On/Off- and\nCash Ramps",
+    subtitle: "Physical cash and digital fiat on- and off-ramps",
+    description:
+      "Grow your revenue by offering on- and off-ramps, pay with crypto, earn yield, and more. All with enterprise-grade security.",
+    wireIcon: "/assets/ico-wire-wallet.png",
+    dotColor: "#FF7421",
+    exploreText: "Explore Coinme",
+    poweredByLogo: "/assets/logo-coinme.png",
+    mobileVideo: "/assets/oms-mobile-wallet.webm",
+  },
+  {
+    badge: "LIVE",
+    title: "Blockchain Rails",
+    subtitle: "The fastest settlement layer to move money globally",
+    description: "Use crypto to offer faster, cheaper cross-border transfers.",
+    wireIcon: "/assets/ico-wire-bpn.png",
+    dotColor: "#00BBFF",
+    exploreText: "Explore Polygon Chain",
+    mobileVideo: "/assets/oms-mobile-bpn.webm",
+  },
+];
+
 function ArrowIcon() {
   return (
     <svg
@@ -273,7 +423,24 @@ function SecondaryCard({ title, description, icon }: SecondaryCardProps) {
   );
 }
 
-export function OpenMoneyStack() {
+export function OpenMoneyStack({
+  eyebrow = OMS_DEFAULT_EYEBROW,
+  heading = OMS_DEFAULT_HEADING,
+  body = OMS_DEFAULT_BODY,
+  ctaLabel = OMS_DEFAULT_CTA.label,
+  ctaHref = OMS_DEFAULT_CTA.href,
+  products = OMS_DEFAULT_PRODUCTS,
+  comingSoon = OMS_DEFAULT_COMING_SOON,
+}: OmsContent = {}) {
+  // Build mobile products by merging product props with mobile video defaults.
+  // mobileVideo is sourced by index from OMS_DEFAULT_MOBILE_PRODUCTS.
+  const mobileProducts: OmsMobileProductItem[] = products.map((p, i) => ({
+    ...p,
+    mobileVideo:
+      OMS_DEFAULT_MOBILE_PRODUCTS[i]?.mobileVideo ??
+      `/assets/oms-mobile-${i}.webm`,
+  }));
+
   return (
     <section
       className="relative w-full overflow-hidden bg-[#3449c1]"
@@ -315,8 +482,7 @@ export function OpenMoneyStack() {
           />
 
           {/* Inverted staircase — animates in on scroll */}
-          {/* OMSStaircase already renders the OPEN MONEY STACK eyebrow (with dot). */}
-          <OMSStaircase />
+          <OMSStaircase eyebrow={eyebrow} />
 
           {/* Heading — live u-h2-new = desktop-h2 token: 64px / 1.06 line-height /
           -1.28px (-0.02em) tracking. Width forces the live 2-line break
@@ -325,7 +491,7 @@ export function OpenMoneyStack() {
             className="absolute left-1/2 -translate-x-1/2 text-desktop-h2 text-white text-center w-[652px]"
             style={{ top: 416 }}
           >
-            One open stack for money movement
+            {heading}
           </p>
 
           {/* Body text — 18px/1.4 (body-large). Width = 400px to reproduce the live
@@ -334,8 +500,7 @@ export function OpenMoneyStack() {
             className="absolute left-1/2 -translate-x-1/2 text-desktop-body-large text-white text-center w-[400px]"
             style={{ top: 580 }}
           >
-            A single place to instantly access the onchain economy, with
-            worldwide distribution.
+            {body}
           </p>
 
           {/* GET EARLY ACCESS button.
@@ -343,7 +508,7 @@ export function OpenMoneyStack() {
                 LIGHT = transparent cut-corner with a light outline, white text+arrow.
           Both states keep WHITE text/arrow (fixed) on the blue band. */}
           <a
-            href="#"
+            href={ctaHref}
             className="scramble-host group absolute inline-flex items-center justify-between w-[245px] h-[52px] pl-[16px] pr-[20px] text-white hover:opacity-90 transition-opacity [[data-theme=dark]_&]:bg-[#07060D]"
             style={{
               top: 662,
@@ -369,7 +534,7 @@ export function OpenMoneyStack() {
               />
             </svg>
             <span className="text-desktop-mono-medium">
-              <ScrambleText>GET EARLY ACCESS</ScrambleText>
+              <ScrambleText>{ctaLabel}</ScrambleText>
             </span>
             <ArrowIcon />
           </a>
@@ -393,45 +558,9 @@ export function OpenMoneyStack() {
 
             {/* oms-lottie-wrap — product rows */}
             <div className="flex flex-col gap-[64px]" style={{ marginTop: 64 }}>
-              <ProductSection
-                badge="LIVE"
-                title="Wallet Infrastructure"
-                subtitle="one-click wallet creation to give your users an onchain account"
-                description="The Polygon Chain is fast, low cost, and battle-tested. Live for five years, with 99.99% uptime and millions of users, this is the best place to build onchain."
-                wireIcon="/assets/ico-wire-chains.png"
-                dotColor="#00FF08"
-                exploreText="Explore Sequence"
-                poweredByLogo="/assets/logo-sequence.png"
-              />
-              <ProductSection
-                badge="LIVE"
-                title="Crosschain Interop"
-                subtitle="one-click crypto transactions with any chain"
-                description="All-in-one integration, enabling users to transact with any wallet, any token, on any chain, bringing deep unified liquidity."
-                wireIcon="/assets/ico-wire-trails.png"
-                dotColor="#E271D7"
-                exploreText="Explore Trails"
-                poweredByLogo="/assets/logo-trails.svg"
-              />
-              <ProductSection
-                badge="LIVE"
-                title={"On/Off- and\nCash Ramps"}
-                subtitle="Physical cash and digital fiat on- and off-ramps"
-                description="Grow your revenue by offering on- and off-ramps, pay with crypto, earn yield, and more. All with enterprise-grade security."
-                wireIcon="/assets/ico-wire-wallet.png"
-                dotColor="#FF7421"
-                exploreText="Explore Coinme"
-                poweredByLogo="/assets/logo-coinme.png"
-              />
-              <ProductSection
-                badge="LIVE"
-                title="Blockchain Rails"
-                subtitle="The fastest settlement layer to move money globally"
-                description="Use crypto to offer faster, cheaper cross-border transfers."
-                wireIcon="/assets/ico-wire-bpn.png"
-                dotColor="#00BBFF"
-                exploreText="Explore Polygon Chain"
-              />
+              {products.map((p, i) => (
+                <ProductSection key={i} {...p} />
+              ))}
             </div>
           </div>
 
@@ -440,16 +569,9 @@ export function OpenMoneyStack() {
             className="absolute flex items-center justify-between w-[1320px]"
             style={{ top: 2068, left: 60 }}
           >
-            <SecondaryCard
-              title="Stablecoin Orchestration"
-              description="Enterprise payments infrastructure for stablecoins and tokenized deposits"
-              icon="/assets/ico-kit.png"
-            />
-            <SecondaryCard
-              title="KYC Hub"
-              description="Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest."
-              icon="/assets/ico-pay.png"
-            />
+            {comingSoon.map((c, i) => (
+              <SecondaryCard key={i} {...c} />
+            ))}
           </div>
 
           {/* Last grid row — inverted-primary band with diagonal cut on top-left
@@ -537,10 +659,10 @@ export function OpenMoneyStack() {
           aria-hidden
         />
 
-        {/* Eyebrow — OPEN MONEY STACK, centered. Live @500: y57. */}
+        {/* Eyebrow — centered. Live @500: y57. */}
         <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 57 }}>
           <Eyebrow
-            text="OPEN MONEY STACK"
+            text={eyebrow}
             borderColor="stroke"
             textColor="primary"
             hasDot
@@ -561,7 +683,7 @@ export function OpenMoneyStack() {
             letterSpacing: "-0.64px",
           }}
         >
-          One open stack for money movement
+          {heading}
         </p>
 
         {/* Body — 16px / 22.4px (1.4), white, centered, x44 w413. Live @500: y381. */}
@@ -576,14 +698,13 @@ export function OpenMoneyStack() {
             lineHeight: "22.4px",
           }}
         >
-          A single place to instantly access the onchain economy, with worldwide
-          distribution.
+          {body}
         </p>
 
         {/* GET EARLY ACCESS button — black cut-corner, white mono+arrow, centered.
             Live @500: y439, w213 h46. */}
         <a
-          href="#"
+          href={ctaHref}
           className="scramble-host group absolute inline-flex items-center justify-between h-[46px] pl-[16px] pr-[18px] text-white [[data-theme=dark]_&]:bg-[#07060D]"
           style={{
             top: 439,
@@ -595,7 +716,7 @@ export function OpenMoneyStack() {
           }}
         >
           <span className="text-desktop-mono-medium">
-            <ScrambleText>GET EARLY ACCESS</ScrambleText>
+            <ScrambleText>{ctaLabel}</ScrambleText>
           </span>
           <svg
             width="8"
@@ -615,22 +736,22 @@ export function OpenMoneyStack() {
         </a>
 
         {/* LIVE product cards — single column, stacked. l=17, w=342. */}
-        {MOBILE_PRODUCTS.map((p, i) => (
+        {mobileProducts.map((p, i) => (
           <MobileProductCard key={i} top={MOBILE_CARD_TOPS[i]} {...p} />
         ))}
 
         {/* COMING SOON cards */}
         <MobileComingSoonCard
           top={2852}
-          title="Stablecoin Orchestration"
-          description="Enterprise payments infrastructure for stablecoins and tokenized deposits"
-          icon="/assets/ico-pay.png"
+          title={comingSoon[0]?.title ?? ""}
+          description={comingSoon[0]?.description ?? ""}
+          icon={comingSoon[0]?.icon ?? ""}
         />
         <MobileComingSoonCard
           top={3120}
-          title="KYC Hub"
-          description="Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest."
-          icon="/assets/ico-kit.png"
+          title={comingSoon[1]?.title ?? ""}
+          description={comingSoon[1]?.description ?? ""}
+          icon={comingSoon[1]?.icon ?? ""}
         />
 
         {/* Bottom black row — live `u-bg-grid-wrap.is-bottom` last row: 5 black
@@ -680,67 +801,6 @@ export function OpenMoneyStack() {
 
 /* ─── Mobile sub-components ─────────────────────────────────────────────── */
 
-type MobileProduct = {
-  badge: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  wireIcon: string;
-  dotColor: string;
-  exploreText: string;
-  poweredByLogo?: string;
-  mobileVideo: string;
-};
-
-const MOBILE_PRODUCTS: MobileProduct[] = [
-  {
-    badge: "LIVE",
-    title: "Wallet Infrastructure",
-    subtitle: "one-click wallet creation to give your users an onchain account",
-    description:
-      "The Polygon Chain is fast, low cost, and battle-tested. Live for five years, with 99.99% uptime and millions of users, this is the best place to build onchain.",
-    wireIcon: "/assets/ico-wire-chains.png",
-    dotColor: "#00FF08",
-    exploreText: "Explore Sequence",
-    poweredByLogo: "/assets/logo-sequence.png",
-    mobileVideo: "/assets/oms-mobile-chains.webm",
-  },
-  {
-    badge: "LIVE",
-    title: "Crosschain Interop",
-    subtitle: "one-click crypto transactions with any chain",
-    description:
-      "All-in-one integration, enabling users to transact with any wallet, any token, on any chain, bringing deep unified liquidity.",
-    wireIcon: "/assets/ico-wire-trails.png",
-    dotColor: "#E271D7",
-    exploreText: "Explore Trails",
-    poweredByLogo: "/assets/logo-trails.svg",
-    mobileVideo: "/assets/oms-mobile-trails.webm",
-  },
-  {
-    badge: "LIVE",
-    title: "On/Off- and\nCash Ramps",
-    subtitle: "Physical cash and digital fiat on- and off-ramps",
-    description:
-      "Grow your revenue by offering on- and off-ramps, pay with crypto, earn yield, and more. All with enterprise-grade security.",
-    wireIcon: "/assets/ico-wire-wallet.png",
-    dotColor: "#FF7421",
-    exploreText: "Explore Coinme",
-    poweredByLogo: "/assets/logo-coinme.png",
-    mobileVideo: "/assets/oms-mobile-wallet.webm",
-  },
-  {
-    badge: "LIVE",
-    title: "Blockchain Rails",
-    subtitle: "The fastest settlement layer to move money globally",
-    description: "Use crypto to offer faster, cheaper cross-border transfers.",
-    wireIcon: "/assets/ico-wire-bpn.png",
-    dotColor: "#00BBFF",
-    exploreText: "Explore Polygon Chain",
-    mobileVideo: "/assets/oms-mobile-bpn.webm",
-  },
-];
-
 // Card start tops. First card at the live line position (y549); each subsequent
 // card = prev top + prev rendered height (560/526/554) + a 48px gap between cards.
 const MOBILE_CARD_TOPS = [549, 1157, 1731, 2333];
@@ -776,7 +836,7 @@ function MobileProductCard({
   exploreText,
   poweredByLogo,
   mobileVideo,
-}: MobileProduct & { top: number }) {
+}: OmsMobileProductItem & { top: number }) {
   return (
     <div
       className="group absolute flex flex-col border-t border-[#707bb7]"
@@ -915,7 +975,7 @@ function MobileProductCard({
           {/* Right half (229) — dot + explore text + colored arrow box */}
           <div className="relative flex flex-1 items-center justify-between px-[14px]">
             <div className="flex items-center gap-[10px]">
-              <DotHex color={dotColor} />
+              <DotHex color={dotColor ?? "#707bb7"} />
               <span className="text-desktop-mono-small uppercase text-white">
                 {exploreText}
               </span>
@@ -932,7 +992,7 @@ function MobileProductCard({
                 fill="none"
                 className="absolute inset-0"
               >
-                <path d={ARROW_BOX} fill={dotColor} />
+                <path d={ARROW_BOX} fill={dotColor ?? "#707bb7"} />
                 <path d={ARROW_TRI} fill="#07060D" />
               </svg>
             </div>
