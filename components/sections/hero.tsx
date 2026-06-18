@@ -6,6 +6,12 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 import { ScrambleText } from "@/components/ui/scramble-text";
 import { MobileStage } from "@/components/ui/stage";
 
+// Hero heading entry decode (matches live): each line scrambles through
+// lowercase letters and resolves left-to-right on load, lightly staggered
+// top-to-bottom.
+const HEADING_LETTERS = "abcdefghijklmnopqrstuvwxyz";
+const HEADING_DELAYS = [0, 80, 160];
+
 // Exact mobile section height extracted from live (500 canvas): the hero spans
 // from the page top (nav floats over the top grid) down to where the next
 // "We've been around the block" glance section begins at css 808.
@@ -279,8 +285,24 @@ export function Hero() {
           {/* Heading */}
           <div className="absolute left-[60px] top-[168px] w-[560px] flex flex-col gap-[2px]">
             <div className="text-desktop-h1 text-white">
-              <p className="mb-0">It&rsquo;s not</p>
-              <p>our first</p>
+              <p className="mb-0">
+                <ScrambleText
+                  trigger="mount"
+                  charSet={HEADING_LETTERS}
+                  startDelay={HEADING_DELAYS[0]}
+                >
+                  It&rsquo;s not
+                </ScrambleText>
+              </p>
+              <p>
+                <ScrambleText
+                  trigger="mount"
+                  charSet={HEADING_LETTERS}
+                  startDelay={HEADING_DELAYS[1]}
+                >
+                  our first
+                </ScrambleText>
+              </p>
             </div>
             <div className="flex items-end gap-[12px] w-full">
               <div className="flex flex-col items-start justify-end pb-[14px]">
@@ -293,17 +315,25 @@ export function Hero() {
                 />
               </div>
               <div className="h-[86px] w-[152px] overflow-hidden">
-                <Image
-                  src="/assets/hero-chains.png"
-                  alt=""
-                  width={152}
-                  height={86}
+                {/* Live: autoplaying wire-chain video (alpha webm) over the scene. */}
+                <video
+                  src="/assets/hero-chains.webm"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  aria-hidden
                   className="object-cover w-full h-full"
-                  unoptimized
                 />
               </div>
               <div className="text-desktop-h1 text-white whitespace-nowrap">
-                trillion
+                <ScrambleText
+                  trigger="mount"
+                  charSet={HEADING_LETTERS}
+                  startDelay={HEADING_DELAYS[2]}
+                >
+                  trillion
+                </ScrambleText>
               </div>
             </div>
           </div>
@@ -320,9 +350,13 @@ export function Hero() {
 
           {/* CTAs — live button-wrap.is-cappped: 12px gap between buttons */}
           <div className="absolute left-[60px] top-[555px] flex items-center gap-[12px]">
+            {/* Live flips OPEN MONEY STACK with the theme: dark = purple bg +
+                white text; light = inverted-primary (#F2F1F5) bg + purple text.
+                (BUILD ON POLYGON stays fixed dark in both.) */}
             <CtaButton
               label="OPEN MONEY STACK"
-              bgClass="bg-purple hover:bg-purple-hover"
+              bgClass="bg-purple hover:bg-purple-hover [[data-theme=light]_&]:bg-inverted-primary [[data-theme=light]_&]:hover:bg-inverted-primary-hover"
+              textClass="text-white [[data-theme=light]_&]:text-purple"
             />
             <CtaButton
               label="BUILD ON POLYGON"
@@ -527,20 +561,46 @@ export function Hero() {
             Line 1/2 plain; line 3 is the chains graphic + "trillion" (live indents
             "trillion" to x177, the chains occupying x55→~165). */}
         <div className="absolute left-[55px] top-[182px] font-heading font-light text-white text-[48px] leading-[0.9] tracking-[-0.96px]">
-          <p>It&rsquo;s not</p>
-          <p>our first</p>
+          <p>
+            <ScrambleText
+              trigger="mount"
+              charSet={HEADING_LETTERS}
+              startDelay={HEADING_DELAYS[0]}
+            >
+              It&rsquo;s not
+            </ScrambleText>
+          </p>
+          <p>
+            <ScrambleText
+              trigger="mount"
+              charSet={HEADING_LETTERS}
+              startDelay={HEADING_DELAYS[1]}
+            >
+              our first
+            </ScrambleText>
+          </p>
           <div className="flex items-center gap-[12px]">
             <span className="inline-block h-[50px] w-[110px] overflow-hidden">
-              <Image
-                src="/assets/hero-chains.png"
-                alt=""
-                width={110}
-                height={50}
+              {/* Live: autoplaying wire-chain video (alpha webm) over the scene. */}
+              <video
+                src="/assets/hero-chains.webm"
+                autoPlay
+                loop
+                muted
+                playsInline
+                aria-hidden
                 className="h-full w-full object-cover"
-                unoptimized
               />
             </span>
-            <span className="whitespace-nowrap">trillion</span>
+            <span className="whitespace-nowrap">
+              <ScrambleText
+                trigger="mount"
+                charSet={HEADING_LETTERS}
+                startDelay={HEADING_DELAYS[2]}
+              >
+                trillion
+              </ScrambleText>
+            </span>
           </div>
         </div>
 
@@ -559,7 +619,8 @@ export function Hero() {
           <div className="w-[213px]">
             <CtaButton
               label="OPEN MONEY STACK"
-              bgClass="bg-purple hover:bg-purple-hover"
+              bgClass="bg-purple hover:bg-purple-hover [[data-theme=light]_&]:bg-inverted-primary [[data-theme=light]_&]:hover:bg-inverted-primary-hover"
+              textClass="text-white [[data-theme=light]_&]:text-purple"
               compact
             />
           </div>
@@ -573,13 +634,15 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Mobile logo marquee — live `.hero-marquee-wrap.is-grid`: a SOLID #07060D
-            band 120px tall (y585→705) behind the logos so they sit on dark. BELOW
-            this band the grid shows (live has grid lines at y706 & y807), so the
-            band is only 120px — not the full region. Top stroke at y585, single row
-            of logos at 50px svg height (~15px glyph), ~13px gaps, logos at y622. */}
+        {/* Mobile logo marquee — live `.hero-marquee-wrap.is-grid`: a SOLID page-bg
+            band 120px tall (y585→705) behind the logos. Flips with the theme
+            (bg-background: #07060D dark / #F2F1F5 light) so the bg-primary logos —
+            which flip to dark in light mode — stay visible. BELOW this band the grid
+            shows (live grid lines at y706 & y807), so the band is only 120px — not the
+            full region. Top stroke at y585, single row of logos at 50px svg height
+            (~15px glyph), ~13px gaps, logos at y622. */}
         <div
-          className="absolute left-0 right-0 overflow-hidden border-t border-stroke bg-[#07060D]"
+          className="absolute left-0 right-0 overflow-hidden border-t border-stroke bg-background"
           style={{ top: 585, height: 120 }}
         >
           {/* Row sits 37px below the top stroke (live logos at y622) */}
@@ -623,14 +686,14 @@ export function Hero() {
             className="absolute inset-y-0 left-0 w-[50px] pointer-events-none"
             style={{
               backgroundImage:
-                "linear-gradient(90deg, #07060D 54%, rgba(7,6,13,0))",
+                "linear-gradient(90deg, var(--background) 54%, transparent)",
             }}
           />
           <div
             className="absolute inset-y-0 right-0 w-[50px] pointer-events-none"
             style={{
               backgroundImage:
-                "linear-gradient(270deg, #07060D 28%, rgba(7,6,13,0))",
+                "linear-gradient(270deg, var(--background) 28%, transparent)",
             }}
           />
         </div>

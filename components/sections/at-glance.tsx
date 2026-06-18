@@ -116,11 +116,16 @@ function StaircaseRow({
   left,
   cols,
   cell = CELL,
+  height = cell,
 }: {
   top: number;
   left: number;
   cols: number;
   cell?: number;
+  /** Row height — defaults to one cell; override to bleed past the cell grid
+   *  (e.g. the last mobile row reaching the section edge so no 1px section-bg
+   *  hairline shows between the at-glance and OMS light platforms). */
+  height?: number;
 }) {
   return (
     <div
@@ -129,7 +134,7 @@ function StaircaseRow({
         top,
         left,
         width: cols * cell,
-        height: cell,
+        height,
         backgroundImage: `linear-gradient(${STAIR_STROKE} 1px, transparent 1px), linear-gradient(90deg, ${STAIR_STROKE} 1px, transparent 1px)`,
         backgroundSize: `${cell}px ${cell}px`,
         outline: `1px solid ${STAIR_STROKE}`,
@@ -488,7 +493,9 @@ export function AtGlance() {
             (x100→400) at y499; lower tier = 5 cells (full width) at y599. The gem
             sits in the left blue cell, the stone in the right one (both on top). */}
         <StaircaseRow top={499} left={100} cols={3} cell={100} />
-        <StaircaseRow top={599} left={0} cols={5} cell={100} />
+        {/* height 101 (not 100) so the row reaches the section bottom (700) with
+            no 1px blue section-bg hairline at the at-glance/OMS seam in light mode. */}
+        <StaircaseRow top={599} left={0} cols={5} cell={100} height={101} />
 
         {/* Heading — live mobile `.u-h2-new` @500: 32px, line-height 1.06, tracking
             -0.64px, at x41 y35. Line 1 ("We've been") is indented to clear the

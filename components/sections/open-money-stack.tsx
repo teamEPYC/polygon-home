@@ -526,13 +526,13 @@ export function OpenMoneyStack() {
           {[0, 1, 2].map((c) => (
             <div
               key={c}
-              className="bg-[#07060D] border-r border-b border-white/10"
+              className="bg-inverted-primary border-r border-b border-white/10 [[data-theme=light]_&]:border-black/[0.06]"
               style={{ width: 100, height: 100 }}
             />
           ))}
         </div>
         <div
-          className="absolute bg-[#07060D] border-r border-b border-white/10"
+          className="absolute bg-inverted-primary border-r border-b border-white/10 [[data-theme=light]_&]:border-black/[0.06]"
           style={{ top: 100, left: 200, width: 100, height: 100 }}
           aria-hidden
         />
@@ -644,7 +644,7 @@ export function OpenMoneyStack() {
           {[0, 1, 2, 3, 4].map((c) => (
             <div
               key={c}
-              className="bg-[#07060D] border-r border-b border-white/10"
+              className="bg-inverted-primary border-r border-b border-white/10 [[data-theme=light]_&]:border-black/[0.06]"
               style={{
                 width: 100,
                 height: 100,
@@ -667,7 +667,7 @@ export function OpenMoneyStack() {
             {[0, 1, 2, 3, 4].map((c) => (
               <div
                 key={c}
-                className="bg-[#07060D] border-r border-b border-white/10"
+                className="bg-inverted-primary border-r border-b border-white/10 [[data-theme=light]_&]:border-black/[0.06]"
                 style={{ width: 100, height: 100 }}
               />
             ))}
