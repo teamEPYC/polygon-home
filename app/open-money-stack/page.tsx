@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Nav } from "@/components/sections/nav";
+import { HeroOMS } from "@/components/sections/hero-oms";
 import { Spacer } from "@/components/ui/spacer";
 import { OpenMoneyStack } from "@/components/sections/open-money-stack";
 import { UseCasesCta } from "@/components/sections/use-cases";
@@ -20,7 +21,7 @@ export default function OpenMoneyStackPage() {
       <NoiseOverlay />
       <Nav />
       <main className="max-w-[1440px] mx-auto overflow-hidden">
-        {/* <HeroOMS /> — Task 4 */}
+        <HeroOMS />
         <Spacer />
         <OpenMoneyStack
           eyebrow="PRODUCTS"
