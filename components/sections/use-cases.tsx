@@ -570,6 +570,57 @@ const CTA_BUTTONS: CtaButton[] = [
   { label: "OPEN MONEY STACK", href: "#open-money-stack", left: 960 },
 ];
 
+// One desktop CTA card — used for every button (homepage 3-up AND the OMS
+// single card) so the frame, poly tick, and button geometry can never drift.
+// `btn.left` positions the 420×164 card; a single centered card just passes
+// left: 510 (page centre). Button is left-aligned at (60,56), 301×51 — the
+// exact live geometry.
+function GetStartedButtonCard({ btn }: { btn: CtaButton }) {
+  return (
+    <div
+      className="absolute z-[4]"
+      style={{ left: btn.left, top: 736, width: 420, height: 164 }}
+    >
+      {/* Cut-corner card frame — exact live .h-uc-card path (big top-left
+          cut + small bottom-right cut), faint fill + subtle outline. */}
+      <svg
+        className="absolute inset-0 pointer-events-none select-none"
+        width={420}
+        height={164}
+        viewBox="0 0 420 164"
+        fill="none"
+        preserveAspectRatio="none"
+        aria-hidden
+      >
+        <path
+          d="M420 124.055C420 125.145 419.554 126.19 418.767 126.944L381.238 162.889C380.494 163.602 379.502 164 378.471 164H4C1.79086 164 0 162.209 0 160V64H0.0214844L0.00683594 60.1904C0.00278726 59.1078 0.437335 58.0698 1.21191 57.3135L58.7539 1.1377C59.5011 0.408371 60.5037 0 61.5479 0H415.98C418.189 0 419.98 1.79048 419.98 3.99902L420 64V124.055Z"
+          fill="rgba(255,255,255,0.04)"
+          stroke="rgba(243,242,246,0.55)"
+        />
+      </svg>
+      {/* Corner poly mark at the top-left cut (live "trail poly.svg" — a
+          rounded right-triangle, right angle bottom-right), 10px at (8,3). */}
+      <svg
+        className="absolute"
+        style={{ left: 8, top: 3, width: 10, height: 10 }}
+        viewBox="0 0 10 10"
+        fill="none"
+        aria-hidden
+      >
+        <path d="M8.79395 9.29395H0.501052C0.0555997 9.29395 -0.167485 8.75538 0.147498 8.44039L8.44039 0.147499C8.75537 -0.167484 9.29395 0.0555996 9.29395 0.501052V8.79395C9.29395 9.07009 9.07009 9.29395 8.79395 9.29395Z" fill="#F2F1F5" />
+      </svg>
+      {/* Button — live geometry: 301×51 at (60,56) inside the 420×164 card
+          (left-aligned past the top-left cut, vertically centred). */}
+      <div
+        className="absolute"
+        style={{ left: 60, top: 56, width: 301, height: 51 }}
+      >
+        <CtaCornerButton label={btn.label} href={btn.href} />
+      </div>
+    </div>
+  );
+}
+
 // Solid grid cells (bg-inverted-primary + border-stroke) — the top inverted
 // staircase / funnel toward the LET'S BUILD eyebrow.
 const SOLID_CELLS: [number, number][] = [
@@ -769,91 +820,11 @@ export function GetStartedCta({
           {heading}
         </h2>
 
-        {/* Footer button cards — 3-up layout when 3 buttons; centered single card when 1 */}
-        {buttons.length === 1 ? (
-          <div
-            className="absolute z-[4]"
-            style={{ left: 510, top: 736, width: 420, height: 164 }}
-          >
-            <svg
-              className="absolute inset-0 pointer-events-none select-none"
-              width={420}
-              height={164}
-              viewBox="0 0 420 164"
-              fill="none"
-              preserveAspectRatio="none"
-              aria-hidden
-            >
-              <path
-                d="M420 124.055C420 125.145 419.554 126.19 418.767 126.944L381.238 162.889C380.494 163.602 379.502 164 378.471 164H4C1.79086 164 0 162.209 0 160V64H0.0214844L0.00683594 60.1904C0.00278726 59.1078 0.437335 58.0698 1.21191 57.3135L58.7539 1.1377C59.5011 0.408371 60.5037 0 61.5479 0H415.98C418.189 0 419.98 1.79048 419.98 3.99902L420 64V124.055Z"
-                fill="rgba(255,255,255,0.04)"
-                stroke="rgba(243,242,246,0.55)"
-              />
-            </svg>
-            {/* Corner poly mark at the top-left cut (live "trail poly.svg" — a
-                rounded right-triangle, right angle bottom-right), 10px at (8,3). */}
-            <svg
-              className="absolute"
-              style={{ left: 8, top: 3, width: 10, height: 10 }}
-              viewBox="0 0 10 10"
-              fill="none"
-              aria-hidden
-            >
-              <path d="M8.79395 9.29395H0.501052C0.0555997 9.29395 -0.167485 8.75538 0.147498 8.44039L8.44039 0.147499C8.75537 -0.167484 9.29395 0.0555996 9.29395 0.501052V8.79395C9.29395 9.07009 9.07009 9.29395 8.79395 9.29395Z" fill="#F2F1F5" />
-            </svg>
-            {/* Single button — Task 2 placeholder centers it; exact live
-                placement on /open-money-stack is verified in Task 7. */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-              <CtaCornerButton label={buttons[0].label} href={buttons[0].href} />
-            </div>
-          </div>
-        ) : (
-          buttons.map((btn) => (
-            <div
-              key={btn.label}
-              className="absolute z-[4]"
-              style={{ left: btn.left, top: 736, width: 420, height: 164 }}
-            >
-              {/* Cut-corner card frame — exact live .h-uc-card path (big top-left
-                  cut + small bottom-right cut), faint fill + subtle outline. */}
-              <svg
-                className="absolute inset-0 pointer-events-none select-none"
-                width={420}
-                height={164}
-                viewBox="0 0 420 164"
-                fill="none"
-                preserveAspectRatio="none"
-                aria-hidden
-              >
-                <path
-                  d="M420 124.055C420 125.145 419.554 126.19 418.767 126.944L381.238 162.889C380.494 163.602 379.502 164 378.471 164H4C1.79086 164 0 162.209 0 160V64H0.0214844L0.00683594 60.1904C0.00278726 59.1078 0.437335 58.0698 1.21191 57.3135L58.7539 1.1377C59.5011 0.408371 60.5037 0 61.5479 0H415.98C418.189 0 419.98 1.79048 419.98 3.99902L420 64V124.055Z"
-                  fill="rgba(255,255,255,0.04)"
-                  stroke="rgba(243,242,246,0.55)"
-                />
-              </svg>
-              {/* Corner poly mark at the top-left cut (live "trail poly.svg" — a
-                  rounded right-triangle, right angle bottom-right), 10px at (8,3). */}
-              <svg
-                className="absolute"
-                style={{ left: 8, top: 3, width: 10, height: 10 }}
-                viewBox="0 0 10 10"
-                fill="none"
-                aria-hidden
-              >
-                <path d="M8.79395 9.29395H0.501052C0.0555997 9.29395 -0.167485 8.75538 0.147498 8.44039L8.44039 0.147499C8.75537 -0.167484 9.29395 0.0555996 9.29395 0.501052V8.79395C9.29395 9.07009 9.07009 9.29395 8.79395 9.29395Z" fill="#F2F1F5" />
-              </svg>
-              {/* Button — live geometry: 301×51 at (60,56) inside the 420×164 card
-                  (left-aligned past the top-left cut, vertically centred). Same
-                  trail button as mobile: full-width outline, label left, chevron right. */}
-              <div
-                className="absolute"
-                style={{ left: 60, top: 56, width: 301, height: 51 }}
-              >
-                <CtaCornerButton label={btn.label} href={btn.href} />
-              </div>
-            </div>
-          ))
-        )}
+        {/* Footer button cards — same card for every button; `btn.left`
+            positions each one (homepage 3-up, or a single centred card at 510). */}
+        {buttons.map((btn) => (
+          <GetStartedButtonCard key={btn.label} btn={btn} />
+        ))}
       </div>
       </div>
     </section>
