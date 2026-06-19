@@ -3,6 +3,7 @@ import { Nav } from "@/components/sections/nav";
 import { HeroOMS } from "@/components/sections/hero-oms";
 import { Spacer } from "@/components/ui/spacer";
 import { OpenMoneyStack } from "@/components/sections/open-money-stack";
+import { StatsBand } from "@/components/sections/stats-band";
 import { UseCasesCta } from "@/components/sections/use-cases";
 import { Footer } from "@/components/sections/footer";
 import { NoiseOverlay } from "@/components/ui/noise-overlay";
@@ -28,7 +29,8 @@ export default function OpenMoneyStackPage() {
           heading="Global rails for upgraded money"
           /* body / products confirmed against live during extraction */
         />
-        {/* <StatsBand /> — Task 5 */}
+        <Spacer />
+        <StatsBand />
         {/* <FaqSection /> — Task 6 */}
         <UseCasesCta
           renderGetStarted
