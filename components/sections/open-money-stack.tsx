@@ -215,7 +215,7 @@ function ArrowIcon() {
 }
 
 // Per-row dot — elongated hexagon (live `oms-button-indicator`, 10×8), colored per row.
-function DotHex({ color }: { color: string }) {
+export function DotHex({ color }: { color: string }) {
   return (
     <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
       <path
@@ -231,12 +231,12 @@ function DotHex({ color }: { color: string }) {
 // Explore arrow box — live `oms-what-button-arrow` (44×36 cut-corner). Always
 // visible as a #707bb7 outline; on row hover the colored fill (row dot color +
 // dark arrow) fades in over it.
-const ARROW_BOX =
+export const ARROW_BOX =
   "M40 0C42.2091 0 44 1.79086 44 4V19.20559C44 21.406 43.1345 23.466 41.5986 24.9707L31.5059 34.8574C30.7582 35.5897 29.7535 36 28.707 36H4C1.79086 36 0 34.2091 0 32V4C0 1.79086 1.79086 0 4 0H40Z";
-const ARROW_TRI =
+export const ARROW_TRI =
   "M23.8612 17.3865C24.0701 17.5838 24.0701 17.9162 23.8612 18.1135L20.5894 21.2035C20.2705 21.5047 19.7461 21.2786 19.7461 20.84L19.7461 14.66C19.7461 14.2214 20.2705 13.9953 20.5894 14.2965L23.8612 17.3865Z";
 
-function ExploreArrow({ color }: { color: string }) {
+export function ExploreArrow({ color }: { color: string }) {
   return (
     <div className="relative" style={{ width: 44, height: 36 }}>
       {/* default outlined box + arrow */}
