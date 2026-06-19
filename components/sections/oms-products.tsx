@@ -75,11 +75,10 @@ function OmsProductCard(p: Product) {
       style={{ top: p.top, left: g.left, width: g.width }}
     >
       <div className={`flex flex-col gap-[16px] ${right ? "ml-auto items-end text-right" : "items-start text-left"}`} style={{ width: g.content }}>
-        {/* Badge — corner-tick pill; self-start/-end per side */}
+        {/* Badge — plain bordered rectangle (live OMS page has NO corner ticks),
+            white text. self-start/-end per side. */}
         <div className={`relative inline-flex items-center px-[12px] py-[6px] border border-[var(--bc)] transition-colors ${right ? "self-end" : "self-start"}`}>
-          <span className="absolute top-0 left-0 size-[6px] text-[var(--bc)]"><svg width="6" height="6" viewBox="0 0 6 6" fill="none"><path d="M0 0H6L0 6V0Z" fill="currentColor" /></svg></span>
-          <span className="text-desktop-mono-medium text-[rgba(255,255,255,0.7)] group-hover:text-white transition-colors whitespace-nowrap pt-[1px]">{p.tag}</span>
-          <span className="absolute bottom-0 right-0 size-[6px] text-[var(--bc)]"><svg width="6" height="6" viewBox="0 0 6 6" fill="none"><path d="M6 6H0L6 0V6Z" fill="currentColor" /></svg></span>
+          <span className="text-desktop-mono-medium text-white whitespace-nowrap pt-[1px]">{p.tag}</span>
         </div>
 
         {/* Heading + subtitle */}
@@ -95,10 +94,10 @@ function OmsProductCard(p: Product) {
             <div className="absolute" style={{ left: 11, top: 11 }}><DotHex color={p.dot} /></div>
           </div>
           <div className="relative flex flex-col justify-between items-end p-[14px]" style={{ minHeight: 100 }}>
-            <svg className="absolute pointer-events-none" style={{ inset: "-1px 0 0 0", zIndex: -1, color: "var(--bc)", width: "100%", height: "100%" }} viewBox="0 0 156 100" preserveAspectRatio="none" fill="none">
+            <svg className="absolute inset-0 pointer-events-none" style={{ color: "var(--bc)", width: "100%", height: "100%" }} viewBox="-1 -1 158 102" preserveAspectRatio="none" fill="none">
               <path d="M154 0.5C154.828 0.5 155.5 1.17157 155.5 2V83.2881C155.5 84.2245 155.124 85.1227 154.458 85.7803L141.576 98.4912C140.921 99.1374 140.038 99.5 139.118 99.5H0.5V0.5H154Z" stroke="currentColor" />
             </svg>
-            <span className="text-desktop-mono-small uppercase text-[rgba(255,255,255,0.7)] group-hover:text-white transition-colors text-right"><ScrambleText>{p.explore}</ScrambleText></span>
+            <span className="text-desktop-mono-small uppercase text-white text-right"><ScrambleText>{p.explore}</ScrambleText></span>
             <ExploreArrow color={p.dot} />
           </div>
         </div>
@@ -179,14 +178,14 @@ export function OmsProducts() {
             <SecondaryCard
               title="Stablecoin Orchestration"
               description="Enterprise payments infrastructure for stablecoins and tokenized deposits"
-              icon="/assets/ico-kit.png"
+              icon="/assets/ico-pay.png"
             />
           </div>
           <div className="absolute" style={{ top: 2151, left: 735 }}>
             <SecondaryCard
               title="KYC Hub"
               description="Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest."
-              icon="/assets/ico-pay.png"
+              icon="/assets/ico-kit.png"
             />
           </div>
 
@@ -194,7 +193,7 @@ export function OmsProducts() {
               row of cells with a diagonal-cut leftmost corner). Theme tokens flip. */}
           <svg
             className="absolute left-0 w-full h-[121px]"
-            style={{ top: 2235 }}
+            style={{ top: 2474 }}
             viewBox="0 0 1441.71 121.707"
             preserveAspectRatio="none"
             fill="none"
