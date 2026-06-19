@@ -196,10 +196,14 @@ export function OmsProducts() {
           className="absolute left-0 top-0 origin-top-left"
           style={{ width: 1440, height: STAGE_H, transform: "scale(calc(100cqw / 1440px))" }}
         >
-          {/* Background — same radial + faint grid as the homepage section */}
+          {/* Background — live OMS `.sec.is-blue` keeps a #3449C1 base bright blue
+              across the whole body and darkens to solid #141B6B only in a band at
+              the very top and bottom edges (sampled: y200 = exact #141B6B, body
+              y700–2150 ≈ #283FB2/blue). A vertical gradient matches this far better
+              than the homepage's center radial (which bottomed out near-black). */}
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ backgroundImage: "radial-gradient(circle at 50% 40%, #273ead, #2941b7 39%, #07092c 75%)" }}
+            style={{ backgroundImage: "linear-gradient(180deg, #141b6b 0%, #141b6b 11%, rgba(20,27,107,0.18) 25%, rgba(20,27,107,0.18) 78%, #141b6b 96%)" }}
           />
           <div
             className="absolute inset-0 pointer-events-none"
