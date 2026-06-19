@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Theme is driven by the `data-theme="dark"` attribute (next-themes), not the
+   OS `prefers-color-scheme`. Re-point Tailwind's `dark:` variant accordingly so
+   theme-conditional utilities (e.g. `dark:border-primary`) work. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* ─── Light Theme (default) ────────────────────────────────────────────────── */
 :root {
   --primary: #07060D;
