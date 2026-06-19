@@ -35,7 +35,7 @@ type AccordionProps = {
 /**
  * FAQ accordion matched to live /open-money-stack.
  *
- * Row top border: light `grey-200` (#888A91) / dark `primary` (#FFFFFF).
+ * Row top border: light `grey-200` (#686D73) / dark `primary` (#FFFFFF).
  * Desktop rows carry a plain `01/02/03` mono tag (no box) above the question;
  * mobile rows have no tag. Question is heading font at weight 400. The
  * cut-corner chevron button sits at the right and rotates 180° on open.
@@ -73,6 +73,8 @@ export function Accordion({
               type="button"
               onClick={() => toggle(i)}
               aria-expanded={isOpen}
+              aria-controls={`accordion-panel-${i}`}
+              id={`accordion-button-${i}`}
               className={`flex w-full cursor-pointer items-start justify-between text-left ${
                 isDesktop
                   ? "gap-[28px] pt-[12px] pb-[35px]"
@@ -102,6 +104,9 @@ export function Accordion({
               </span>
             </button>
             <div
+              id={`accordion-panel-${i}`}
+              role="region"
+              aria-labelledby={`accordion-button-${i}`}
               className="grid transition-[grid-template-rows] duration-300 ease-out"
               style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
             >

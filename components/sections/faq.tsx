@@ -61,7 +61,7 @@ export function FaqSection() {
       style={{ containerType: "inline-size" }}
     >
       {/* ── Desktop ─────────────────────────────────────────────── */}
-      <DesktopStage className="hidden md:block" height={800}>
+      <DesktopStage className="hidden md:block" height={642}>
         <div className="absolute left-[59px] top-[8px] w-[1324px]">
           {/* Header zone */}
           <div className="relative">

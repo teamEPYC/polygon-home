@@ -10,9 +10,9 @@ import { Footer } from "@/components/sections/footer";
 import { NoiseOverlay } from "@/components/ui/noise-overlay";
 
 export const metadata: Metadata = {
-  title: "Build on Polygon's Open Money Stack",
+  title: "Build on Polygon’s Open Money Stack | Polygon Technology",
   description:
-    "Build compliant, borderless payments on Polygon's Open Money Stack with unified wallets, deep stablecoin liquidity, and always-on settlement.",
+    "Build compliant, borderless payments on Polygon’s Open Money Stack with unified wallets, deep stablecoin liquidity, and always-on settlement for real-world money movement.",
   // OG image confirmed/downloaded during extraction (Task 6 wrap or here):
   openGraph: {
     images: [
@@ -28,6 +28,7 @@ export default function OpenMoneyStackPage() {
       <Nav />
       <main className="max-w-[1440px] mx-auto overflow-hidden">
         <HeroOMS />
+        <Spacer />
         <Spacer />
         <OpenMoneyStack
           eyebrow="PRODUCTS"
