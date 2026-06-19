@@ -2,7 +2,7 @@ import Image from "next/image";
 import { OmsVideoPlayer } from "@/components/ui/oms-video-player";
 import { OMSStaircase } from "./oms-staircase";
 import { ScrambleText } from "@/components/ui/scramble-text";
-import { DotHex, ExploreArrow } from "./open-money-stack";
+import { DotHex, ExploreArrow, SecondaryCard } from "./open-money-stack";
 
 const STAGE_H = 2595;
 const HEADING = "Global rails for upgraded money";
@@ -173,6 +173,49 @@ export function OmsProducts() {
           {PRODUCTS.map((p) => (
             <OmsProductCard key={p.title} {...p} />
           ))}
+
+          {/* Coming-soon cards — Stablecoin (left x59) / KYC Hub (right x735), y2151 */}
+          <div className="absolute" style={{ top: 2151, left: 59 }}>
+            <SecondaryCard
+              title="Stablecoin Orchestration"
+              description="Enterprise payments infrastructure for stablecoins and tokenized deposits"
+              icon="/assets/ico-kit.png"
+            />
+          </div>
+          <div className="absolute" style={{ top: 2151, left: 735 }}>
+            <SecondaryCard
+              title="KYC Hub"
+              description="Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest."
+              icon="/assets/ico-pay.png"
+            />
+          </div>
+
+          {/* Bottom inverted-primary grid band — reuse the homepage SVG (y2235 h121
+              row of cells with a diagonal-cut leftmost corner). Theme tokens flip. */}
+          <svg
+            className="absolute left-0 w-full h-[121px]"
+            style={{ top: 2235 }}
+            viewBox="0 0 1441.71 121.707"
+            preserveAspectRatio="none"
+            fill="none"
+            aria-hidden
+          >
+            <g fill="var(--color-inverted-primary)" stroke="var(--color-stroke)">
+              <path d="M1081.21 1.20711H1201.21V121.207H1081.21V1.20711Z" />
+              <path d="M1201.21 1.20711H1321.21V121.207H1201.21V1.20711Z" />
+              <path d="M1321.21 1.20711H1441.21V121.207H1321.21V1.20711Z" />
+              <path d="M961.207 1.20711H1081.21V121.207H961.207V1.20711Z" />
+              <path d="M841.207 1.20711H961.207V121.207H841.207V1.20711Z" />
+              <path d="M481.207 1.20711H601.207V121.207H481.207V1.20711Z" />
+              <path d="M601.207 1.20711H721.207V121.207H601.207V1.20711Z" />
+              <path d="M721.207 1.20711H841.207V121.207H721.207V1.20711Z" />
+              <path d="M361.207 1.20711H481.207V121.207H361.207V1.20711Z" />
+              <path d="M241.207 1.20711H361.207V121.207H241.207V1.20711Z" />
+              <path d="M121.207 1.20711H241.207V121.207H121.207V1.20711Z" />
+              <path d="M121.207 1.20711V121.207H1.20711L121.207 1.20711Z" />
+            </g>
+            <rect x="1.20711" y="1.20711" width="120" height="120" fill="none" stroke="var(--grid-stroke)" />
+          </svg>
         </div>
       </div>
     </section>

@@ -407,7 +407,7 @@ type SecondaryCardProps = {
   icon: string;
 };
 
-function SecondaryCard({ title, description, icon }: SecondaryCardProps) {
+export function SecondaryCard({ title, description, icon }: SecondaryCardProps) {
   return (
     <div className="relative flex items-start gap-0 border-t border-[var(--semi-transparent-blue)] rounded-[2px] w-[646px] h-[164px]">
       {/* Icon area */}
