@@ -28,7 +28,7 @@ background `rgb(52,73,193)` = `#3449C1`. All section-relative y below = page-y �
 | Product 3 — On/Off and Cash Ramps | 2547 | 1465 | LEFT | card x59 **w596 h391** → line x59→655 |
 | Product 4 — Blockchain Rails | 2909 | 1827 | RIGHT | card x853 **w530 h274** → line 853→1383 |
 | Coming-soon cards (Stablecoin Orchestration, KYC Hub) | ~3100 | ~2018 | x60, two side-by-side | reuse `SecondaryCard`; exact tops verified at build |
-| Bottom inverted-primary grid band | 3317 | 2235 | full width h360 | reuse existing bottom-grid SVG/cells |
+| Bottom inverted-primary grid band | 3556 | **2474** | full width, single 121px row flush to section bottom | reuse existing bottom-grid SVG (diagonal-cut top-left); the `is-bottom` *wrap* is 360 tall but the visible black row sits at the bottom edge, matching the homepage pattern (verified against live) |
 
 ---
 
