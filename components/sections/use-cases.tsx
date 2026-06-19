@@ -831,7 +831,8 @@ export function GetStartedCta({
                   stroke="rgba(243,242,246,0.55)"
                 />
               </svg>
-              {/* Diamond tick at the top-left cut (live trail-poly.svg), 10px at (8,3). */}
+              {/* Corner poly mark at the top-left cut (live "trail poly.svg" — a
+                  rounded right-triangle, right angle bottom-right), 10px at (8,3). */}
               <svg
                 className="absolute"
                 style={{ left: 8, top: 3, width: 10, height: 10 }}
@@ -839,10 +840,15 @@ export function GetStartedCta({
                 fill="none"
                 aria-hidden
               >
-                <path d="M5 0L10 5L5 10L0 5L5 0Z" fill="#F3F2F6" />
+                <path d="M8.79395 9.29395H0.501052C0.0555997 9.29395 -0.167485 8.75538 0.147498 8.44039L8.44039 0.147499C8.75537 -0.167484 9.29395 0.0555996 9.29395 0.501052V8.79395C9.29395 9.07009 9.07009 9.29395 8.79395 9.29395Z" fill="#F2F1F5" />
               </svg>
-              {/* Centered button */}
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+              {/* Button — live geometry: 301×51 at (60,56) inside the 420×164 card
+                  (left-aligned past the top-left cut, vertically centred). Same
+                  trail button as mobile: full-width outline, label left, chevron right. */}
+              <div
+                className="absolute"
+                style={{ left: 60, top: 56, width: 301, height: 51 }}
+              >
                 <CtaCornerButton label={btn.label} href={btn.href} />
               </div>
             </div>
