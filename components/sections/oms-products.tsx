@@ -2,7 +2,7 @@ import Image from "next/image";
 import { OmsVideoPlayer } from "@/components/ui/oms-video-player";
 import { OMSStaircase } from "./oms-staircase";
 import { ScrambleText } from "@/components/ui/scramble-text";
-import { DotHex, ExploreArrow, SecondaryCard } from "./open-money-stack";
+import { DotHex, ExploreArrow } from "./open-money-stack";
 
 const STAGE_H = 2595;
 const HEADING = "Global rails for upgraded money";
@@ -21,6 +21,10 @@ type Product = {
   wireIcon: string;
   dot: string;
   explore: string;
+  /** When true, the explore label renders as text-desktop-body (16px, title-case)
+   *  instead of the default text-desktop-mono-small uppercase. Only for Wallet
+   *  Infrastructure per live polygon.technology/open-money-stack. */
+  exploreBody?: boolean;
   logo: string | null;
   top: number;
 };
@@ -33,7 +37,7 @@ const PRODUCTS: Product[] = [
     subtitle: "one-click wallet creation to give your users an onchain account",
     description: "Easily onboard users with a single wallet address with zero-config auth and enterprise-grade security.",
     wireIcon: "/assets/ico-wire-chains.png", dot: "#00FF08",
-    explore: "Explore Sequence", logo: "/assets/logo-sequence.png", top: 792,
+    explore: "Explore Sequence", exploreBody: true, logo: "/assets/logo-sequence.png", top: 792,
   },
   {
     side: "right", tag: "LIVE", title: "Crosschain Interop",
@@ -58,6 +62,64 @@ const PRODUCTS: Product[] = [
   },
 ];
 
+// OMS-specific coming-soon card — matches live anatomy on /open-money-stack.
+// border-top 1px #707bb7 (semi-transparent-blue); width 648.
+// Layout: plain bordered COMING SOON badge (no corner ticks) + horizontal row
+// (icon box left, text right).
+function OmsComingSoonCard({
+  title,
+  description,
+  icon,
+}: {
+  title: string;
+  description: string;
+  icon: string;
+}) {
+  return (
+    <div
+      className="relative flex flex-col border-t border-[#707bb7]"
+      style={{ width: 648 }}
+    >
+      {/* Badge — plain bordered rectangle, no corner ticks. Hangs from the card's
+          top border, self-start so it sits at the card's top-left. */}
+      <div className="inline-flex items-center self-start px-[12px] py-[6px] border border-[#707bb7]">
+        <span className="text-desktop-mono-medium text-[rgba(255,255,255,0.7)] whitespace-nowrap pt-[1px]">
+          COMING SOON
+        </span>
+      </div>
+
+      {/* Content row — icon box + text, starts ~45px below the border line
+          (badge height ~29px + gap 16px ≈ 45px). Gap ~21px between icon and text. */}
+      <div className="flex flex-row items-start gap-[21px] mt-[16px]">
+        {/* Icon box — 151×98, cut-corner (beveled) border via product-card-container.svg,
+            3D icon on top, hex dot indicator at top-left (x11, y11). */}
+        <div className="relative shrink-0" style={{ width: 151, height: 98 }}>
+          <Image
+            src="/assets/product-card-container.svg"
+            alt=""
+            fill
+            className="object-fill"
+            unoptimized
+          />
+          <Image src={icon} alt="" fill className="object-contain p-[12px]" unoptimized />
+          <div className="absolute" style={{ left: 11, top: 11 }}>
+            <DotHex color="#C590E5" />
+          </div>
+        </div>
+
+        {/* Text column — title h4 + subtitle, starts ~x231 within card (151 icon + 21 gap = 172;
+            close enough to the 231 live coord accounting for card's own border/padding). */}
+        <div className="flex flex-col gap-[28px]">
+          <h4 className="text-desktop-h4 text-white">{title}</h4>
+          <p className="text-desktop-mono-medium uppercase text-[rgba(255,255,255,0.7)]">
+            {description}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Per-side geometry. Card box carries the border-top line; content column is
 // pinned to the outer margin so the line overshoots toward center (behind video).
 const SIDE: Record<Side, { left: number; width: number; content: number; btnW: number }> = {
@@ -68,6 +130,9 @@ const SIDE: Record<Side, { left: number; width: number; content: number; btnW: n
 function OmsProductCard(p: Product) {
   const g = SIDE[p.side];
   const right = p.side === "right";
+  const exploreClass = p.exploreBody
+    ? "text-desktop-body text-white text-right"
+    : "text-desktop-mono-small uppercase text-white text-right";
   return (
     <a
       href="#"
@@ -97,7 +162,7 @@ function OmsProductCard(p: Product) {
             <svg className="absolute inset-0 pointer-events-none" style={{ color: "var(--bc)", width: "100%", height: "100%" }} viewBox="-1 -1 158 102" preserveAspectRatio="none" fill="none">
               <path d="M154 0.5C154.828 0.5 155.5 1.17157 155.5 2V83.2881C155.5 84.2245 155.124 85.1227 154.458 85.7803L141.576 98.4912C140.921 99.1374 140.038 99.5 139.118 99.5H0.5V0.5H154Z" stroke="currentColor" />
             </svg>
-            <span className="text-desktop-mono-small uppercase text-white text-right"><ScrambleText>{p.explore}</ScrambleText></span>
+            <span className={exploreClass}><ScrambleText>{p.explore}</ScrambleText></span>
             <ExploreArrow color={p.dot} />
           </div>
         </div>
@@ -173,16 +238,16 @@ export function OmsProducts() {
             <OmsProductCard key={p.title} {...p} />
           ))}
 
-          {/* Coming-soon cards — Stablecoin (left x59) / KYC Hub (right x735), y2151 */}
-          <div className="absolute" style={{ top: 2151, left: 59 }}>
-            <SecondaryCard
+          {/* Coming-soon cards — Stablecoin (left x59) / KYC Hub (right x735), y2150 */}
+          <div className="absolute" style={{ top: 2150, left: 59 }}>
+            <OmsComingSoonCard
               title="Stablecoin Orchestration"
               description="Enterprise payments infrastructure for stablecoins and tokenized deposits"
               icon="/assets/ico-pay.png"
             />
           </div>
-          <div className="absolute" style={{ top: 2151, left: 735 }}>
-            <SecondaryCard
+          <div className="absolute" style={{ top: 2150, left: 735 }}>
+            <OmsComingSoonCard
               title="KYC Hub"
               description="Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest."
               icon="/assets/ico-kit.png"
