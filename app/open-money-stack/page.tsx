@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/sections/nav";
 import { HeroOMS } from "@/components/sections/hero-oms";
 import { Spacer } from "@/components/ui/spacer";
-import { OpenMoneyStack } from "@/components/sections/open-money-stack";
+import { OmsProducts } from "@/components/sections/oms-products";
 import { StatsBand } from "@/components/sections/stats-band";
 import { FaqSection } from "@/components/sections/faq";
 import { UseCasesCta } from "@/components/sections/use-cases";
@@ -30,11 +30,7 @@ export default function OpenMoneyStackPage() {
         <HeroOMS />
         <Spacer />
         <Spacer />
-        <OpenMoneyStack
-          eyebrow="PRODUCTS"
-          heading="Global rails for upgraded money"
-          /* body / products confirmed against live during extraction */
-        />
+        <OmsProducts />
         <Spacer />
         <StatsBand />
         <Spacer />
