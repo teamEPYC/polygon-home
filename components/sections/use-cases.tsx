@@ -892,11 +892,13 @@ function MobileGetStarted({
                   top: row * M_GS_CELL,
                   width: M_GS_CELL,
                   height: M_GS_CELL,
-                  border: "1px solid rgba(255,255,255,0.07)",
-                  background: isFunnel(col, row) ? "#07060d" : "transparent",
-                  borderTop: isFunnel(col, row)
-                    ? "1px solid rgba(255,255,255,0.07)"
-                    : "1px solid rgba(255,255,255,0.07)",
+                  // Theme-aware: funnel cells are inverted-primary (#07060D dark /
+                  // #F2F1F5 light) and the grid lines flip via --grid-stroke, so the
+                  // pedestal isn't stuck black in light mode.
+                  border: "1px solid var(--grid-stroke)",
+                  background: isFunnel(col, row)
+                    ? "var(--color-inverted-primary)"
+                    : "transparent",
                 }}
               />
             )),
