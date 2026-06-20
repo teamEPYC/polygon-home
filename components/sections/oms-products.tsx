@@ -302,11 +302,17 @@ export function OmsProducts() {
           </div>
 
           {/* Bottom inverted-primary grid band — reuse the homepage SVG (y2235 h121
-              row of cells with a diagonal-cut leftmost corner). Theme tokens flip. */}
+              row of cells with a diagonal-cut leftmost corner). Theme tokens flip.
+              viewBox height is clamped to where the cells actually end (121.207, not
+              121.707) so they reach the band's bottom edge — otherwise a ~0.5px gap
+              let the blue field show as a hairline at the section's bottom. */}
+          {/* h is 4px taller than the 121px band so the cells over-cover the
+              section's bottom edge (the stage's overflow-hidden clips the excess);
+              otherwise sub-pixel rounding at the bottom let a blue hairline show. */}
           <svg
-            className="absolute left-0 w-full h-[121px]"
+            className="absolute left-0 w-full h-[125px]"
             style={{ top: 2474 }}
-            viewBox="0 0 1441.71 121.707"
+            viewBox="0 0 1441.71 121.207"
             preserveAspectRatio="none"
             fill="none"
             aria-hidden
