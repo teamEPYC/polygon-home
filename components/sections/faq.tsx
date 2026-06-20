@@ -80,12 +80,12 @@ export function FaqSection() {
         <div className="ml-[59px] pt-[8px] w-[1324px]">
           {/* Header zone */}
           <div className="relative">
-            <Eyebrow
-              text="FAQ"
-              borderColor="grey-200"
-              textColor="grey-100"
-              className="absolute left-0 top-[7px] z-10"
-            />
+            {/* Eyebrow hardcodes position:relative (for its corner ticks), so a
+                bare `absolute` className loses the cascade and the chip ends up
+                in-flow — pushing the heading down. Wrap it in an absolute div. */}
+            <div className="absolute left-0 top-[7px] z-10">
+              <Eyebrow text="FAQ" borderColor="grey-200" textColor="grey-100" />
+            </div>
             <h2 className="w-[640px] text-desktop-h2-indent text-primary">
               Frequently asked questions.
             </h2>
@@ -107,13 +107,16 @@ export function FaqSection() {
       <DynamicStage className="md:hidden" width={500} initialHeight={760}>
         <div className="ml-[21px] pt-[6px] w-[459px]">
           <div className="relative w-[300px]">
-            <Eyebrow
-              text="FAQ"
-              borderColor="grey-200"
-              textColor="grey-100"
-              textSize="text-mobile-mono-small"
-              className="absolute left-0 top-[4px] z-10 h-[30px]"
-            />
+            {/* Absolute wrapper (see desktop note) so the chip overlays the
+                heading's first line instead of stacking above it. */}
+            <div className="absolute left-0 top-[6px] z-10">
+              <Eyebrow
+                text="FAQ"
+                borderColor="grey-200"
+                textColor="grey-100"
+                textSize="text-mobile-mono-small"
+              />
+            </div>
             <h2 className="text-mobile-h2-indent leading-[1.3] text-primary [text-indent:62px]">
               Frequently asked questions.
             </h2>
