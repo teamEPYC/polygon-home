@@ -426,7 +426,19 @@ function UseCaseBar({ uc, first }: { uc: UseCase; first?: boolean }) {
   );
 }
 
-export function UseCasesCta() {
+export function UseCasesCta({
+  eyebrow = "WHAT POLYGON CAN DO FOR YOU",
+  useCases = USE_CASES,
+  mobileUseCases = MOBILE_USE_CASES,
+  renderGetStarted = true,
+  getStarted,
+}: {
+  eyebrow?: string;
+  useCases?: UseCase[];
+  mobileUseCases?: typeof MOBILE_USE_CASES;
+  renderGetStarted?: boolean;
+  getStarted?: Parameters<typeof GetStartedCta>[0];
+} = {}) {
   return (
     <>
       <section
@@ -462,13 +474,13 @@ export function UseCasesCta() {
               {/* WHAT POLYGON CAN DO FOR YOU eyebrow — transparent, grey-200
                   border, triangle corner ticks, no dot (live is-stat). */}
               <Eyebrow
-                text="WHAT POLYGON CAN DO FOR YOU"
+                text={eyebrow}
                 borderColor="grey-200"
                 textColor="primary"
               />
               {/* Card stack — gap 21. */}
               <div className="flex flex-col" style={{ gap: 21 }}>
-                {MOBILE_USE_CASES.map((uc) => (
+                {mobileUseCases.map((uc) => (
                   <MobileUseCaseCard key={uc.number} uc={uc} />
                 ))}
               </div>
@@ -518,7 +530,7 @@ export function UseCasesCta() {
             {/* Eyebrow */}
             <div className="absolute z-[3]" style={{ left: 60, top: 122 }}>
               <Eyebrow
-                text="WHAT POLYGON CAN DO FOR YOU"
+                text={eyebrow}
                 borderColor="grey-200"
                 textColor="primary"
                 hasDot
@@ -530,7 +542,7 @@ export function UseCasesCta() {
               className="absolute z-[2] flex flex-col items-end"
               style={{ left: 240, top: 122, width: 1200 }}
             >
-              {USE_CASES.map((uc, i) => (
+              {useCases.map((uc, i) => (
                 <UseCaseBar key={uc.number} uc={uc} first={i === 0} />
               ))}
             </div>
@@ -539,7 +551,7 @@ export function UseCasesCta() {
       </section>
 
       {/* ── SECTION 2: GET STARTED CTA (Figma node 1727:42786) ── */}
-      <GetStartedCta />
+      {renderGetStarted && <GetStartedCta {...getStarted} />}
     </>
   );
 }
@@ -551,12 +563,66 @@ export function UseCasesCta() {
  */
 
 // Footer button cards.
-type CtaButton = { label: string; href: string; left: number };
+// `top` overrides the default card y (736) — needed when the heading wraps to
+// more lines than the homepage default (e.g. the OMS band's 3-line heading,
+// where live places the card lower so it clears "payments?").
+type CtaButton = { label: string; href: string; left: number; top?: number };
 const CTA_BUTTONS: CtaButton[] = [
   { label: "START BUILDING", href: "/docs", left: 60 },
   { label: "CONTACT US", href: "#contact", left: 510 },
   { label: "OPEN MONEY STACK", href: "#open-money-stack", left: 960 },
 ];
+
+// One desktop CTA card — used for every button (homepage 3-up AND the OMS
+// single card) so the frame, poly tick, and button geometry can never drift.
+// `btn.left` positions the 420×164 card; a single centered card just passes
+// left: 510 (page centre). Button is left-aligned at (60,56), 301×51 — the
+// exact live geometry.
+function GetStartedButtonCard({ btn }: { btn: CtaButton }) {
+  return (
+    <div
+      className="absolute z-[4]"
+      style={{ left: btn.left, top: btn.top ?? 736, width: 420, height: 164 }}
+    >
+      {/* Cut-corner card frame — exact live .h-uc-card path (big top-left
+          cut + small bottom-right cut), faint fill + subtle outline. */}
+      <svg
+        className="absolute inset-0 pointer-events-none select-none"
+        width={420}
+        height={164}
+        viewBox="0 0 420 164"
+        fill="none"
+        preserveAspectRatio="none"
+        aria-hidden
+      >
+        <path
+          d="M420 124.055C420 125.145 419.554 126.19 418.767 126.944L381.238 162.889C380.494 163.602 379.502 164 378.471 164H4C1.79086 164 0 162.209 0 160V64H0.0214844L0.00683594 60.1904C0.00278726 59.1078 0.437335 58.0698 1.21191 57.3135L58.7539 1.1377C59.5011 0.408371 60.5037 0 61.5479 0H415.98C418.189 0 419.98 1.79048 419.98 3.99902L420 64V124.055Z"
+          fill="rgba(255,255,255,0.04)"
+          stroke="rgba(243,242,246,0.55)"
+        />
+      </svg>
+      {/* Corner poly mark at the top-left cut (live "trail poly.svg" — a
+          rounded right-triangle, right angle bottom-right), 10px at (8,3). */}
+      <svg
+        className="absolute"
+        style={{ left: 8, top: 3, width: 10, height: 10 }}
+        viewBox="0 0 10 10"
+        fill="none"
+        aria-hidden
+      >
+        <path d="M8.79395 9.29395H0.501052C0.0555997 9.29395 -0.167485 8.75538 0.147498 8.44039L8.44039 0.147499C8.75537 -0.167484 9.29395 0.0555996 9.29395 0.501052V8.79395C9.29395 9.07009 9.07009 9.29395 8.79395 9.29395Z" fill="#F2F1F5" />
+      </svg>
+      {/* Button — live geometry: 301×51 at (60,56) inside the 420×164 card
+          (left-aligned past the top-left cut, vertically centred). */}
+      <div
+        className="absolute"
+        style={{ left: 60, top: 56, width: 301, height: 51 }}
+      >
+        <CtaCornerButton label={btn.label} href={btn.href} />
+      </div>
+    </div>
+  );
+}
 
 // Solid grid cells (bg-inverted-primary + border-stroke) — the top inverted
 // staircase / funnel toward the LET'S BUILD eyebrow.
@@ -585,7 +651,15 @@ const isSolid = (x: number, y: number) =>
 const FUNNEL_ROW_DELAY = 0.14;
 const FUNNEL_EYEBROW_DELAY = 3 * FUNNEL_ROW_DELAY; // 3 funnel rows → 0.42s
 
-function GetStartedCta() {
+export function GetStartedCta({
+  eyebrow = "LET'S BUILD",
+  heading = "Get started with Polygon",
+  buttons = CTA_BUTTONS,
+}: {
+  eyebrow?: string;
+  heading?: string;
+  buttons?: CtaButton[];
+} = {}) {
   const funnelRef = useRef<HTMLDivElement>(null);
   const inView = useInView(funnelRef, { once: true, margin: "0px 0px -80px 0px" });
   return (
@@ -594,8 +668,8 @@ function GetStartedCta() {
       className="relative w-full overflow-hidden bg-[#3449c1]"
       style={{ containerType: "inline-size" }}
     >
-      {/* ── MOBILE (≤767px): centered eyebrow + heading + 3 stacked cards ── */}
-      <MobileGetStarted />
+      {/* ── MOBILE (≤767px): centered eyebrow + heading + stacked cards ── */}
+      <MobileGetStarted eyebrow={eyebrow} heading={heading} buttons={buttons} />
 
       {/* ── DESKTOP (≥768px): 1440×1200 stage (unchanged) ── */}
       <div className="hidden md:block" style={{ aspectRatio: "1440 / 1200" }}>
@@ -726,7 +800,7 @@ function GetStartedCta() {
           }}
         >
           <Eyebrow
-            text="LET'S BUILD"
+            text={eyebrow}
             borderColor="grey-200"
             textColor="primary"
             hasDot
@@ -746,54 +820,13 @@ function GetStartedCta() {
             letterSpacing: "-1.92px",
           }}
         >
-          Get started with Polygon
+          {heading}
         </h2>
 
-        {/* Footer button cards */}
-        {CTA_BUTTONS.map((btn) => (
-          <div
-            key={btn.label}
-            className="absolute z-[4]"
-            style={{ left: btn.left, top: 736, width: 420, height: 164 }}
-          >
-            {/* Cut-corner card frame — exact live .h-uc-card path (big top-left
-                cut + small bottom-right cut), faint fill + subtle outline. */}
-            <svg
-              className="absolute inset-0 pointer-events-none select-none"
-              width={420}
-              height={164}
-              viewBox="0 0 420 164"
-              fill="none"
-              preserveAspectRatio="none"
-              aria-hidden
-            >
-              <path
-                d="M420 124.055C420 125.145 419.554 126.19 418.767 126.944L381.238 162.889C380.494 163.602 379.502 164 378.471 164H4C1.79086 164 0 162.209 0 160V64H0.0214844L0.00683594 60.1904C0.00278726 59.1078 0.437335 58.0698 1.21191 57.3135L58.7539 1.1377C59.5011 0.408371 60.5037 0 61.5479 0H415.98C418.189 0 419.98 1.79048 419.98 3.99902L420 64V124.055Z"
-                fill="rgba(255,255,255,0.04)"
-                stroke="rgba(243,242,246,0.55)"
-              />
-            </svg>
-            {/* Corner poly mark at the top-left cut (live "trail poly.svg" — a
-                rounded right-triangle, right angle bottom-right), 10px at (8,3). */}
-            <svg
-              className="absolute"
-              style={{ left: 8, top: 3, width: 10, height: 10 }}
-              viewBox="0 0 10 10"
-              fill="none"
-              aria-hidden
-            >
-              <path d="M8.79395 9.29395H0.501052C0.0555997 9.29395 -0.167485 8.75538 0.147498 8.44039L8.44039 0.147499C8.75537 -0.167484 9.29395 0.0555996 9.29395 0.501052V8.79395C9.29395 9.07009 9.07009 9.29395 8.79395 9.29395Z" fill="#F2F1F5" />
-            </svg>
-            {/* Button — live geometry: 301×51 at (60,56) inside the 420×164 card
-                (left-aligned past the top-left cut, vertically centred). Same
-                trail button as mobile: full-width outline, label left, chevron right. */}
-            <div
-              className="absolute"
-              style={{ left: 60, top: 56, width: 301, height: 51 }}
-            >
-              <CtaCornerButton label={btn.label} href={btn.href} />
-            </div>
-          </div>
+        {/* Footer button cards — same card for every button; `btn.left`
+            positions each one (homepage 3-up, or a single centred card at 510). */}
+        {buttons.map((btn) => (
+          <GetStartedButtonCard key={btn.label} btn={btn} />
         ))}
       </div>
       </div>
@@ -826,7 +859,15 @@ const M_FUNNEL: [number, number][] = [
 const isFunnel = (c: number, r: number) =>
   M_FUNNEL.some(([fc, fr]) => fc === c && fr === r);
 
-function MobileGetStarted() {
+function MobileGetStarted({
+  eyebrow,
+  heading,
+  buttons,
+}: {
+  eyebrow: string;
+  heading: string;
+  buttons: CtaButton[];
+}) {
   return (
     <div className="md:hidden">
       <MobileStage width={500} height={M_GS_H}>
@@ -882,15 +923,15 @@ function MobileGetStarted() {
         {/* centered content */}
         <div className="absolute z-[3] left-1/2 -translate-x-1/2 flex flex-col items-center">
           <div style={{ height: 48 }} />
-          <Eyebrow text="LET'S BUILD" borderColor="grey-200" textColor="primary" hasDot />
+          <Eyebrow text={eyebrow} borderColor="grey-200" textColor="primary" hasDot />
           <h2
             className="mt-[224px] text-center font-heading font-[300] text-white"
             style={{ fontSize: 48, lineHeight: 0.9, letterSpacing: "-0.02em", width: 303 }}
           >
-            Get started with Polygon
+            {heading}
           </h2>
           <div className="mt-[78px] flex w-[457px] flex-col" style={{ gap: 12 }}>
-            {CTA_BUTTONS.map((btn) => (
+            {buttons.map((btn) => (
               <div
                 key={btn.label}
                 className="relative flex items-center px-[20px]"

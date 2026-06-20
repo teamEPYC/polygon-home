@@ -47,11 +47,11 @@ All defined in `app/globals.css`. Flip automatically between themes.
 | Tailwind class | Dark | Light | Use for |
 |---|---|---|---|
 | `text-primary` / `bg-primary` | `#FFFFFF` | `#07060D` | Primary text, icons |
-| `bg-background` | `#07060D` | `#FFFFFF` | Page background |
+| `bg-background` | `#07060D` | `#F2F1F5` | Page background |
 | `bg-inverted-primary` | `#07060D` | `#F2F1F5` | Inverted surfaces |
 | `bg-inverted-primary-hover` | `#121118` | `#D0CED6` | Hover on inverted surfaces |
 | `text-grey-100` / `bg-grey-100` | `#F2F3F7` | `#2D2B36` | Near-primary text |
-| `text-grey-200` / `bg-grey-200` | `#A0A1A6` | `#888A91` | Secondary/muted text |
+| `text-grey-200` / `bg-grey-200` | `#A0A1A6` | `#686D73` | Secondary/muted text |
 | `text-grey-300` / `bg-grey-300` | `#595A5F` | `#A2A3A5` | Tertiary text |
 | `text-grey-400` / `bg-grey-400` | `#353535` | `#BAB9BB` | Subtle elements |
 | `bg-grey-500` | `#1F1E20` | `#D7D6D9` | Subtle surfaces |
