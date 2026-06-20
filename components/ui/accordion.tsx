@@ -95,12 +95,27 @@ export function Accordion({
                 </span>
               </div>
               <span
-                className={`flex shrink-0 items-center justify-center border border-grey-200 text-primary dark:border-primary ${
+                className={`relative flex shrink-0 items-center justify-center text-primary ${
                   isDesktop ? "h-[51px] w-[64px]" : "h-[56px] w-[64px]"
                 }`}
-                style={{ clipPath: chevClip }}
               >
-                <Chevron open={isOpen} />
+                {/* Cut-corner outline with a COMPLETE stroke (incl. the beveled
+                    diagonal): a border-color layer behind a 1px-inset bg fill,
+                    both clipped. A plain CSS border + clip-path drops the stroke
+                    along the diagonal, leaving the border incomplete. */}
+                <span
+                  aria-hidden
+                  className="absolute inset-0 bg-grey-200 dark:bg-primary"
+                  style={{ clipPath: chevClip }}
+                />
+                <span
+                  aria-hidden
+                  className="absolute inset-px bg-background"
+                  style={{ clipPath: chevClip }}
+                />
+                <span className="relative z-[1] flex items-center justify-center">
+                  <Chevron open={isOpen} />
+                </span>
               </span>
             </button>
             <div

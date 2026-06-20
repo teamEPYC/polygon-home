@@ -111,6 +111,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             >
               <path d="M121 0V122H0L121 0Z" />
             </clipPath>
+            {/* Live omsHeroClip — the OMS hero blue scene field (720×600 path):
+                a beveled BOTTOM-LEFT corner (bottom edge stops at x120 then cuts
+                diagonally up to y480). The cut is transparent, so it reveals the
+                page background and flips light/dark. Referenced from hero-oms.tsx. */}
+            <clipPath
+              id="omsHeroClip"
+              clipPathUnits="objectBoundingBox"
+              transform="scale(0.00139, 0.00167)"
+            >
+              <path d="M0 0H720V600H120L0 480V0Z" />
+            </clipPath>
           </defs>
         </svg>
         <ThemeProvider>{children}</ThemeProvider>

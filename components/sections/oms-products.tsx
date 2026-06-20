@@ -2,7 +2,14 @@ import Image from "next/image";
 import { OmsVideoPlayer } from "@/components/ui/oms-video-player";
 import { OMSStaircase } from "./oms-staircase";
 import { ScrambleText } from "@/components/ui/scramble-text";
-import { DotHex, ExploreArrow } from "./open-money-stack";
+import { MobileStage } from "@/components/ui/stage";
+import { Eyebrow } from "@/components/ui/eyebrow";
+import {
+  DotHex,
+  ExploreArrow,
+  MobileProductCard,
+  MobileComingSoonCard,
+} from "./open-money-stack";
 
 const STAGE_H = 2595;
 const HEADING = "Global rails for upgraded money";
@@ -59,6 +66,39 @@ const PRODUCTS: Product[] = [
     description: "Use crypto to offer faster, cheaper payments, anywhere in the world.",
     wireIcon: "/assets/ico-wire-bpn.png", dot: "#00BBFF",
     explore: "Explore Polygon Chain", logo: null, top: 1827,
+  },
+];
+
+// ─── Mobile geometry (≤767px) ───────────────────────────────────────────────
+// All values extracted from live polygon.technology/open-money-stack @500px
+// (cdp-eval). Section is a single 500-wide stacked column; height 3328.
+const MOBILE_STAGE_H = 3328;
+// Per-card top within the stage (live .oms-lottie-card top, relative to section).
+const MOBILE_CARD_TOPS = [593, 1166, 1684, 2245];
+// Coming-soon card tops (Stablecoin Orchestration / KYC Hub).
+const MOBILE_COMING_SOON_TOPS = [2707, 2881];
+// Per-row mobile loop videos — same 4 renders as the homepage OMS section,
+// in product order: chains, trails, wallet (sphere), bpn.
+const MOBILE_VIDEOS = [
+  "/assets/oms-mobile-chains.webm",
+  "/assets/oms-mobile-trails.webm",
+  "/assets/oms-mobile-wallet.webm",
+  "/assets/oms-mobile-bpn.webm",
+];
+
+// Coming-soon content (shared between desktop cards below and mobile block).
+const COMING_SOON = [
+  {
+    title: "Stablecoin Orchestration",
+    description:
+      "Enterprise payments infrastructure for stablecoins and tokenized deposits",
+    icon: "/assets/ico-pay.png",
+  },
+  {
+    title: "KYC Hub",
+    description:
+      "Manage all payments-related KYC in one place. Worry about your customers while we take care of the rest.",
+    icon: "/assets/ico-kit.png",
   },
 ];
 
@@ -160,7 +200,10 @@ function OmsProductCard(p: Product) {
           </div>
           <div className="relative flex flex-col justify-between items-end p-[14px]" style={{ minHeight: 100 }}>
             <svg className="absolute inset-0 pointer-events-none" style={{ color: "var(--bc)", width: "100%", height: "100%" }} viewBox="-1 -1 158 102" preserveAspectRatio="none" fill="none">
-              <path d="M154 0.5C154.828 0.5 155.5 1.17157 155.5 2V83.2881C155.5 84.2245 155.124 85.1227 154.458 85.7803L141.576 98.4912C140.921 99.1374 140.038 99.5 139.118 99.5H0.5V0.5H154Z" stroke="currentColor" />
+              {/* Cut-corner box: right + bevel + bottom + left edges only. The
+                  top edge is intentionally NOT drawn here — the button-wrap grid's
+                  `border-t` already provides it, so redrawing it caused a double line. */}
+              <path d="M154 0.5C154.828 0.5 155.5 1.17157 155.5 2V83.2881C155.5 84.2245 155.124 85.1227 154.458 85.7803L141.576 98.4912C140.921 99.1374 140.038 99.5 139.118 99.5H0.5V0.5" stroke="currentColor" />
             </svg>
             <span className={exploreClass}><ScrambleText>{p.explore}</ScrambleText></span>
             <ExploreArrow color={p.dot} />
@@ -286,6 +329,135 @@ export function OmsProducts() {
           </svg>
         </div>
       </div>
+
+      {/* ─── MOBILE (≤767px) ─────────────────────────────────────────────────
+          Single-column stacked cards. Reuses the homepage OMS mobile primitives
+          (MobileProductCard / MobileComingSoonCard); only the copy, background,
+          card tops, and the header (no CTA) differ. Geometry extracted from live
+          /open-money-stack @500px. */}
+      <MobileStage className="md:hidden" width={500} height={MOBILE_STAGE_H}>
+        {/* Background — #3449C1 base + the SAME vertical vignette as desktop
+            (live mobile darkens to #141b6b at top/bottom edges, brightest in the
+            middle — verified by sampling live: ~#171e73 top → ~#2c46b7 mid →
+            ~#223594 bottom). Without it the flat #3449c1 stayed too bright near
+            the bottom band and read as a stray blue band. */}
+        <div className="absolute inset-0 pointer-events-none bg-[#3449c1]" />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(180deg, #141b6b 0%, #141b6b 11%, rgba(20,27,107,0.18) 25%, rgba(20,27,107,0.18) 78%, #141b6b 96%)",
+          }}
+        />
+        {/* Faint global grid — 100px cells (live u-bg-grid) */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
+            backgroundSize: "100px 100px",
+          }}
+        />
+
+        {/* Top black staircase pedestal under the PRODUCTS eyebrow:
+            row 1 = 3 cells (x100→400, y0), row 2 = 1 centered cell (x200→300, y100). */}
+        <div className="absolute flex" style={{ top: 0, left: 100, height: 100 }} aria-hidden>
+          {[0, 1, 2].map((c) => (
+            <div
+              key={c}
+              className="bg-inverted-primary border-r border-b border-white/10 [[data-theme=light]_&]:border-black/[0.06]"
+              style={{ width: 100, height: 100 }}
+            />
+          ))}
+        </div>
+        <div
+          className="absolute bg-inverted-primary border-r border-b border-white/10 [[data-theme=light]_&]:border-black/[0.06]"
+          style={{ top: 100, left: 200, width: 100, height: 100 }}
+          aria-hidden
+        />
+
+        {/* Eyebrow — centered, y57 (live). */}
+        <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 57 }}>
+          <Eyebrow text={EYEBROW} borderColor="white" textColor="white" hasDot />
+        </div>
+
+        {/* Heading — 32px / lh 33.92 (1.06) / -0.64px, centered, y300. */}
+        <p
+          className="absolute left-1/2 -translate-x-1/2 text-white text-center"
+          style={{
+            top: 300,
+            width: 413,
+            fontFamily: "var(--font-heading)",
+            fontWeight: 300,
+            fontSize: 32,
+            lineHeight: "33.92px",
+            letterSpacing: "-0.64px",
+          }}
+        >
+          {HEADING}
+        </p>
+
+        {/* Body — 16px / 22.4 (1.4), centered, y381. No CTA button on this page. */}
+        <p
+          className="absolute left-1/2 -translate-x-1/2 text-white text-center"
+          style={{
+            top: 381,
+            width: 413,
+            fontFamily: "var(--font-body)",
+            fontWeight: 400,
+            fontSize: 16,
+            lineHeight: "22.4px",
+          }}
+        >
+          {BODY}
+        </p>
+
+        {/* LIVE product cards — single column, stacked. */}
+        {PRODUCTS.map((p, i) => (
+          <MobileProductCard
+            key={p.title}
+            top={MOBILE_CARD_TOPS[i]}
+            badge={p.tag}
+            title={p.title}
+            subtitle={p.subtitle}
+            description={p.description}
+            wireIcon={p.wireIcon}
+            dotColor={p.dot}
+            exploreText={p.explore}
+            poweredByLogo={p.logo ?? undefined}
+            mobileVideo={MOBILE_VIDEOS[i]}
+            mediaFirst
+            exploreBody={p.exploreBody}
+          />
+        ))}
+
+        {/* COMING SOON cards */}
+        {COMING_SOON.map((c, i) => (
+          <MobileComingSoonCard
+            key={c.title}
+            top={MOBILE_COMING_SOON_TOPS[i]}
+            title={c.title}
+            description={c.description}
+            icon={c.icon}
+          />
+        ))}
+
+        {/* Bottom black grid row — 5 cells at y3228, leftmost triangle-clipped
+            (live #triangleClip). Section ends at 3328. */}
+        <div className="absolute left-0 flex" style={{ top: 3228, width: 500, height: 100 }} aria-hidden>
+          {[0, 1, 2, 3, 4].map((c) => (
+            <div
+              key={c}
+              className="bg-inverted-primary border-r border-b border-white/10 [[data-theme=light]_&]:border-black/[0.06]"
+              style={{
+                width: 100,
+                height: 100,
+                clipPath: c === 0 ? "url(#triangleClip)" : undefined,
+              }}
+            />
+          ))}
+        </div>
+      </MobileStage>
     </section>
   );
 }

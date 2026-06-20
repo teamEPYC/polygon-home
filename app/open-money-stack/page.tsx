@@ -26,7 +26,11 @@ export default function OpenMoneyStackPage() {
     <div className="min-h-screen bg-background">
       <NoiseOverlay />
       <Nav />
-      <main className="max-w-[1440px] mx-auto overflow-hidden">
+      {/* Left + right vertical rails frame the whole capped column, matching
+          live's `.u-container-capped` border-left + section border-right
+          (1px #1B1B1D dark / #E1E1E5 light). Placed on <main> so they run
+          continuously through every section (no floating per-section segments). */}
+      <main className="max-w-[1440px] mx-auto overflow-hidden border-x border-stroke">
         <HeroOMS />
         <Spacer />
         <Spacer />
@@ -39,7 +43,9 @@ export default function OpenMoneyStackPage() {
           renderGetStarted
           getStarted={{
             heading: "Ready to launch crypto payments?",
-            buttons: [{ label: "CONTACT US", href: "#contact", left: 510 }],
+            // 3-line heading → card sits lower than the homepage default (736) so
+            // it clears "payments?"; top 823 lands the button at live's y879.
+            buttons: [{ label: "CONTACT US", href: "#contact", left: 510, top: 823 }],
           }}
         />
         <Footer />

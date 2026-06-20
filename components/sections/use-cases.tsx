@@ -563,7 +563,10 @@ export function UseCasesCta({
  */
 
 // Footer button cards.
-type CtaButton = { label: string; href: string; left: number };
+// `top` overrides the default card y (736) — needed when the heading wraps to
+// more lines than the homepage default (e.g. the OMS band's 3-line heading,
+// where live places the card lower so it clears "payments?").
+type CtaButton = { label: string; href: string; left: number; top?: number };
 const CTA_BUTTONS: CtaButton[] = [
   { label: "START BUILDING", href: "/docs", left: 60 },
   { label: "CONTACT US", href: "#contact", left: 510 },
@@ -579,7 +582,7 @@ function GetStartedButtonCard({ btn }: { btn: CtaButton }) {
   return (
     <div
       className="absolute z-[4]"
-      style={{ left: btn.left, top: 736, width: 420, height: 164 }}
+      style={{ left: btn.left, top: btn.top ?? 736, width: 420, height: 164 }}
     >
       {/* Cut-corner card frame — exact live .h-uc-card path (big top-left
           cut + small bottom-right cut), faint fill + subtle outline. */}

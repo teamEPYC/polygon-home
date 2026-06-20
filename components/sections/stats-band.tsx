@@ -79,6 +79,22 @@ const byNum = (n: string) => STATS.find((s) => s.num === n)!;
 
 const DESKTOP_H = 1394;
 const MOBILE_W = 500;
+
+/* Background line-grid — live paints a faint 120px grid behind the stats cards
+ * (measured from live: vertical lines at x0,120,240… → 120px cells, origin
+ * top-left). Same pattern + colour the homepage uses (Spacer / at-glance):
+ * var(--color-stroke) = #1B1B1D dark / #E1E1E5 light, so it flips with theme.
+ * Mobile canvas is 500px → 100px cells (5 columns), matching at-glance mobile. */
+const GRID_DESKTOP = {
+  backgroundImage:
+    "linear-gradient(var(--color-stroke) 1px, transparent 1px), linear-gradient(90deg, var(--color-stroke) 1px, transparent 1px)",
+  backgroundSize: "120px 120px",
+} as const;
+const GRID_MOBILE = {
+  backgroundImage:
+    "linear-gradient(var(--color-stroke) 1px, transparent 1px), linear-gradient(90deg, var(--color-stroke) 1px, transparent 1px)",
+  backgroundSize: "100px 100px",
+} as const;
 // 6 cards at 467×229, x16, first at y213, pitch ≈284 → last bottom 1865.
 const MOBILE_FIRST_Y = 213;
 const MOBILE_PITCH = 284.4;
@@ -233,6 +249,9 @@ export function StatsBand() {
 
       {/* ── Desktop (≥768px) ─────────────────────────────────────────────── */}
       <DesktopStage className="hidden md:block" height={DESKTOP_H}>
+        {/* Background 120px grid (behind cards) — origin x0 aligns to the page rails */}
+        <div className="absolute inset-0 pointer-events-none" style={GRID_DESKTOP} aria-hidden />
+
         {/* Heading — live u-h2 64px / lh1.1 / -1.28px, indented to clear eyebrow */}
         <h2
           className="absolute left-[40px] top-[14px] w-[560px] text-desktop-h2 text-primary"
@@ -260,6 +279,9 @@ export function StatsBand() {
 
       {/* ── Mobile (<768px) ──────────────────────────────────────────────── */}
       <MobileStage className="md:hidden" width={MOBILE_W} height={MOBILE_H}>
+        {/* Background 100px grid (behind cards) */}
+        <div className="absolute inset-0 pointer-events-none" style={GRID_MOBILE} aria-hidden />
+
         <h2
           className="absolute left-[16px] top-[14px] w-[380px] font-heading font-light text-primary text-[43.2px] leading-[1.3] tracking-[-0.864px]"
           style={{ textIndent: "84px" }}

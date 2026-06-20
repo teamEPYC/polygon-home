@@ -1,5 +1,5 @@
 import { Eyebrow } from "@/components/ui/eyebrow";
-import { DesktopStage, MobileStage } from "@/components/ui/stage";
+import { DynamicStage } from "@/components/ui/dynamic-stage";
 import { Accordion, type AccordionItem } from "@/components/ui/accordion";
 
 /** Exact copy extracted from live /open-money-stack FAQ. */
@@ -29,23 +29,38 @@ const CONTACT_HREF =
 const SUPPORT_COPY =
   "If you don't see your question answered here, reach out to our support team, we're always happy to help.";
 
-/** Cut-corner "contact us" button — bottom-right cut, label + triangle arrow. */
+/**
+ * Cut-corner "contact us" button — live `.btn-new.is-black`: a grey OUTLINE (no
+ * fill) in the shared #buttonClip shape (rounded left, beveled bottom-right, right
+ * tab), label + triangle arrow. The outline is drawn as a grey-300 layer behind a
+ * 1px-inset background-colored fill, both clipped to #buttonClip — so the bevel
+ * keeps its stroke (a plain CSS border would be clipped away). Theme-safe via tokens.
+ */
 function ContactButton({ className }: { className?: string }) {
-  const clip =
-    "polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%)";
   return (
     <a
       href={CONTACT_HREF}
-      className={`inline-flex items-center justify-between bg-inverted-primary text-primary transition-colors hover:bg-inverted-primary-hover ${className ?? ""}`}
-      style={{ clipPath: clip }}
+      className={`group relative inline-flex items-center justify-between text-primary ${className ?? ""}`}
     >
-      <span className="text-desktop-mono-medium uppercase">contact us</span>
+      {/* Border layer (grey-300) */}
+      <span
+        aria-hidden
+        className="absolute inset-0 bg-grey-300 transition-colors group-hover:bg-grey-200"
+        style={{ clipPath: "url(#buttonClip)" }}
+      />
+      {/* Fill layer — section bg, inset 1px to reveal the border ring */}
+      <span
+        aria-hidden
+        className="absolute inset-px bg-background"
+        style={{ clipPath: "url(#buttonClip)" }}
+      />
+      <span className="relative text-desktop-mono-medium uppercase">contact us</span>
       <svg
         width="8"
         height="10"
         viewBox="0 0 8 10"
         fill="none"
-        className="ml-[12px] shrink-0"
+        className="relative ml-[12px] shrink-0"
         aria-hidden
       >
         <path d="M8 5L0 9.33013V0.669873L8 5Z" fill="currentColor" />
@@ -61,8 +76,8 @@ export function FaqSection() {
       style={{ containerType: "inline-size" }}
     >
       {/* ── Desktop ─────────────────────────────────────────────── */}
-      <DesktopStage className="hidden md:block" height={642}>
-        <div className="absolute left-[59px] top-[8px] w-[1324px]">
+      <DynamicStage className="hidden md:block" width={1440} initialHeight={642}>
+        <div className="ml-[59px] pt-[8px] w-[1324px]">
           {/* Header zone */}
           <div className="relative">
             <Eyebrow
@@ -77,7 +92,7 @@ export function FaqSection() {
             {/* Right column — support copy + CONTACT US, fixed at live x≈633 */}
             <div className="absolute left-[633px] top-[33px] w-[400px]">
               <p className="text-desktop-body text-primary">{SUPPORT_COPY}</p>
-              <ContactButton className="mt-[12px] h-[52px] pl-[12px] pr-[16px]" />
+              <ContactButton className="mt-[12px] h-[53px] w-[183px] pl-[12px] pr-[30px]" />
             </div>
           </div>
 
@@ -86,11 +101,11 @@ export function FaqSection() {
             <Accordion items={FAQ_ITEMS} variant="desktop" />
           </div>
         </div>
-      </DesktopStage>
+      </DynamicStage>
 
       {/* ── Mobile ──────────────────────────────────────────────── */}
-      <MobileStage className="md:hidden" width={500} height={760}>
-        <div className="absolute left-[21px] top-[6px] w-[459px]">
+      <DynamicStage className="md:hidden" width={500} initialHeight={760}>
+        <div className="ml-[21px] pt-[6px] w-[459px]">
           <div className="relative w-[300px]">
             <Eyebrow
               text="FAQ"
@@ -106,13 +121,13 @@ export function FaqSection() {
           <p className="mt-[18px] w-[300px] text-mobile-body text-primary">
             {SUPPORT_COPY}
           </p>
-          <ContactButton className="mt-[24px] h-[46px] pl-[12px] pr-[12px]" />
+          <ContactButton className="mt-[24px] h-[46px] w-[170px] pl-[12px] pr-[28px]" />
 
           <div className="mt-[92px]">
             <Accordion items={FAQ_ITEMS} variant="mobile" />
           </div>
         </div>
-      </MobileStage>
+      </DynamicStage>
     </section>
   );
 }

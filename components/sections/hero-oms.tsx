@@ -7,9 +7,14 @@ import { DesktopStage, MobileStage } from "@/components/ui/stage";
 
 // Exact section heights extracted from live polygon.technology/open-money-stack.
 // Desktop: section.oms-hero spans y0 → 839 (content starts at the 120px grid row).
-// Mobile (500-canvas): section spans y0 → 797.
+// Mobile (500-canvas): section.oms-hero spans y0 → 797, then live appends a
+// spacer (≈102) + trusted-by marquee strip (y899 h100) + spacer (≈101) before
+// the Products band begins at y1099. Those live as siblings on live, but the
+// page's <Spacer/> units are desktop-only (hidden on mobile), so we fold that
+// whole 797→1099 region into the mobile stage so the Hero→Products gap matches
+// live (302px) and the strip renders at its true y.
 const HERO_DESKTOP_H = 839;
-const HERO_MOBILE_H = 797;
+const HERO_MOBILE_H = 1099;
 
 // Hero scene video (3D objects, alpha webm) — downloaded from live
 // (OMS_Hero_V2-WebM.webm). Sits on top of the blue gradient SVG.
@@ -42,7 +47,13 @@ function HeroVideo() {
 // Solid ▸ triangle — live `.oms-button-icon` arrow (viewBox 0 0 12 12).
 function TriangleArrow({ color = "currentColor" }: { color?: string }) {
   return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      className="shrink-0"
+    >
       <path
         d="M7.86511 5.38649C8.07403 5.5838 8.07403 5.9162 7.86511 6.11351L4.59331 9.20354C4.27444 9.50469 3.75 9.27863 3.75 8.84003L3.75 2.65997C3.75 2.22137 4.27444 1.99531 4.59331 2.29646L7.86511 5.38649Z"
         fill={color}
@@ -88,14 +99,56 @@ function CtaButton({
 // Live renders each as a currentColor SVG; we mask + fill bg-primary so they
 // flip #07060D (light) / #FFFFFF (dark) to match the cell color per theme.
 const LOGOS = [
-  { src: "/assets/hero/logos/stripe.svg", alt: "Stripe", w: 88, vbW: 72, vbH: 60 },
-  { src: "/assets/hero/logos/revolut.svg", alt: "Revolut", w: 120, vbW: 88, vbH: 60 },
-  { src: "/assets/hero/logos/polymarket.svg", alt: "Polymarket", w: 150, vbW: 132, vbH: 60 },
-  { src: "/assets/hero/logos/courtyard.svg", alt: "Courtyard", w: 150, vbW: 132, vbH: 60 },
-  { src: "/assets/hero/logos/google.svg", alt: "Google", w: 120, vbW: 88, vbH: 60 },
-  { src: "/assets/hero/logos/reddit.svg", alt: "Reddit", w: 88, vbW: 76, vbH: 60 },
+  {
+    src: "/assets/hero/logos/stripe.svg",
+    alt: "Stripe",
+    w: 88,
+    vbW: 72,
+    vbH: 60,
+  },
+  {
+    src: "/assets/hero/logos/revolut.svg",
+    alt: "Revolut",
+    w: 120,
+    vbW: 88,
+    vbH: 60,
+  },
+  {
+    src: "/assets/hero/logos/polymarket.svg",
+    alt: "Polymarket",
+    w: 150,
+    vbW: 132,
+    vbH: 60,
+  },
+  {
+    src: "/assets/hero/logos/courtyard.svg",
+    alt: "Courtyard",
+    w: 150,
+    vbW: 132,
+    vbH: 60,
+  },
+  {
+    src: "/assets/hero/logos/google.svg",
+    alt: "Google",
+    w: 120,
+    vbW: 88,
+    vbH: 60,
+  },
+  {
+    src: "/assets/hero/logos/reddit.svg",
+    alt: "Reddit",
+    w: 88,
+    vbW: 76,
+    vbH: 60,
+  },
   { src: "/assets/hero/logos/nexo.svg", alt: "Nexo", w: 150, vbW: 98, vbH: 60 },
-  { src: "/assets/hero/logos/securitize.svg", alt: "Securitize", w: 150, vbW: 120, vbH: 60 },
+  {
+    src: "/assets/hero/logos/securitize.svg",
+    alt: "Securitize",
+    w: 150,
+    vbW: 120,
+    vbH: 60,
+  },
 ];
 
 const HEADING = "Move funds globally with stablecoins in one unified stack";
@@ -120,11 +173,24 @@ export function HeroOMS() {
           }}
         />
 
-        {/* Blue scene — gradient field SVG with the 3D video on top. Fixed blue
-            in BOTH themes (live scene/gradient do not flip). x721 y120 w662 h603. */}
+        {/* Blue scene — TWO independent live layers, both anchored at x721 y120:
+            • gradient field SVG `.oms-hero-bg` 662×603 → bottom y723 (the blue box)
+            • 3D video 662×662 (square, native 1920²) → bottom y782, so it extends
+              ~59px BELOW the gradient; its alpha lower edge sits on the page bg,
+              exactly like live. Keeping the video square avoids the object-cover
+              vertical crop that was distorting the scene + blue field.
+            Fixed blue in BOTH themes (live scene/gradient do not flip). */}
         <div
           className="absolute overflow-hidden"
-          style={{ left: 721, top: 120, width: 662, height: 603 }}
+          style={{
+            left: 721,
+            top: 116,
+            width: 662,
+            height: 603,
+            // Live `.oms-hero-bg` beveled bottom-left corner — the cut is
+            // transparent and reveals the page bg (flips light/dark).
+            clipPath: "url(#omsHeroClip)",
+          }}
         >
           <Image
             src={HERO_BG}
@@ -134,9 +200,12 @@ export function HeroOMS() {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0">
-            <HeroVideo />
-          </div>
+        </div>
+        <div
+          className="absolute"
+          style={{ left: 721, top: 120, width: 662, height: 662 }}
+        >
+          <HeroVideo />
         </div>
 
         {/* Heading — live `.u-h2-new` (H1 tag, 64px): white→dark flip via token */}
@@ -229,13 +298,15 @@ export function HeroOMS() {
             • heading y80 (32px/1.06/-0.64) · sub y203 (16px body-large)
             • two side-by-side 213/172px CTAs y307 · full-bleed scene y384→797 */}
       <MobileStage className="md:hidden" width={500} height={HERO_MOBILE_H}>
-        {/* 120px grid (full bleed) */}
+        {/* 100px grid (full bleed) — 5 cols on the 500 canvas, matching every
+            other mobile section (products/stats) and live, so the grid lines run
+            continuously down the page instead of jumping at section boundaries. */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage:
               "linear-gradient(var(--color-stroke) 1px, transparent 1px), linear-gradient(90deg, var(--color-stroke) 1px, transparent 1px)",
-            backgroundSize: "120px 120px",
+            backgroundSize: "100px 100px",
           }}
         />
 
@@ -269,11 +340,22 @@ export function HeroOMS() {
           </div>
         </div>
 
-        {/* Full-bleed blue scene — live `.oms-hero-bg` x3 y384 w495 h413.
-            Gradient field + 3D video on top, fixed blue in both themes. */}
+        {/* Full-bleed blue scene — TWO live layers, both anchored at x3 y384:
+            • gradient field SVG `.oms-hero-bg` 495×413 → bottom y797 (the blue box)
+            • 3D video 495×495 (square) → bottom y879, extends below the gradient,
+              alpha lower edge on the page bg. Square keeps the scene undistorted
+              (no object-cover crop). Fixed blue in both themes. */}
         <div
           className="absolute overflow-hidden"
-          style={{ left: 3, top: 384, width: 495, height: 413 }}
+          style={{
+            left: 3,
+            top: 384,
+            width: 495,
+            height: 413,
+            // Same beveled bottom-left corner as desktop (live uses #omsHeroClip
+            // on mobile too); transparent cut reveals the page bg, flips themes.
+            clipPath: "url(#omsHeroClip)",
+          }}
         >
           <Image
             src={HERO_BG}
@@ -283,9 +365,73 @@ export function HeroOMS() {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0">
-            <HeroVideo />
+        </div>
+        <div
+          className="absolute"
+          style={{ left: 3, top: 384, width: 495, height: 495 }}
+        >
+          <HeroVideo />
+        </div>
+
+        {/* Trusted-by marquee strip — live `.marquee-mobile-grid`/`.hero-marquee-wrap.is-oms`:
+            x1 y899 w499 h100, bg inverted-primary (#07060D dark / #F2F1F5 light),
+            border-top stroke. Same LOGOS + mask-render as desktop so logos flip
+            #FFFFFF (dark) / #07060D (light). Edge fades 50px (live `.marquee-grad`). */}
+        <div
+          className="absolute overflow-hidden border-t border-stroke bg-inverted-primary"
+          style={{ left: 1, top: 899, width: 499, height: 100 }}
+        >
+          <div className="absolute inset-y-0 left-0 flex items-center animate-[marquee_22s_linear_infinite]">
+            {[0, 1].map((set) => (
+              <div
+                key={set}
+                className="flex items-center gap-[24px] pr-[24px] h-full"
+                aria-hidden={set === 1}
+              >
+                {LOGOS.map((logo) => (
+                  <div
+                    key={logo.alt}
+                    className="h-full shrink-0 flex items-center justify-center"
+                    style={{ width: logo.w, marginLeft: 24 }}
+                  >
+                    <div
+                      role="img"
+                      aria-label={logo.alt}
+                      className="bg-primary"
+                      style={{
+                        width: logo.w,
+                        height: (logo.w * logo.vbH) / logo.vbW,
+                        maxHeight: "55%",
+                        WebkitMaskImage: `url(${logo.src})`,
+                        maskImage: `url(${logo.src})`,
+                        WebkitMaskRepeat: "no-repeat",
+                        maskRepeat: "no-repeat",
+                        WebkitMaskSize: "contain",
+                        maskSize: "contain",
+                        WebkitMaskPosition: "center",
+                        maskPosition: "center",
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
+          {/* edge fades — live `.marquee-grad.is-oms` (50px on mobile) */}
+          <div
+            className="absolute left-0 top-0 h-full w-[50px] pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(to right, var(--color-inverted-primary), transparent)",
+            }}
+          />
+          <div
+            className="absolute right-0 top-0 h-full w-[50px] pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(to left, var(--color-inverted-primary), transparent)",
+            }}
+          />
         </div>
       </MobileStage>
     </section>

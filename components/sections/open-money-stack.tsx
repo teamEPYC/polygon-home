@@ -824,7 +824,7 @@ export function OpenMoneyStack({
 // card = prev top + prev rendered height (560/526/554) + a 48px gap between cards.
 const MOBILE_CARD_TOPS = [549, 1157, 1731, 2333];
 
-function MobileBadge({ text }: { text: string }) {
+export function MobileBadge({ text }: { text: string }) {
   return (
     <div className="relative inline-flex items-center px-[12px] py-[6px] border-r border-b border-l border-[#707bb7] self-start">
       <span className="absolute top-0 left-0 size-[6px] pointer-events-none text-[#707bb7]">
@@ -844,7 +844,7 @@ function MobileBadge({ text }: { text: string }) {
   );
 }
 
-function MobileProductCard({
+export function MobileProductCard({
   top,
   badge,
   title,
@@ -855,7 +855,15 @@ function MobileProductCard({
   exploreText,
   poweredByLogo,
   mobileVideo,
-}: OmsMobileProductItem & { top: number }) {
+  mediaFirst = false,
+  exploreBody = false,
+}: OmsMobileProductItem & {
+  top: number;
+  mediaFirst?: boolean;
+  /** Render the explore label as 16px title-case body (live Wallet card) instead
+   *  of uppercase mono. */
+  exploreBody?: boolean;
+}) {
   return (
     <div
       className="group absolute flex flex-col border-t border-[#707bb7]"
@@ -893,7 +901,8 @@ function MobileProductCard({
         {subtitle}
       </p>
 
-      {/* Description — live: 14px / lh 19.6 (1.4), op70 */}
+      {/* Description — live: 14px / lh 19.6 (1.4), op70.
+          mediaFirst (OMS page) flows it BELOW the video/explore bar via CSS order. */}
       <p
         className="text-[rgba(255,255,255,0.7)]"
         style={{
@@ -901,6 +910,7 @@ function MobileProductCard({
           fontWeight: 400,
           fontSize: 14,
           lineHeight: "19.6px",
+          order: mediaFirst ? 2 : 0,
         }}
       >
         {description}
@@ -908,7 +918,7 @@ function MobileProductCard({
 
       {/* POWERED BY + logo */}
       {poweredByLogo && (
-        <div className="flex items-center gap-[12px]">
+        <div className="flex items-center gap-[12px]" style={{ order: mediaFirst ? 3 : 0 }}>
           <span className="text-desktop-mono-small uppercase text-[rgba(255,255,255,0.7)]">
             powered by
           </span>
@@ -925,7 +935,7 @@ function MobileProductCard({
 
       {/* Video + explore bar — flush (no flex gap); live joins them so the video's
           bottom edge IS the explore bar's top border. */}
-      <div className="flex  flex-col">
+      <div className="flex  flex-col" style={{ order: mediaFirst ? 1 : 0 }}>
         {/* Mobile loop video — live `oms-mobile-video-embed`: 459×200, border on
           top/left/right only (no bottom — it joins the explore bar below).
           object-CONTAIN so the full 620×620 square video shows (not cropped). */}
@@ -995,7 +1005,13 @@ function MobileProductCard({
           <div className="relative flex flex-1 items-center justify-between px-[14px]">
             <div className="flex items-center gap-[10px]">
               <DotHex color={dotColor ?? "#707bb7"} />
-              <span className="text-desktop-mono-small uppercase text-white">
+              <span
+                className={
+                  exploreBody
+                    ? "text-desktop-body text-white"
+                    : "text-desktop-mono-small uppercase text-white"
+                }
+              >
                 {exploreText}
               </span>
             </div>
@@ -1022,7 +1038,7 @@ function MobileProductCard({
   );
 }
 
-function MobileComingSoonCard({
+export function MobileComingSoonCard({
   top,
   title,
   description,
