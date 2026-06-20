@@ -384,7 +384,7 @@ export function OmsProducts() {
 
         {/* Eyebrow — centered, y57 (live). */}
         <div className="absolute left-1/2 -translate-x-1/2" style={{ top: 57 }}>
-          <Eyebrow text={EYEBROW} borderColor="white" textColor="white" hasDot />
+          <Eyebrow text={EYEBROW} borderColor="stroke" textColor="primary" hasDot />
         </div>
 
         {/* Heading — 32px / lh 33.92 (1.06) / -0.64px, centered, y300. */}
